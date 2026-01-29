@@ -1,21 +1,25 @@
 package repo
 
-import "drive/internal/domain"
+import (
+	"drive/internal/domain"
 
-type userRepo struct{}
+	"gorm.io/gorm"
+)
 
-func NewUserRepo() domain.UserRepo {
-	return &userRepo{}
+type userRepo struct {
+	db *gorm.DB
 }
 
-//用户注册
+func NewUserRepo(db *gorm.DB) domain.UserRepo {
+	return &userRepo{db: db}
+}
+
+// 用户注册
 func (r *userRepo) Register(user *domain.User) error {
-
-	return nil
+	return r.db.Create(user).Error
 }
 
-//用户登录
+// 用户登录
 func (r *userRepo) Logon(user *domain.User) error {
-
-	return nil
+	return r.db.Where("user_name = ? AND pass_word = ?", user.UserName, user.PassWord).First(user).Error
 }

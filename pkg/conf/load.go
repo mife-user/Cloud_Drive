@@ -16,7 +16,7 @@ func GetConfig() *Config {
 func LoadConfig() (*Config, error) {
 	v := viper.New()
 	//主要配置文件目录
-	path := filepath.Join("config")
+	path := filepath.Join("configs")
 	v.AddConfigPath(path)
 	//配置文件名称和类型
 	v.SetConfigName("config")
@@ -40,6 +40,15 @@ func LoadConfig() (*Config, error) {
 	if err := v.Unmarshal(&globalConfig); err != nil {
 		return nil, fmt.Errorf("解析配置失败：%w", err)
 	}
+
+	// 从环境变量中读取敏感信息
+	if dsn := v.GetString("mysql_dsn"); dsn != "" {
+		globalConfig.Mysql.Dsn = dsn
+	}
+	if password := v.GetString("redis_password"); password != "" {
+		globalConfig.Redis.Password = password
+	}
+
 	return &globalConfig, nil
 }
 

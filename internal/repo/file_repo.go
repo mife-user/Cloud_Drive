@@ -1,15 +1,20 @@
 package repo
 
-import "drive/internal/domain"
+import (
+	"drive/internal/domain"
 
-type fileRepo struct{}
+	"gorm.io/gorm"
+)
 
-func NewFileRepo() domain.FileRepo {
-	return &fileRepo{}
+type fileRepo struct {
+	db *gorm.DB
+}
+
+func NewFileRepo(db *gorm.DB) domain.FileRepo {
+	return &fileRepo{db: db}
 }
 
 // 文件上传
 func (r *fileRepo) UploadFile(file *domain.File) error {
-
-	return nil
+	return r.db.Create(file).Error
 }
