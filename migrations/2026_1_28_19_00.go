@@ -3,10 +3,9 @@ package migrations
 import "gorm.io/gorm"
 
 var Migration_2026_1_28_19_00 = migration{
-	Version:  202601281900,
-	IsUpdate: 0,
-	Up:       up,
-	Down:     down,
+	Version: 202601281900,
+	Up:      up,
+	Down:    down,
 }
 
 type User struct {

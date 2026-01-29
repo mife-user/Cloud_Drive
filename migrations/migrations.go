@@ -15,10 +15,9 @@ type MigrationRecord struct {
 }
 
 type migration struct {
-	Version  int                     //版本号
-	IsUpdate int                     //是否升级
-	Up       func(db *gorm.DB) error //更新
-	Down     func(db *gorm.DB) error //回滚
+	Version int                     //版本号
+	Up      func(db *gorm.DB) error //更新
+	Down    func(db *gorm.DB) error //回滚
 }
 
 // 获取所有迁移
