@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  # 应用服务：补充Gin配置环境变量
+  cloudpan:
+    build: .
+    container_name: cloudpan-app
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - CLOUDPAN_ENV=dev
+      - CLOUDPAN_MYSQL_DSN=root:123456@tcp(mysql:3306)/cloudpan_prod?charset=utf8mb4&parseTime=True&loc=Local
+      - CLOUDPAN_REDIS_HOST=redis
+      - CLOUDPAN_REDIS_PORT=6379
+      - CLOUDPAN_REDIS_PASSWORD=cloudpan_redis_123
+      - CLOUDPAN_REDIS_DB=0
+      - CLOUDPAN_GIN_MODE=debug
+      - CLOUDPAN_GIN_PORT=8080
+      - CLOUDPAN_GIN_CORS_ALLOW_ORIGINS=["http://localhost:3000"]
+      - CLOUDPAN_GIN_CORS_ALLOW_METHODS=["GET","POST","PUT","DELETE"]
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - cloudpan-net
+
+  # MySQL数据库（保持不变）
+  mysql:
+    image: mysql:8.0
+    container_name: cloudpan-mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=cloudpan_prod
+      - MYSQL_CHARACTER_SET_SERVER=utf8mb4
+      - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./deployments/docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      - cloudpan-net
+
+  # Redis缓存（保持不变）
+  redis:
+    image: redis:7.2-alpine
+    container_name: cloudpan-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass cloudpan_redis_123
+    volumes:
+      - redis-data:/data
+    networks:
+      - cloudpan-net
+
+networks:
+  cloudpan-net:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  redis-data:
