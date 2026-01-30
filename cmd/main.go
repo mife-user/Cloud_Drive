@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 
+	"drive/internal/api/routes"
 	"drive/migrations"
 	"drive/pkg/conf"
 	"drive/pkg/db"
-	"drive/pkg/router"
 )
 
 func main() {
@@ -45,7 +45,7 @@ func main() {
 	}
 
 	// 初始化路由
-	router := router.NewRouter(database, config)
+	router := routes.NewRouter(database, config)
 	engine := router.Setup()
 
 	// 打印初始化成功信息

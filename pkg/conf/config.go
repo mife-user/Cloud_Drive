@@ -8,6 +8,7 @@ type Config struct {
 	Mysql MysqlConfig `mapstructure:"mysql"`
 	Redis RedisConfig `mapstructure:"redis"`
 	Gin   GinConfig   `mapstructure:"gin"`
+	JWT   JWTConfig   `mapstructure:"jwt"`
 }
 
 // mysql配置结构体
@@ -37,4 +38,9 @@ type GinConfig struct {
 type CorsConfig struct {
 	AllowOrigins []string `mapstructure:"allow_origins"`
 	AllowMethods []string `mapstructure:"allow_methods"`
+}
+
+// JWT配置结构体
+type JWTConfig struct {
+	Secret string `mapstructure:"secret"`
 }
