@@ -1,14 +1,11 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
-	"os"
-	"path/filepath"
-	"time"
 
 	"drive/internal/domain"
 	"drive/pkg/conf"
+	"drive/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -43,40 +40,16 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
-
-	// 创建存储目录结构
-	storageDir := fmt.Sprintf("./storage/%v/%s", userID, time.Now().Format("2006-01-02"))
-	if err := os.MkdirAll(storageDir, 0755); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "创建存储目录失败: " + err.Error()})
+	// 检查用户ID是否为uint类型且非零
+	if uid, ok := userID.(uint); !ok || uid == 0 {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "无效的用户ID"})
 		return
 	}
-
-	// 生成唯一文件名
-	ext := filepath.Ext(header.Filename)
-	fileName := fmt.Sprintf("%d%s", time.Now().UnixNano(), ext)
-	filePath := filepath.Join(storageDir, fileName)
-
-	// 创建目标文件
-	dst, err := os.Create(filePath)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "创建文件失败: " + err.Error()})
-		return
-	}
-	defer dst.Close()
-
 	// 保存文件
-	if _, err := dst.ReadFrom(file); err != nil {
+	fileRecord, err := utils.SaveFile(header, file, userID)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件失败: " + err.Error()})
 		return
-	}
-
-	// 创建文件记录
-	fileRecord := &domain.File{
-		FileName:    header.Filename,
-		Size:        header.Size,
-		Path:        filePath,
-		UserID:      userID.(uint),
-		Permissions: "private",
 	}
 
 	// 保存文件记录到数据库
