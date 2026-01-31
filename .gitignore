@@ -25,3 +25,4 @@ go.work.sum
 .env
 FUTURE_PROJECT_STRUCTURE.md
 project_reference.md
+.trae/documents/解决 domain 层结构体绑定问题.md
