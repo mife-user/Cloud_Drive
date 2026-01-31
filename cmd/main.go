@@ -45,7 +45,10 @@ func main() {
 	}
 
 	// 初始化路由
-	router := routes.NewRouter(database, config)
+	router := routes.GetRouter()
+	if !router.NewRouter(database, config) {
+		log.Fatalf("创建路由失败")
+	}
 	engine := router.Setup()
 
 	// 打印初始化成功信息

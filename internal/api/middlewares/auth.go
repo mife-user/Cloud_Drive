@@ -23,7 +23,7 @@ func AuthMiddleware(config *conf.Config) gin.HandlerFunc {
 
 		// 检查Bearer前缀
 		parts := strings.SplitN(authHeader, " ", 2)
-		if !(len(parts) == 2 && parts[0] == "Bearer") {
+		if !(len(parts) == 2 && strings.ToLower(parts[0]) == "bearer") {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "认证格式错误"})
 			c.Abort()
 			return
@@ -38,7 +38,11 @@ func AuthMiddleware(config *conf.Config) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-
+		if claims.UserID == 0 {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "token中缺少用户ID"})
+			c.Abort()
+			return
+		}
 		// 将用户信息存储到context中
 		c.Set("user_id", claims.UserID)
 		c.Set("user_name", claims.Name)

@@ -40,11 +40,6 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
-	// 检查用户ID是否为uint类型且非零
-	if uid, ok := userID.(uint); !ok || uid == 0 {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "无效的用户ID"})
-		return
-	}
 	// 保存文件
 	fileRecord, err := utils.SaveFile(header, file, userID)
 	if err != nil {

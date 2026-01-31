@@ -12,23 +12,26 @@ import (
 
 // Router 路由结构体
 type Router struct {
-	authHandler  *handlers.AuthHandler
-	fileHandler  *handlers.FileHandler
-	userHandler  *handlers.UserHandler
-	config       *conf.Config
+	authHandler *handlers.AuthHandler
+	fileHandler *handlers.FileHandler
+	userHandler *handlers.UserHandler
+	config      *conf.Config
 }
 
-// NewRouter 创建路由
-func NewRouter(db *gorm.DB, config *conf.Config) *Router {
+// GetRouter 获取路由实例
+func GetRouter() *Router {
+	return &Router{}
+}
+
+// NewRouter 初始化路由
+func (r *Router) NewRouter(db *gorm.DB, config *conf.Config) bool {
 	userRepo := repo.NewUserRepo(db)
 	fileRepo := repo.NewFileRepo(db)
-
-	return &Router{
-		authHandler: handlers.NewAuthHandler(userRepo, config),
-		fileHandler: handlers.NewFileHandler(fileRepo, config),
-		userHandler: handlers.NewUserHandler(userRepo, config),
-		config:      config,
-	}
+	r.authHandler = handlers.NewAuthHandler(userRepo, config)
+	r.fileHandler = handlers.NewFileHandler(fileRepo, config)
+	r.userHandler = handlers.NewUserHandler(userRepo, config)
+	r.config = config
+	return true
 }
 
 // Setup 设置路由

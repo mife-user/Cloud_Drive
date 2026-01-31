@@ -10,6 +10,7 @@ type fileRepo struct {
 	db *gorm.DB
 }
 
+// NewFileRepo 创建文件仓库
 func NewFileRepo(db *gorm.DB) domain.FileRepo {
 	return &fileRepo{db: db}
 }
