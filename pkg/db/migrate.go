@@ -22,6 +22,7 @@ func Rollback(v int) error {
 	return migrations.Rollback(db, v)
 }
 
+// MigrationStatus 获取数据库迁移状态
 func MigrationStatus() (string, error) {
 	db := GetDB()
 	return migrations.Status(db)

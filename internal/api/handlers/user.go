@@ -38,19 +38,3 @@ func (h *UserHandler) Register(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "注册成功"})
 }
-
-// GetUserInfo 获取用户信息
-func (h *UserHandler) GetUserInfo(c *gin.Context) {
-	// 从上下文获取用户ID
-	userID, exists := c.Get("user_id")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
-		return
-	}
-
-	// 这里可以实现获取用户信息的逻辑
-	c.JSON(http.StatusOK, gin.H{
-		"message": "获取用户信息成功",
-		"user_id": userID,
-	})
-}

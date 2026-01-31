@@ -34,7 +34,7 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 	}
 	defer file.Close()
 
-	// 从认证中间件获取用户ID
+	// 获取当前登录用户ID
 	userID, exists := c.Get("user_id")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
@@ -56,10 +56,11 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "上传成功",
 		"file": gin.H{
-			"file_name": fileRecord.FileName,
-			"size":      fileRecord.Size,
-			"path":      fileRecord.Path,
-			"user_id":   fileRecord.UserID,
+			"file_name":   fileRecord.FileName,
+			"size":        fileRecord.Size,
+			"path":        fileRecord.Path,
+			"permissions": fileRecord.Permissions,
+			"owner":       fileRecord.Owner,
 		},
 	})
 }

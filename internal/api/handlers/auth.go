@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"net/http"
-
+	"drive/internal/api/dtos"
 	"drive/internal/domain"
 	"drive/pkg/auth"
 	"drive/pkg/conf"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,13 +26,13 @@ func NewAuthHandler(userRepo domain.UserRepo, config *conf.Config) *AuthHandler 
 
 // Login 用户登录
 func (h *AuthHandler) Login(c *gin.Context) {
-	var user domain.User
-	if err := c.ShouldBindJSON(&user); err != nil {
+	var userDtos dtos.UserDtos
+	if err := c.ShouldBindJSON(&userDtos); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})
 		return
 	}
-
-	if err := h.userRepo.Logon(&user); err != nil {
+	user := userDtos.ToUser()
+	if err := h.userRepo.Logon(user); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "用户名或密码错误"})
 		return
 	}
@@ -47,7 +47,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "登录成功",
 		"user": gin.H{
-			"id":       user.ID,
+
 			"username": user.UserName,
 			"role":     user.Role,
 		},
