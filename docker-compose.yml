@@ -19,6 +19,7 @@ services:
       - CLOUDPAN_GIN_PORT=8080
       - CLOUDPAN_GIN_CORS_ALLOW_ORIGINS=["http://localhost:3000"]
       - CLOUDPAN_GIN_CORS_ALLOW_METHODS=["GET","POST","PUT","DELETE"]
+      - CLOUDPAN_JWT_SECRET=cloudpan_jwt_123
     volumes:
       - ./logs:/app/logs
     depends_on:

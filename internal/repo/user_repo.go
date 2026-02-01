@@ -3,6 +3,7 @@ package repo
 import (
 	"drive/internal/domain"
 	"drive/pkg/utils"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -17,6 +18,9 @@ func NewUserRepo(db *gorm.DB) domain.UserRepo {
 
 // 用户注册
 func (r *userRepo) Register(user *domain.User) error {
+	if user.UserName == "" || user.PassWord == "" {
+		return errors.New("用户名或密码不能为空")
+	}
 	// 加密密码
 	hashedPassword, err := utils.HashPassword(user.PassWord)
 	if err != nil {
@@ -37,7 +41,7 @@ func (r *userRepo) Logon(user *domain.User) error {
 
 	// 验证密码
 	if !utils.CheckPasswordHash(user.PassWord, existingUser.PassWord) {
-		return gorm.ErrRecordNotFound
+		return errors.New("密码错误")
 	}
 
 	// 将查询到的用户信息赋值给传入的user

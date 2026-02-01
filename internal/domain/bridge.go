@@ -7,4 +7,5 @@ type UserRepo interface {
 
 type FileRepo interface {
 	UploadFile(file *File) error
+	ViewFile(userID string) ([]File, error)
 }

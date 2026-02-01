@@ -64,3 +64,23 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 		},
 	})
 }
+
+// 查看所有文件
+func (h *FileHandler) ViewFiles(c *gin.Context) {
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
+		return
+	}
+
+	files, err := h.fileRepo.ViewFile(userID.(string))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "查看文件失败: " + err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "查看成功",
+		"files":   files,
+	})
+}
