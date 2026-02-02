@@ -7,7 +7,7 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-var redisbase *redis.Client
+var redisbase *redis.Client = nil
 
 // Redis初始化
 func Init() error {

@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var database *gorm.DB
+var database *gorm.DB = nil
 
 // 数据库初始化
 func Init() error {
