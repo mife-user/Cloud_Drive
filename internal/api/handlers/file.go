@@ -48,7 +48,7 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 	}
 
 	// 保存文件记录到数据库
-	if err := h.fileRepo.UploadFile(fileRecord); err != nil {
+	if err := h.fileRepo.UploadFile(c, fileRecord); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件记录失败: " + err.Error()})
 		return
 	}
@@ -73,7 +73,7 @@ func (h *FileHandler) ViewFiles(c *gin.Context) {
 		return
 	}
 
-	files, err := h.fileRepo.ViewFile(userID.(string))
+	files, err := h.fileRepo.ViewFile(c, userID.(string))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "查看文件失败: " + err.Error()})
 		return

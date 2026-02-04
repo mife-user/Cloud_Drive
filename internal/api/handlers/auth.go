@@ -32,7 +32,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 	user := userDtos.ToUser()
-	if err := h.userRepo.Logon(user); err != nil {
+	if err := h.userRepo.Logon(c, user); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "用户名或密码错误"})
 		return
 	}

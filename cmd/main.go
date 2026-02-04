@@ -34,7 +34,6 @@ func main() {
 	if err := migrations.Run(database); err != nil {
 		log.Fatalf("运行数据库迁移失败: %v", err)
 	}
-
 	// 打印迁移状态
 	status, err := migrations.Status(database)
 	if err != nil {

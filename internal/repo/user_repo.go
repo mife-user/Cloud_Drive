@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"drive/internal/domain"
 	"drive/pkg/utils"
 	"errors"
@@ -17,7 +18,7 @@ func NewUserRepo(db *gorm.DB) domain.UserRepo {
 }
 
 // 用户注册
-func (r *userRepo) Register(user *domain.User) error {
+func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 	if user.UserName == "" || user.PassWord == "" {
 		return errors.New("用户名或密码不能为空")
 	}
@@ -32,7 +33,7 @@ func (r *userRepo) Register(user *domain.User) error {
 }
 
 // 用户登录
-func (r *userRepo) Logon(user *domain.User) error {
+func (r *userRepo) Logon(ctx context.Context, user *domain.User) error {
 	// 先根据用户名查询用户
 	var existingUser domain.User
 	if err := r.db.Where("user_name = ?", user.UserName).First(&existingUser).Error; err != nil {

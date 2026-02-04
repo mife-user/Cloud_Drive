@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"drive/internal/domain"
 
 	"gorm.io/gorm"
@@ -16,12 +17,12 @@ func NewFileRepo(db *gorm.DB) domain.FileRepo {
 }
 
 // 文件上传
-func (r *fileRepo) UploadFile(file *domain.File) error {
+func (r *fileRepo) UploadFile(ctx context.Context, file *domain.File) error {
 	return r.db.Create(file).Error
 }
 
 // 查看文件
-func (r *fileRepo) ViewFile(userID string) ([]domain.File, error) {
+func (r *fileRepo) ViewFile(ctx context.Context, userID string) ([]domain.File, error) {
 	var files []domain.File
 	if err := r.db.Where("user_id = ?", userID).Find(&files).Error; err != nil {
 		return nil, err

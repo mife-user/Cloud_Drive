@@ -1,11 +1,13 @@
 package domain
 
+import "context"
+
 type UserRepo interface {
-	Register(user *User) error
-	Logon(user *User) error
+	Register(ctx context.Context, user *User) error
+	Logon(ctx context.Context, user *User) error
 }
 
 type FileRepo interface {
-	UploadFile(file *File) error
-	ViewFile(userID string) ([]File, error)
+	UploadFile(ctx context.Context, file *File) error
+	ViewFile(ctx context.Context, userID string) ([]File, error)
 }
