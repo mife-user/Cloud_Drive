@@ -8,6 +8,7 @@ import (
 	"drive/migrations"
 	"drive/pkg/conf"
 	"drive/pkg/db"
+	"drive/pkg/logger"
 )
 
 func main() {
@@ -33,6 +34,10 @@ func main() {
 	// 运行数据库迁移
 	if err := migrations.Run(database); err != nil {
 		log.Fatalf("运行数据库迁移失败: %v", err)
+	}
+	// 初始化日志
+	if err := logger.InitLogger(config); err != nil {
+		log.Fatalf("初始化日志失败: %v", err)
 	}
 	// 打印迁移状态
 	status, err := migrations.Status(database)

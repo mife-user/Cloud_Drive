@@ -9,22 +9,10 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-var loggerInstance *logger = nil
-
-// 获取日志实例
-func GetLogger() *zap.Logger {
-	if loggerInstance == nil {
-		loggerInstance = &logger{}
-		err := initLogger()
-		if err != nil {
-			return nil
-		}
-	}
-	return loggerInstance.Log
-}
+var loggerInstance *zap.Logger
 
 // 初始化日志实例
-func initLogger() error {
+func InitLogger(config *conf.Config) error {
 	// 日志目录
 	logDir := "./logs"
 	// 确保日志目录存在
@@ -39,7 +27,6 @@ func initLogger() error {
 		return err
 	}
 	// 获取当前环境配置
-	config := conf.GetConfig()
 	env := config.Env
 	// 日志编码器配置
 	encoderCfg := zapcore.EncoderConfig{
@@ -74,12 +61,14 @@ func initLogger() error {
 		multiWrite = zapcore.NewMultiWriteSyncer(fileWrite, consoleWrite)
 	}
 
-	// 日志级别
+	// 根据环境选择日志级别
 	level := zapcore.DebugLevel // 日志级别
+	if env == "prod" {
+		level = zapcore.InfoLevel
+	}
 	// 日志核心
 	core := zapcore.NewCore(encoder, multiWrite, level)
 	// 日志实例
-	loggerInstance.Log = zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
-	loggerInstance.env = env
+	loggerInstance = zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
 	return nil
 }
