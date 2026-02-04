@@ -60,6 +60,7 @@ func (r *Router) Setup() *gin.Engine {
 		file.Use(middlewares.AuthMiddleware(r.config))
 		{
 			file.POST("/upload", r.fileHandler.UploadFile)
+			file.GET("/view", r.fileHandler.ViewFiles)
 		}
 	}
 
