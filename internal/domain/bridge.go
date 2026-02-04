@@ -8,6 +8,6 @@ type UserRepo interface {
 }
 
 type FileRepo interface {
-	UploadFile(ctx context.Context, file *File) error
+	UploadFile(ctx context.Context, files []*File) error
 	ViewFile(ctx context.Context, userID string) ([]File, error)
 }

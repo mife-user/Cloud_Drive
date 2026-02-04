@@ -19,9 +19,9 @@ func NewFileRepo(db *gorm.DB) domain.FileRepo {
 }
 
 // 文件上传
-func (r *fileRepo) UploadFile(ctx context.Context, file *domain.File) error {
-	if err := r.db.Create(file).Error; err != nil {
-		logger.Error("上传文件失败", zap.Uint("user_id", file.UserID), zap.Error(err))
+func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File) error {
+	if err := r.db.Create(files).Error; err != nil {
+		logger.Error("上传文件失败", zap.Error(err))
 		return err
 	}
 	logger.Debug("上传文件成功")

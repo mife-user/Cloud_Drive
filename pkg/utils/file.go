@@ -9,11 +9,21 @@ import (
 	"time"
 )
 
-func SaveFile(header *multipart.FileHeader, file multipart.File, userID any) (*domain.File, error) {
+func SaveFile(header *multipart.FileHeader, userID uint) (*domain.File, error) {
+	// 打开文件
+	file, err := header.Open()
+	if err != nil {
+		return nil, fmt.Errorf("打开文件失败: %w", err)
+	}
+	defer file.Close()
+
 	// 创建存储目录结构
-	storageDir := fmt.Sprintf("./storage/%v/%s", userID, time.Now().Format("2006-01-02"))
-	if err := os.MkdirAll(storageDir, 0755); err != nil {
-		return nil, fmt.Errorf("创建存储目录失败: %w", err)
+	storageDir := fmt.Sprintf("./storage/%v/%s", userID, header.Filename)
+	// 检查目录是否存在，不存在则创建
+	if _, err := os.Stat(storageDir); os.IsNotExist(err) {
+		if err := os.MkdirAll(storageDir, 0755); err != nil {
+			return nil, fmt.Errorf("创建存储目录失败: %w", err)
+		}
 	}
 
 	// 生成唯一文件名
@@ -38,7 +48,7 @@ func SaveFile(header *multipart.FileHeader, file multipart.File, userID any) (*d
 		FileName:    header.Filename,
 		Size:        header.Size,
 		Path:        filePath,
-		UserID:      userID.(uint),
+		UserID:      userID,
 		Permissions: "private",
 	}
 	return fileRecord, nil
