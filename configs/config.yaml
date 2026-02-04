@@ -6,7 +6,6 @@ mysql:
   max_idle: 20  
   max_open: 50
 redis:
-  host: "127.0.0.1"
   port: "6379"
   username: ""
   db: 0       

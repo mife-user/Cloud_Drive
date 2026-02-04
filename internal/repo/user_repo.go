@@ -56,7 +56,7 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 }
 
 // 用户登录
-func (r *userRepo) Logon(ctx context.Context, user *domain.User) error {
+func (r *userRepo) Logon(user *domain.User) error {
 	// 先根据用户名查询用户
 	var existingUser domain.User
 	if err := r.db.Where("user_name = ?", user.UserName).First(&existingUser).Error; err != nil {

@@ -28,11 +28,18 @@ func NewAuthHandler(userRepo domain.UserRepo, config *conf.Config) *AuthHandler 
 func (h *AuthHandler) Login(c *gin.Context) {
 	var userDtos dtos.UserDtos
 	if err := c.ShouldBindJSON(&userDtos); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误", "details": err.Error()})
 		return
 	}
+
+	// 检查用户名是否为空
+	if userDtos.UserName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "用户名为空"})
+		return
+	}
+
 	user := userDtos.ToDMUser()
-	if err := h.userRepo.Logon(c, user); err != nil {
+	if err := h.userRepo.Logon(user); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "用户名或密码错误"})
 		return
 	}
@@ -47,7 +54,6 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "登录成功",
 		"user": gin.H{
-
 			"username": user.UserName,
 			"role":     user.Role,
 		},

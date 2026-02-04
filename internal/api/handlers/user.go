@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"drive/internal/api/dtos"
 	"drive/internal/domain"
 	"drive/pkg/conf"
 
@@ -25,12 +26,12 @@ func NewUserHandler(userRepo domain.UserRepo, config *conf.Config) *UserHandler 
 
 // Register 用户注册
 func (h *UserHandler) Register(c *gin.Context) {
-	var user domain.User
-	if err := c.ShouldBindJSON(&user); err != nil {
+	var userDto dtos.UserDtos
+	if err := c.ShouldBindJSON(&userDto); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})
 		return
 	}
-	if err := h.userRepo.Register(c, &user); err != nil {
+	if err := h.userRepo.Register(c, userDto.ToDMUser()); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "注册失败"})
 		return
 	}
