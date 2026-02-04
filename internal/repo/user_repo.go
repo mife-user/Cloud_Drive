@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/pkg/errorer"
 	"drive/pkg/logger"
 	"drive/pkg/utils"
 	"errors"
@@ -21,10 +22,23 @@ func NewUserRepo(db *gorm.DB) domain.UserRepo {
 
 // 用户注册
 func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
-	if user.UserName == "" || user.PassWord == "" {
-		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(errors.New("用户名或密码不能为空")))
-		return errors.New("用户名或密码不能为空")
+	// 检查用户名是否为空
+	if user.UserName == "" {
+		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(errors.New(errorer.ErrUserNameNotFound)))
+		return errors.New(errorer.ErrUserNameNotFound)
 	}
+	// 检查密码是否为空
+	if user.PassWord == "" {
+		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(errors.New(errorer.ErrPasswordNotFound)))
+		return errors.New(errorer.ErrPasswordNotFound)
+	}
+	// 检查用户名是否已存在
+	var existingUser domain.User
+	if err := r.db.Where("user_name = ?", user.UserName).First(&existingUser).Error; err == nil {
+		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(errors.New(errorer.ErrUserNameExist)))
+		return errors.New(errorer.ErrUserNameExist)
+	}
+
 	// 加密密码
 	hashedPassword, err := utils.HashPassword(user.PassWord)
 	if err != nil {
@@ -32,7 +46,7 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 		return err
 	}
 	user.PassWord = hashedPassword
-
+	// 创建用户
 	if err := r.db.Create(user).Error; err != nil {
 		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(err))
 		return err
@@ -52,8 +66,8 @@ func (r *userRepo) Logon(ctx context.Context, user *domain.User) error {
 
 	// 验证密码
 	if !utils.CheckPasswordHash(user.PassWord, existingUser.PassWord) {
-		logger.Error("登录用户失败", zap.String("user_name", user.UserName), zap.Error(errors.New("密码错误")))
-		return errors.New("密码错误")
+		logger.Error("登录用户失败", zap.String("user_name", user.UserName), zap.Error(errors.New(errorer.ErrPasswordError)))
+		return errors.New(errorer.ErrPasswordError)
 	}
 
 	// 将查询到的用户信息赋值给传入的user

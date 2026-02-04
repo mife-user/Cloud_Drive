@@ -67,18 +67,19 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 
 // 查看所有文件
 func (h *FileHandler) ViewFiles(c *gin.Context) {
+	// 获取当前登录用户ID
 	userID, exists := c.Get("user_id")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
-
+	// 查看文件
 	files, err := h.fileRepo.ViewFile(c, userID.(string))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "查看文件失败: " + err.Error()})
 		return
 	}
-
+	// 返回文件列表
 	c.JSON(http.StatusOK, gin.H{
 		"message": "查看成功",
 		"files":   files,

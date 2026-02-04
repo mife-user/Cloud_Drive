@@ -31,7 +31,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})
 		return
 	}
-	user := userDtos.ToUser()
+	user := userDtos.ToDMUser()
 	if err := h.userRepo.Logon(c, user); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "用户名或密码错误"})
 		return
