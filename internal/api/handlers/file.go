@@ -4,9 +4,8 @@ import (
 	"net/http"
 
 	"drive/internal/domain"
+	"drive/internal/service"
 	"drive/pkg/conf"
-	"drive/pkg/pool"
-	"drive/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -42,23 +41,12 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
-	// 保存文件
 	var fileRecords []*domain.File
-	pool := pool.NewPool(4)
-	pool.Start()
-	for _, header := range files {
-		// 提交任务到线程池
-		pool.Submit(func() {
-			fileRecord, err := utils.SaveFile(header, userID.(uint))
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件失败: " + err.Error()})
-				return
-			}
-			// 保存文件记录到切片
-			fileRecords = append(fileRecords, fileRecord)
-		})
+	// 保存文件
+	if err = service.SaveFiles(c, files, fileRecords, userID.(uint)); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件失败: " + err.Error()})
+		return
 	}
-	pool.Stop()
 
 	// 保存文件记录到数据库
 	if err := h.fileRepo.UploadFile(c, fileRecords); err != nil {
