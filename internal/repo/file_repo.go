@@ -4,6 +4,7 @@ import (
 	"context"
 	"drive/internal/domain"
 	"drive/pkg/logger"
+	"fmt"
 
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -20,6 +21,10 @@ func NewFileRepo(db *gorm.DB) domain.FileRepo {
 
 // 文件上传
 func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File) error {
+	if len(files) == 0 {
+		logger.Error("上传文件失败: 空切片")
+		return fmt.Errorf("空切片")
+	}
 	if err := r.db.Create(files).Error; err != nil {
 		logger.Error("上传文件失败", zap.Error(err))
 		return err

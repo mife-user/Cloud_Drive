@@ -34,7 +34,6 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 	}
 	// 获取上传的文件头
 	files := file.File["files"]
-
 	// 获取当前登录用户ID
 	userID, exists := c.Get("user_id")
 	if !exists {
@@ -49,6 +48,10 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 	}
 
 	// 保存文件记录到数据库
+	if len(fileRecords) == 0 {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件记录失败: 没有文件记录"})
+		return
+	}
 	if err := h.fileRepo.UploadFile(c, fileRecords); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件记录失败: " + err.Error()})
 		return
