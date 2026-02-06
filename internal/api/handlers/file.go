@@ -40,19 +40,20 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
-	var fileRecords []*domain.File
+
 	// 保存文件
-	if err = service.SaveFiles(c, files, &fileRecords, userID.(uint)); err != nil {
+	fileRecords, err := service.SaveFiles(files, userID.(uint))
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件失败: " + err.Error()})
 		return
 	}
 
 	// 保存文件记录到数据库
-	if len(fileRecords) == 0 {
+	if len(*fileRecords) == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件记录失败: 没有文件记录"})
 		return
 	}
-	if err := h.fileRepo.UploadFile(c, fileRecords); err != nil {
+	if err := h.fileRepo.UploadFile(c, *fileRecords); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件记录失败: " + err.Error()})
 		return
 	}

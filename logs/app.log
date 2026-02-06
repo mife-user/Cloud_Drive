@@ -1,14 +1,12 @@
-02-06 03:12:06	注册用户成功||
-02-06 03:13:59	登录用户成功||
-02-06 03:17:04	登录用户成功||
-02-06 03:17:30	登录用户成功||
-02-06 03:24:51	上传文件失败	{"error": "empty slice found"}
+02-06 09:08:56	注册用户成功||
+02-06 09:08:58	登录用户成功||
+02-06 09:09:00	上传文件失败	{"error": "Error 1054 (42S22): Unknown column 'owner' in 'field list'"}
 drive/pkg/logger.Error
 	/app/pkg/logger/logger_Act.go:12
 drive/internal/repo.(*fileRepo).UploadFile
-	/app/internal/repo/file_repo.go:24
+	/app/internal/repo/file_repo.go:29
 drive/internal/api/handlers.(*FileHandler).UploadFile
-	/app/internal/api/handlers/file.go:52
+	/app/internal/api/handlers/file.go:56
 github.com/gin-gonic/gin.(*Context).Next
 	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
 drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
@@ -35,174 +33,6 @@ net/http.serverHandler.ServeHTTP
 	/usr/local/go/src/net/http/server.go:3340
 net/http.(*conn).serve
 	/usr/local/go/src/net/http/server.go:2109||
-02-06 03:27:33	上传文件失败	{"error": "empty slice found"}
-drive/pkg/logger.Error
-	/app/pkg/logger/logger_Act.go:12
-drive/internal/repo.(*fileRepo).UploadFile
-	/app/internal/repo/file_repo.go:24
-drive/internal/api/handlers.(*FileHandler).UploadFile
-	/app/internal/api/handlers/file.go:52
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
-	/app/internal/api/middlewares/auth.go:50
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
-	/app/internal/api/middlewares/cors.go:26
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.LoggerWithConfig.func1
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
-github.com/gin-gonic/gin.(*Engine).ServeHTTP
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
-net/http.serverHandler.ServeHTTP
-	/usr/local/go/src/net/http/server.go:3340
-net/http.(*conn).serve
-	/usr/local/go/src/net/http/server.go:2109||
-02-06 08:02:08	注册用户成功||
-02-06 08:02:12	登录用户成功||
-02-06 08:02:18	上传文件失败	{"error": "empty slice found"}
-drive/pkg/logger.Error
-	/app/pkg/logger/logger_Act.go:12
-drive/internal/repo.(*fileRepo).UploadFile
-	/app/internal/repo/file_repo.go:24
-drive/internal/api/handlers.(*FileHandler).UploadFile
-	/app/internal/api/handlers/file.go:52
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
-	/app/internal/api/middlewares/auth.go:50
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
-	/app/internal/api/middlewares/cors.go:26
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.LoggerWithConfig.func1
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
-github.com/gin-gonic/gin.(*Engine).ServeHTTP
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
-net/http.serverHandler.ServeHTTP
-	/usr/local/go/src/net/http/server.go:3340
-net/http.(*conn).serve
-	/usr/local/go/src/net/http/server.go:2109||
-02-06 08:02:38	上传文件失败	{"error": "empty slice found"}
-drive/pkg/logger.Error
-	/app/pkg/logger/logger_Act.go:12
-drive/internal/repo.(*fileRepo).UploadFile
-	/app/internal/repo/file_repo.go:24
-drive/internal/api/handlers.(*FileHandler).UploadFile
-	/app/internal/api/handlers/file.go:52
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
-	/app/internal/api/middlewares/auth.go:50
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
-	/app/internal/api/middlewares/cors.go:26
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.LoggerWithConfig.func1
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
-github.com/gin-gonic/gin.(*Engine).ServeHTTP
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
-net/http.serverHandler.ServeHTTP
-	/usr/local/go/src/net/http/server.go:3340
-net/http.(*conn).serve
-	/usr/local/go/src/net/http/server.go:2109||
-02-06 08:05:18	注册用户成功||
-02-06 08:05:20	登录用户成功||
-02-06 08:05:25	上传文件失败	{"error": "empty slice found"}
-drive/pkg/logger.Error
-	/app/pkg/logger/logger_Act.go:12
-drive/internal/repo.(*fileRepo).UploadFile
-	/app/internal/repo/file_repo.go:24
-drive/internal/api/handlers.(*FileHandler).UploadFile
-	/app/internal/api/handlers/file.go:51
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
-	/app/internal/api/middlewares/auth.go:50
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
-	/app/internal/api/middlewares/cors.go:26
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.LoggerWithConfig.func1
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
-github.com/gin-gonic/gin.(*Engine).ServeHTTP
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
-net/http.serverHandler.ServeHTTP
-	/usr/local/go/src/net/http/server.go:3340
-net/http.(*conn).serve
-	/usr/local/go/src/net/http/server.go:2109||
-02-06 08:05:35	上传文件失败	{"error": "empty slice found"}
-drive/pkg/logger.Error
-	/app/pkg/logger/logger_Act.go:12
-drive/internal/repo.(*fileRepo).UploadFile
-	/app/internal/repo/file_repo.go:24
-drive/internal/api/handlers.(*FileHandler).UploadFile
-	/app/internal/api/handlers/file.go:51
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
-	/app/internal/api/middlewares/auth.go:50
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
-	/app/internal/api/middlewares/cors.go:26
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.LoggerWithConfig.func1
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
-github.com/gin-gonic/gin.(*Context).Next
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
-github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
-github.com/gin-gonic/gin.(*Engine).ServeHTTP
-	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
-net/http.serverHandler.ServeHTTP
-	/usr/local/go/src/net/http/server.go:3340
-net/http.(*conn).serve
-	/usr/local/go/src/net/http/server.go:2109||
-02-06 08:11:46	注册用户成功||
-02-06 08:11:48	登录用户成功||
+02-06 09:11:04	注册用户成功||
+02-06 09:11:06	登录用户成功||
+02-06 09:11:08	上传文件成功||

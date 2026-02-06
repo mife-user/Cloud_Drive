@@ -1,7 +1,5 @@
 package pool
 
-import "sync"
-
 //定义协程池
 type Pool struct {
 	Size  int         // 协程池大小
@@ -18,11 +16,8 @@ func NewPool(size int) *Pool {
 
 //传入任务并启动协程池
 func (p *Pool) Start() {
-	wg := sync.WaitGroup{}
 	for i := 0; i < p.Size; i++ {
-		wg.Add(1)
 		go func() {
-			defer wg.Done()
 			for task := range p.Tasks {
 				task()
 			}
