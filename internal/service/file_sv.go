@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func SaveFiles(c *gin.Context, files []*multipart.FileHeader, fileRecords []*domain.File, userID uint) error {
+func SaveFiles(c *gin.Context, files []*multipart.FileHeader, fileRecords *[]*domain.File, userID uint) error {
 	// 保存文件
 	pool := pool.NewPool(4)
 	pool.Start()
@@ -24,7 +24,7 @@ func SaveFiles(c *gin.Context, files []*multipart.FileHeader, fileRecords []*dom
 				return
 			}
 			// 保存文件记录到切片
-			fileRecords = append(fileRecords, fileRecord)
+			*fileRecords = append(*fileRecords, fileRecord)
 		})
 	}
 	pool.Stop()

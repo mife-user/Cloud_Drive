@@ -43,7 +43,7 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 	}
 	var fileRecords []*domain.File
 	// 保存文件
-	if err = service.SaveFiles(c, files, fileRecords, userID.(uint)); err != nil {
+	if err = service.SaveFiles(c, files, &fileRecords, userID.(uint)); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件失败: " + err.Error()})
 		return
 	}
