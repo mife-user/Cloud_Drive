@@ -42,8 +42,8 @@ func Run(db *gorm.DB) error {
 	for _, m := range migrations {
 		// 检查迁移是否已应用
 		var record MigrationRecord
-		result := db.Where("version = ?", m.Version).First(&record)
-		if result.Error == nil && record.Applied {
+		result := db.Where("version = ?", m.Version).First(&record).Error
+		if result == nil && record.Applied {
 			continue // 已应用，跳过
 		}
 
@@ -53,7 +53,7 @@ func Run(db *gorm.DB) error {
 		}
 
 		// 记录迁移状态
-		if result.Error == gorm.ErrRecordNotFound {
+		if result == gorm.ErrRecordNotFound {
 			// 新增记录
 			record = MigrationRecord{Version: m.Version, Applied: true}
 			db.Create(&record)
