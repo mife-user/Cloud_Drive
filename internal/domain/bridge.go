@@ -4,7 +4,7 @@ import "context"
 
 type UserRepo interface {
 	Register(ctx context.Context, user *User) error
-	Logon(user *User) error
+	Logon(ctx context.Context, user *User) error
 }
 
 type FileRepo interface {

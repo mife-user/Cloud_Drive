@@ -6,17 +6,19 @@ import (
 	"drive/pkg/logger"
 	"fmt"
 
+	"github.com/go-redis/redis/v8"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
 type fileRepo struct {
 	db *gorm.DB
+	rd *redis.Client
 }
 
 // NewFileRepo 创建文件仓库
-func NewFileRepo(db *gorm.DB) domain.FileRepo {
-	return &fileRepo{db: db}
+func NewFileRepo(db *gorm.DB, rd *redis.Client) domain.FileRepo {
+	return &fileRepo{db: db, rd: rd}
 }
 
 // 文件上传

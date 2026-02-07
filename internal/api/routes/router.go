@@ -7,6 +7,7 @@ import (
 	"drive/pkg/conf"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm"
 )
 
@@ -24,9 +25,9 @@ func GetRouter() *Router {
 }
 
 // NewRouter 初始化路由
-func (r *Router) NewRouter(db *gorm.DB, config *conf.Config) bool {
-	userRepo := repo.NewUserRepo(db)
-	fileRepo := repo.NewFileRepo(db)
+func (r *Router) NewRouter(db *gorm.DB, rd *redis.Client, config *conf.Config) bool {
+	userRepo := repo.NewUserRepo(db, rd)
+	fileRepo := repo.NewFileRepo(db, rd)
 	r.authHandler = handlers.NewAuthHandler(userRepo, config)
 	r.fileHandler = handlers.NewFileHandler(fileRepo, config)
 	r.userHandler = handlers.NewUserHandler(userRepo, config)

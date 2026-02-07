@@ -7,17 +7,20 @@ import (
 	"drive/pkg/logger"
 	"drive/pkg/utils"
 	"errors"
+	"time"
 
+	"github.com/go-redis/redis/v8"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
 type userRepo struct {
 	db *gorm.DB
+	rd *redis.Client
 }
 
-func NewUserRepo(db *gorm.DB) domain.UserRepo {
-	return &userRepo{db: db}
+func NewUserRepo(db *gorm.DB, rd *redis.Client) domain.UserRepo {
+	return &userRepo{db: db, rd: rd}
 }
 
 // 用户注册
@@ -32,9 +35,13 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(errors.New(errorer.ErrPasswordNotFound)))
 		return errors.New(errorer.ErrPasswordNotFound)
 	}
+	//缓存检查用户是否已存在
+	if err := r.rd.Get(ctx, "user:"+user.UserName).Err(); err == nil {
+		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(errors.New(errorer.ErrUserNameExist)))
+		return errors.New(errorer.ErrUserNameExist)
+	}
 	// 检查用户名是否已存在
-	var existingUser domain.User
-	if err := r.db.Where("user_name = ?", user.UserName).First(&existingUser).Error; err == nil {
+	if err := r.db.Where("user_name = ?", user.UserName).First(&domain.User{}).Error; err == nil {
 		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(errors.New(errorer.ErrUserNameExist)))
 		return errors.New(errorer.ErrUserNameExist)
 	}
@@ -51,14 +58,22 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(err))
 		return err
 	}
+	// 缓存用户信息
+	if err := r.rd.Set(ctx, "user:"+user.UserName, user, time.Hour*3).Err(); err != nil {
+		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(err))
+		return err
+	}
 	logger.Debug("注册用户成功")
 	return nil
 }
 
 // 用户登录
-func (r *userRepo) Logon(user *domain.User) error {
+func (r *userRepo) Logon(ctx context.Context, user *domain.User) error {
 	// 先根据用户名查询用户
 	var existingUser domain.User
+	if err := r.rd.Get(ctx, "user:"+user.UserName).Scan(&existingUser); err == nil {
+		return nil
+	}
 	if err := r.db.Where("user_name = ?", user.UserName).First(&existingUser).Error; err != nil {
 		logger.Error("登录用户失败", zap.String("user_name", user.UserName), zap.Error(err))
 		return err
@@ -69,7 +84,11 @@ func (r *userRepo) Logon(user *domain.User) error {
 		logger.Error("登录用户失败", zap.String("user_name", user.UserName), zap.Error(errors.New(errorer.ErrPasswordError)))
 		return errors.New(errorer.ErrPasswordError)
 	}
-
+	// 缓存用户信息
+	if err := r.rd.Set(ctx, "user:"+user.UserName, existingUser, time.Hour*3).Err(); err != nil {
+		logger.Error("登录用户失败", zap.String("user_name", user.UserName), zap.Error(err))
+		return err
+	}
 	// 将查询到的用户信息赋值给传入的user
 	*user = existingUser
 	logger.Debug("登录用户成功")
