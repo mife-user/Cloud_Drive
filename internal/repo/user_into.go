@@ -9,19 +9,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/go-redis/redis/v8"
 	"go.uber.org/zap"
-	"gorm.io/gorm"
 )
-
-type userRepo struct {
-	db *gorm.DB
-	rd *redis.Client
-}
-
-func NewUserRepo(db *gorm.DB, rd *redis.Client) domain.UserRepo {
-	return &userRepo{db: db, rd: rd}
-}
 
 // 用户注册
 func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
@@ -61,7 +50,7 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(err))
 		return err
 	}
-	logger.Debug("注册用户成功")
+	logger.Info("注册用户成功", zap.String("user_name", user.UserName))
 	return nil
 }
 

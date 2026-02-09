@@ -8,4 +8,5 @@ const (
 	ErrPasswordNotFound = "密码不可为空"  // ErrPasswordNotFound 密码不可为空
 	ErrUserNameNotFound = "用户名不可为空" // ErrUserNameNotFound 用户名不可为空
 	ErrEmptySlice       = "空切片"     // ErrEmptySlice 空切片
+	ErrUpdateUserFailed = "更新用户失败"  // ErrUpdateUserFailed 更新用户失败
 )

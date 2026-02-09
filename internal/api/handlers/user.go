@@ -5,6 +5,7 @@ import (
 
 	"drive/internal/api/dtos"
 	"drive/internal/domain"
+	"drive/internal/service"
 	"drive/pkg/conf"
 
 	"github.com/gin-gonic/gin"
@@ -37,4 +38,29 @@ func (h *UserHandler) Register(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "注册成功"})
+}
+
+// 用户信息修改
+func (h *UserHandler) RemixUser(c *gin.Context) {
+	var userDto dtos.UserDtos
+	if err := c.ShouldBindJSON(&userDto); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})
+		return
+	}
+	DMUser := userDto.ToDMUser()
+	// 从上下文获取当前登录用户ID
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
+		return
+	}
+	if err := service.BuildUser(DMUser, userID); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "修改失败"})
+		return
+	}
+	if err := h.userRepo.RemixUser(c, DMUser); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "修改失败"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "修改成功"})
 }

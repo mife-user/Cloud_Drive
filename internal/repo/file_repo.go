@@ -110,6 +110,6 @@ func (r *fileRepo) ViewFile(ctx context.Context, userID string) ([]domain.File, 
 		logger.Error("查询文件失败", zap.String("user_id", userID), zap.Error(err))
 		return nil, err
 	}
-	logger.Debug("查询文件成功")
+	logger.Info("查询文件成功")
 	return files, nil
 }
