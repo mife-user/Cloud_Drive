@@ -41,23 +41,21 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 		return errors.New(errorer.ErrUserNameExist)
 	}
 	// 检查用户名是否已存在
-	if err := r.db.Where("user_name = ?", user.UserName).First(&domain.User{}).Error; err == nil {
-		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(errors.New(errorer.ErrUserNameExist)))
-		return errors.New(errorer.ErrUserNameExist)
+	if err := r.db.Where("user_name = ?", user.UserName).First(&domain.User{}).Error; err != nil {
+		// 加密密码
+		hashedPassword, err := utils.HashPassword(user.PassWord)
+		if err != nil {
+			logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(err))
+			return err
+		}
+		user.PassWord = hashedPassword
+		// 创建用户
+		if err := r.db.Create(user).Error; err != nil {
+			logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(err))
+			return err
+		}
 	}
 
-	// 加密密码
-	hashedPassword, err := utils.HashPassword(user.PassWord)
-	if err != nil {
-		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(err))
-		return err
-	}
-	user.PassWord = hashedPassword
-	// 创建用户
-	if err := r.db.Create(user).Error; err != nil {
-		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(err))
-		return err
-	}
 	// 缓存用户信息
 	if err := r.rd.Set(ctx, "user:"+user.UserName, user, time.Hour*3).Err(); err != nil {
 		logger.Error("注册用户失败", zap.String("user_name", user.UserName), zap.Error(err))
@@ -71,24 +69,23 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 func (r *userRepo) Logon(ctx context.Context, user *domain.User) error {
 	// 先根据用户名查询用户
 	var existingUser domain.User
-	if err := r.rd.Get(ctx, "user:"+user.UserName).Scan(&existingUser); err == nil {
-		return nil
+	if err := r.rd.Get(ctx, "user:"+user.UserName).Scan(&existingUser); err != nil {
+		if err := r.db.Where("user_name = ?", user.UserName).First(&existingUser).Error; err != nil {
+			logger.Error("登录用户失败", zap.String("user_name", user.UserName), zap.Error(err))
+			return err
+		}
+		// 缓存用户信息
+		if err := r.rd.Set(ctx, "user:"+user.UserName, &existingUser, time.Hour*3).Err(); err != nil {
+			logger.Error("登录用户失败", zap.String("user_name", user.UserName), zap.Error(err))
+			return err
+		}
 	}
-	if err := r.db.Where("user_name = ?", user.UserName).First(&existingUser).Error; err != nil {
-		logger.Error("登录用户失败", zap.String("user_name", user.UserName), zap.Error(err))
-		return err
-	}
-
 	// 验证密码
 	if !utils.CheckPasswordHash(user.PassWord, existingUser.PassWord) {
 		logger.Error("登录用户失败", zap.String("user_name", user.UserName), zap.Error(errors.New(errorer.ErrPasswordError)))
 		return errors.New(errorer.ErrPasswordError)
 	}
-	// 缓存用户信息
-	if err := r.rd.Set(ctx, "user:"+user.UserName, existingUser, time.Hour*3).Err(); err != nil {
-		logger.Error("登录用户失败", zap.String("user_name", user.UserName), zap.Error(err))
-		return err
-	}
+
 	// 将查询到的用户信息赋值给传入的user
 	*user = existingUser
 	logger.Debug("登录用户成功")

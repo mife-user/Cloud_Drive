@@ -7,4 +7,5 @@ const (
 	ErrFileNotExist     = "文件不存在"   // ErrFileNotExist 文件不存在
 	ErrPasswordNotFound = "密码不可为空"  // ErrPasswordNotFound 密码不可为空
 	ErrUserNameNotFound = "用户名不可为空" // ErrUserNameNotFound 用户名不可为空
+	ErrEmptySlice       = "空切片"     // ErrEmptySlice 空切片
 )
