@@ -9,7 +9,7 @@ import (
 	"drive/pkg/conf"
 	"drive/pkg/db"
 	"drive/pkg/logger"
-	"drive/pkg/redis"
+	"drive/pkg/res"
 )
 
 func main() {
@@ -37,24 +37,15 @@ func main() {
 		log.Fatalf("运行数据库迁移失败: %v", err)
 	}
 	// 初始化Redis
-	if err := redis.Init(); err != nil {
+	if err := res.Init(); err != nil {
 		log.Fatalf("初始化Redis失败: %v", err)
 	}
 	// 获取Redis连接
-	rd := redis.GetRD()
+	rd := res.GetRD()
 	// 初始化日志
 	if err := logger.InitLogger(config); err != nil {
 		log.Fatalf("初始化日志失败: %v", err)
 	}
-	// 打印迁移状态
-	status, err := migrations.Status(database)
-	if err != nil {
-		log.Printf("获取迁移状态失败: %v", err)
-	} else {
-		fmt.Println("迁移状态:")
-		fmt.Println(status)
-	}
-
 	// 初始化路由
 	router := routes.GetRouter()
 	if !router.NewRouter(database, rd, config) {

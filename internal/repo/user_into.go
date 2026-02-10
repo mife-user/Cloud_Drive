@@ -6,6 +6,7 @@ import (
 	"drive/pkg/errorer"
 	"drive/pkg/logger"
 	"drive/pkg/utils"
+	"encoding/json"
 	"time"
 )
 
@@ -45,8 +46,13 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 		logger.Error("注册用户失败", logger.S("user_name", user.UserName), logger.C(err))
 		return err
 	}
-	// 缓存用户信息
-	if err := r.rd.Set(ctx, "user:"+user.UserName, user, time.Hour*3).Err(); err != nil {
+	// 缓存用户所有信息
+	userjson, errjson := json.Marshal(user)
+	if errjson != nil {
+		logger.Error("注册用户失败", logger.S("user_name", user.UserName), logger.C(errjson))
+		return errjson
+	}
+	if err := r.rd.Set(ctx, "user:"+user.UserName, string(userjson), time.Hour*3).Err(); err != nil {
 		logger.Error("缓存用户信息失败", logger.S("user_name", user.UserName), logger.C(err))
 		// 缓存失败不影响注册结果
 	}
@@ -68,14 +74,25 @@ func (r *userRepo) Logon(ctx context.Context, user *domain.User) error {
 	}
 	// 先根据用户名查询用户
 	var existingUser domain.User
-	if err := r.rd.Get(ctx, "user:"+user.UserName).Scan(&existingUser); err != nil {
+	userjsonOut, errjsonout := r.rd.Get(ctx, "user:"+user.UserName).Result()
+	if errjsonout == nil {
+		if err := json.Unmarshal([]byte(userjsonOut), &existingUser); err != nil {
+			logger.Error("缓存用户信息失败", logger.S("user_name", user.UserName), logger.C(err))
+			return err
+		}
+	} else {
 		// 缓存中不存在用户，从数据库查询
 		if err := r.db.Where("user_name = ?", user.UserName).First(&existingUser).Error; err != nil {
 			logger.Error("登录用户失败", logger.S("user_name", user.UserName), logger.C(err))
 			return err
 		}
 		// 缓存用户信息
-		if err := r.rd.Set(ctx, "user:"+user.UserName, existingUser, time.Hour*3).Err(); err != nil {
+		userjsonIn, errjsonIn := json.Marshal(existingUser)
+		if errjsonIn != nil {
+			logger.Error("缓存用户信息失败", logger.S("user_name", user.UserName), logger.C(errjsonIn))
+			// 缓存失败不影响登录结果
+		}
+		if err := r.rd.Set(ctx, "user:"+user.UserName, string(userjsonIn), time.Hour*3).Err(); err != nil {
 			logger.Error("缓存用户信息失败", logger.S("user_name", user.UserName), logger.C(err))
 			// 缓存失败不影响登录结果
 		}

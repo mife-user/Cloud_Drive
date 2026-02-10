@@ -36,3 +36,317 @@ net/http.(*conn).serve
 02-06 09:11:04	注册用户成功||
 02-06 09:11:06	登录用户成功||
 02-06 09:11:08	上传文件成功||
+02-10 12:39:57	缓存用户信息失败	{"user_name": "mife", "error": "dial tcp :0: connect: connection refused"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*userRepo).Register
+	/app/internal/repo/user_into.go:50
+drive/internal/api/handlers.(*UserHandler).Register
+	/app/internal/api/handlers/user.go:35
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-10 12:39:57	注册用户成功	{"user_name": "mife"}||
+02-10 12:40:00	缓存用户信息失败	{"user_name": "mife", "error": "dial tcp :0: connect: connection refused"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*userRepo).Logon
+	/app/internal/repo/user_into.go:79
+drive/internal/api/handlers.(*AuthHandler).Login
+	/app/internal/api/handlers/auth.go:42
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-10 12:40:00	登录用户成功	{"user_name": "mife"}||
+02-10 12:44:26	缓存文件信息失败	{"error": "dial tcp :0: connect: connection refused"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*fileRepo).UploadFile.func1
+	/app/internal/repo/file_up.go:46
+drive/pkg/pool.(*Pool).Start.func1
+	/app/pkg/pool/pools.go:22||
+02-10 12:44:26	上传文件成功||
+02-10 13:22:25	缓存用户信息失败	{"user_name": "mife", "error": "dial tcp :0: connect: connection refused"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*userRepo).Register
+	/app/internal/repo/user_into.go:56
+drive/internal/api/handlers.(*UserHandler).Register
+	/app/internal/api/handlers/user.go:35
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-10 13:22:25	注册用户成功	{"user_name": "mife"}||
+02-10 13:22:29	缓存用户信息失败	{"user_name": "mife", "error": "dial tcp :0: connect: connection refused"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*userRepo).Logon
+	/app/internal/repo/user_into.go:96
+drive/internal/api/handlers.(*AuthHandler).Login
+	/app/internal/api/handlers/auth.go:42
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-10 13:22:30	登录用户成功	{"user_name": "mife"}||
+02-10 13:22:41	缓存文件信息失败	{"error": "dial tcp :0: connect: connection refused"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*fileRepo).UploadFile.func1
+	/app/internal/repo/file_up.go:46
+drive/pkg/pool.(*Pool).Start.func1
+	/app/pkg/pool/pools.go:22||
+02-10 13:22:41	上传文件成功||
+02-10 13:34:55	缓存用户信息失败	{"user_name": "mife", "error": "dial tcp :6379: connect: connection refused"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*userRepo).Register
+	/app/internal/repo/user_into.go:56
+drive/internal/api/handlers.(*UserHandler).Register
+	/app/internal/api/handlers/user.go:35
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-10 13:34:55	注册用户成功	{"user_name": "mife"}||
+02-10 13:35:01	缓存用户信息失败	{"user_name": "mife", "error": "dial tcp :6379: connect: connection refused"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*userRepo).Logon
+	/app/internal/repo/user_into.go:96
+drive/internal/api/handlers.(*AuthHandler).Login
+	/app/internal/api/handlers/auth.go:42
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-10 13:35:01	登录用户成功	{"user_name": "mife"}||
+02-10 13:35:26	缓存文件信息失败	{"error": "dial tcp :6379: connect: connection refused"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*fileRepo).UploadFile.func1
+	/app/internal/repo/file_up.go:46
+drive/pkg/pool.(*Pool).Start.func1
+	/app/pkg/pool/pools.go:22||
+02-10 13:35:26	上传文件成功||
+02-10 13:44:45	注册用户失败用户名已存在	{"user_name": "mife"}||
+02-10 13:44:56	缓存用户信息失败	{"user_name": "mife", "error": "dial tcp :6379: connect: connection refused"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*userRepo).Logon
+	/app/internal/repo/user_into.go:96
+drive/internal/api/handlers.(*AuthHandler).Login
+	/app/internal/api/handlers/auth.go:42
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-10 13:44:56	登录用户成功	{"user_name": "mife"}||
+02-10 13:45:06	缓存文件信息失败	{"error": "dial tcp :6379: connect: connection refused"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*fileRepo).UploadFile.func1
+	/app/internal/repo/file_up.go:46
+drive/pkg/pool.(*Pool).Start.func1
+	/app/pkg/pool/pools.go:22||
+02-10 13:45:06	上传文件成功||
+02-10 13:47:49	缓存用户信息失败	{"user_name": "mife", "error": "dial tcp :6379: connect: connection refused"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*userRepo).Register
+	/app/internal/repo/user_into.go:56
+drive/internal/api/handlers.(*UserHandler).Register
+	/app/internal/api/handlers/user.go:35
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-10 13:47:49	注册用户成功	{"user_name": "mife"}||
+02-10 13:47:59	缓存用户信息失败	{"user_name": "mife", "error": "dial tcp :6379: connect: connection refused"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*userRepo).Logon
+	/app/internal/repo/user_into.go:96
+drive/internal/api/handlers.(*AuthHandler).Login
+	/app/internal/api/handlers/auth.go:42
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-10 13:47:59	登录用户成功	{"user_name": "mife"}||
+02-10 13:48:06	缓存文件信息失败	{"error": "dial tcp :6379: connect: connection refused"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*fileRepo).UploadFile.func1
+	/app/internal/repo/file_up.go:46
+drive/pkg/pool.(*Pool).Start.func1
+	/app/pkg/pool/pools.go:22||
+02-10 13:48:06	上传文件成功||
+02-10 14:00:42	注册用户成功	{"user_name": "mife"}||
+02-10 14:00:57	登录用户成功	{"user_name": "mife"}||
+02-10 14:01:07	上传文件成功||

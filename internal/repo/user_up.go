@@ -6,6 +6,7 @@ import (
 	"drive/pkg/errorer"
 	"drive/pkg/logger"
 	"drive/pkg/utils"
+	"encoding/json"
 	"time"
 )
 
@@ -41,7 +42,12 @@ func (r *userRepo) RemixUser(ctx context.Context, user *domain.User) error {
 			return err
 		}
 		// 缓存用户信息
-		if err := r.rd.Set(ctx, "user:"+user.UserName, user, time.Hour*3).Err(); err != nil {
+		userjsonIn, errjson := json.Marshal(user)
+		if errjson != nil {
+			logger.Error("修改用户失败"+errorer.ErrUpdateUserFailed, logger.C(errjson))
+			return errjson
+		}
+		if err := r.rd.Set(ctx, "user:"+user.UserName, string(userjsonIn), time.Hour*3).Err(); err != nil {
 			logger.Debug("修改用户失败"+errorer.ErrUpdateUserFailed, logger.C(err))
 			return err
 		}

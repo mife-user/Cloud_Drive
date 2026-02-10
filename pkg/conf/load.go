@@ -22,9 +22,8 @@ func LoadConfig() (*Config, error) {
 	v.SetConfigName("config")
 	v.SetConfigType("yaml")
 	//环境变量配置
-	v.AutomaticEnv()
-	v.SetEnvPrefix("CLOUDPAN")
-	v.AllowEmptyEnv(true)
+	v.AutomaticEnv()           //自动绑定环境变量
+	v.SetEnvPrefix("CLOUDPAN") //环境变量前缀
 	//读取主配置文件
 	if err := v.ReadInConfig(); err != nil {
 		return nil, fmt.Errorf("加载主配置失败：%w", err)
@@ -45,6 +44,12 @@ func LoadConfig() (*Config, error) {
 	if dsn := v.GetString("mysql_dsn"); dsn != "" {
 		globalConfig.Mysql.Dsn = dsn
 	}
+	if host := v.GetString("redis_host"); host != "" {
+		globalConfig.Redis.Host = host
+	}
+	if port := v.GetString("redis_port"); port != "" {
+		globalConfig.Redis.Port = port
+	}
 	if password := v.GetString("redis_password"); password != "" {
 		globalConfig.Redis.Password = password
 	}
@@ -57,6 +62,9 @@ func StatusConfig() error {
 	// MySQL配置检查
 	if globalConfig.Mysql.Dsn == "" {
 		return fmt.Errorf("mysql连接未配置")
+	}
+	if globalConfig.Redis.Host == "" {
+		return fmt.Errorf("redis主机未配置")
 	}
 	// Redis配置检查
 	if globalConfig.Redis.Port == "" {

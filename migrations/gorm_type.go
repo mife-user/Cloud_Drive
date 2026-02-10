@@ -2,12 +2,6 @@ package migrations
 
 import "gorm.io/gorm"
 
-var Migration_2026_1_28_19_00 = migration{
-	Version: 202601281900,
-	Up:      up,
-	Down:    down,
-}
-
 type User struct {
 	gorm.Model
 	UserName string `gorm:"type:varchar(100);not null;default:'默认用户';comment:用户名"`
@@ -24,14 +18,4 @@ type File struct {
 	UserID      uint   `gorm:"not null;comment:用户ID"`
 	Owner       string `gorm:"type:varchar(100);not null;default:'默认用户';comment:文件所有者"`
 	Permissions string `gorm:"type:varchar(100);not null;default:'不可写';comment:权限"`
-}
-
-// 更新
-func up(db *gorm.DB) error {
-	return db.Migrator().CreateTable(&User{}, &File{})
-}
-
-// 回滚
-func down(db *gorm.DB) error {
-	return db.Migrator().DropTable(&User{}, &File{})
 }
