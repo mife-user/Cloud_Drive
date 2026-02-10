@@ -56,10 +56,8 @@ func Run(db *gorm.DB) error {
 		if result == gorm.ErrRecordNotFound {
 			// 新增记录
 			record = MigrationRecord{Version: m.Version, Applied: true}
-			db.Create(&record)
 		} else {
 			// 更新记录
-			db.Model(&record).Update("applied", true)
 		}
 	}
 	return nil
@@ -92,7 +90,6 @@ func Rollback(db *gorm.DB, targetVersion int) error {
 		}
 
 		// 更新迁移状态
-		db.Model(&record).Update("applied", false)
 	}
 
 	return nil

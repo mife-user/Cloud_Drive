@@ -28,9 +28,9 @@ func (r *fileRepo) ViewFile(ctx context.Context, userID string) ([]domain.File, 
 	errCh := make(chan error, 1)
 	// 解析缓存中的文件信息
 	for _, fileJSON := range fileJSONs {
+		wg.Add(1)
 		pool.Submit(func() {
 			defer wg.Done()
-			wg.Add(1)
 			var file domain.File
 			if err := json.Unmarshal([]byte(fileJSON), &file); err != nil {
 				logger.Debug("解析缓存文件信息失败", logger.C(err))

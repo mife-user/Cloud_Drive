@@ -45,7 +45,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	}
 
 	// 生成JWT token
-	token, err := auth.GenerateToken(user.ID, user.UserName, h.config.JWT.Secret)
+	token, err := auth.GenerateToken(user.ID, user.Role, user.UserName, h.config.JWT.Secret)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "生成token失败"})
 		return

@@ -14,6 +14,7 @@ const (
 	ErrEmptySlice       = "空切片"     // ErrEmptySlice 空切片
 )
 
+// New 创建一个新的错误
 func New(err string) error {
 	return errors.New(err)
 }

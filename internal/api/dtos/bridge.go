@@ -7,7 +7,6 @@ func (u *UserDtos) ToDMUser() *domain.User {
 	return &domain.User{
 		UserName: u.UserName,
 		PassWord: u.PassWord,
-		Role:     u.Role,
 	}
 }
 

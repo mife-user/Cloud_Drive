@@ -11,11 +11,12 @@ import (
 type Claims struct {
 	UserID uint   `json:"user_id"`
 	Name   string `json:"name"`
+	Role   string `json:"role"`
 	jwt.RegisteredClaims
 }
 
 // GenerateToken 生成JWT token
-func GenerateToken(userID uint, name, secret string) (string, error) {
+func GenerateToken(userID uint, role, name, secret string) (string, error) {
 	// 设置token有效期为24小时
 	expirationTime := time.Now().Add(24 * time.Hour)
 
@@ -23,6 +24,7 @@ func GenerateToken(userID uint, name, secret string) (string, error) {
 	claims := &Claims{
 		UserID: userID,
 		Name:   name,
+		Role:   role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),

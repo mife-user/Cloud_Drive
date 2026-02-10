@@ -43,8 +43,14 @@ func AuthMiddleware(config *conf.Config) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		if claims.Name == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "token中缺少用户名"})
+			c.Abort()
+			return
+		}
 		// 将用户信息存储到context中
 		c.Set("user_id", claims.UserID)
+		c.Set("role", claims.Role)
 		c.Set("user_name", claims.Name)
 
 		c.Next()
