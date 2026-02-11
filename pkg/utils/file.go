@@ -18,8 +18,8 @@ func SaveFile(header *multipart.FileHeader, userID uint) (*domain.File, error) {
 	defer file.Close()
 
 	// 提取目录路径和文件名
-	dirPath := filepath.Dir(header.Filename)
-	fileName := filepath.Base(header.Filename)
+	dirPath := filepath.Dir(header.Filename)   // 包含子目录路径
+	fileName := filepath.Base(header.Filename) // 文件名
 
 	// 创建存储目录结构
 	storageBase := fmt.Sprintf("./storage/%v", userID)

@@ -30,14 +30,14 @@ func InitLogger(config *conf.Config) error {
 	env := config.Env
 	// 日志编码器配置
 	encoderCfg := zapcore.EncoderConfig{
-		TimeKey:       "time",                                        // 日志时间键名
-		LevelKey:      "level",                                       // 日志级别键名
-		NameKey:       "logger",                                      // 日志实例名键名
-		CallerKey:     "caller",                                      // 日志调用者键名
-		MessageKey:    "msg",                                         // 日志消息键名
-		StacktraceKey: "stacktrace",                                  // 日志栈跟踪键名
-		LineEnding:    "||\n",                                        // 自定义日志行结束符
-		EncodeTime:    zapcore.TimeEncoderOfLayout("01-02 15:04:05"), // 日志时间编码器，将时间编码为指定格式
+		TimeKey:       "time",       // 日志时间键名
+		LevelKey:      "level",      // 日志级别键名
+		NameKey:       "logger",     // 日志实例名键名
+		CallerKey:     "caller",     // 日志调用者键名
+		MessageKey:    "msg",        // 日志消息键名
+		StacktraceKey: "stacktrace", // 日志栈跟踪键名
+		LineEnding:    "||\n",       // 自定义日志行结束符
+		EncodeTime:    nowTime,
 	}
 
 	// 根据环境选择编码器

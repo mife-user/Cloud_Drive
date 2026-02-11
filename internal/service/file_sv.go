@@ -33,13 +33,8 @@ func SaveFiles(files []*multipart.FileHeader, userID uint) (*[]*domain.File, err
 			recordCh <- fileRecord
 		})
 	}
-
-	// 启动一个goroutine，等待所有任务完成后关闭通道
-	go func() {
-		wg.Wait()
-		close(recordCh)
-	}()
-
+	wg.Wait()
+	close(recordCh)
 	// 从通道中收集文件记录
 	fileRecords := make([]*domain.File, 0, len(files))
 	for record := range recordCh {

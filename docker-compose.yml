@@ -20,8 +20,10 @@ services:
       - CLOUDPAN_GIN_CORS_ALLOW_ORIGINS=["http://localhost:3000"]
       - CLOUDPAN_GIN_CORS_ALLOW_METHODS=["GET","POST","PUT","DELETE"]
       - CLOUDPAN_JWT_SECRET=cloudpan_jwt_123
+      - TZ=Asia/Shanghai
     volumes:
       - ./logs:/app/logs
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       - mysql
       - redis

@@ -3,21 +3,23 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"drive/pkg/pool"
-	"encoding/json"
 	"fmt"
 	"sync"
 )
 
 // 查看文件
-func (r *fileRepo) ViewFile(ctx context.Context, userID string) ([]domain.File, error) {
+func (r *fileRepo) ViewFile(ctx context.Context, userID uint) ([]domain.File, error) {
 	var files []domain.File
+	//将uint转换为string
+	userIDStr := fmt.Sprintf("%d", userID)
 	// 从缓存中查询文件信息
-	userKey := fmt.Sprintf("files:%s", userID)            // 缓存键名
+	userKey := fmt.Sprintf("files:%s", userIDStr)         // 缓存键名
 	fileJSONs, err := r.rd.HGetAll(ctx, userKey).Result() // 查询缓存中的所有文件信息
 	if err != nil {
-		logger.Error("查询缓存文件失败", logger.S("user_id", userID), logger.C(err))
+		logger.Error("查询缓存文件失败", logger.S("user_id", userIDStr), logger.C(err))
 		return nil, err
 	}
 	// 并发解析缓存中的文件信息
@@ -32,7 +34,7 @@ func (r *fileRepo) ViewFile(ctx context.Context, userID string) ([]domain.File, 
 		pool.Submit(func() {
 			defer wg.Done()
 			var file domain.File
-			if err := json.Unmarshal([]byte(fileJSON), &file); err != nil {
+			if err := exc.ExcJSONToFile(fileJSON, &file); err != nil {
 				logger.Debug("解析缓存文件信息失败", logger.C(err))
 				errCh <- err
 				return
@@ -51,7 +53,7 @@ func (r *fileRepo) ViewFile(ctx context.Context, userID string) ([]domain.File, 
 			Select("file_name", "size", "path", "permissions", "owner").
 			Where("user_id = ?", userID).
 			Find(&files).Error; err != nil {
-			logger.Error("查询文件失败", logger.S("user_id", userID), logger.C(err))
+			logger.Error("查询文件失败", logger.S("user_id", userIDStr), logger.C(err))
 			return nil, err
 		}
 		logger.Info("从数据库查询文件成功")

@@ -73,7 +73,7 @@ func (h *FileHandler) ViewFiles(c *gin.Context) {
 		return
 	}
 	// 查看文件
-	files, err := h.fileRepo.ViewFile(c, userID.(string))
+	files, err := h.fileRepo.ViewFile(c, userID.(uint))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "查看文件失败: " + err.Error()})
 		return
