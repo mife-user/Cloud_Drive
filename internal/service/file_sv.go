@@ -2,6 +2,7 @@ package service
 
 import (
 	"drive/internal/domain"
+	"drive/pkg/errorer"
 	"drive/pkg/logger"
 	"drive/pkg/pool"
 	"drive/pkg/utils"
@@ -11,7 +12,13 @@ import (
 	"go.uber.org/zap"
 )
 
-func SaveFiles(files []*multipart.FileHeader, userID uint) (*[]*domain.File, error) {
+func SaveFiles(files []*multipart.FileHeader, userID any) (*[]*domain.File, error) {
+	// 转换userID为uint类型
+	userIDUint, ok := userID.(uint)
+	if !ok {
+		logger.Error("userID类型转换失败")
+		return nil, errorer.New(errorer.ErrTypeError)
+	}
 	// 创建文件记录通道
 	recordCh := make(chan *domain.File, len(files))
 	// 保存文件
@@ -24,7 +31,7 @@ func SaveFiles(files []*multipart.FileHeader, userID uint) (*[]*domain.File, err
 		// 提交任务到协程池
 		pool.Submit(func() {
 			defer wg.Done()
-			fileRecord, err := utils.SaveFile(h, userID)
+			fileRecord, err := utils.SaveFile(h, userIDUint)
 			if err != nil {
 				logger.Error("保存文件失败: %v", zap.Error(err))
 				return

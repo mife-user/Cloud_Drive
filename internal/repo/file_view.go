@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/pkg/errorer"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"drive/pkg/pool"
@@ -11,10 +12,15 @@ import (
 )
 
 // 查看文件
-func (r *fileRepo) ViewFile(ctx context.Context, userID uint) ([]domain.File, error) {
+func (r *fileRepo) ViewFile(ctx context.Context, userID any) ([]domain.File, error) {
 	var files []domain.File
-	//将uint转换为string
-	userIDStr := fmt.Sprintf("%d", userID)
+	//将any转换为uint
+	userIDUint, ok := userID.(uint)
+	if !ok {
+		logger.Error("userID类型错误")
+		return nil, errorer.New(errorer.ErrTypeError)
+	}
+	userIDStr := fmt.Sprintf("%d", userIDUint)
 	// 从缓存中查询文件信息
 	userKey := fmt.Sprintf("files:%s", userIDStr)         // 缓存键名
 	fileJSONs, err := r.rd.HGetAll(ctx, userKey).Result() // 查询缓存中的所有文件信息
@@ -51,7 +57,7 @@ func (r *fileRepo) ViewFile(ctx context.Context, userID uint) ([]domain.File, er
 		// 从数据库查询文件信息，仅返回文件名、大小、路径、权限和所有者
 		if err = r.db.
 			Select("file_name", "size", "path", "permissions", "owner").
-			Where("user_id = ?", userID).
+			Where("user_id = ?", userIDUint).
 			Find(&files).Error; err != nil {
 			logger.Error("查询文件失败", logger.S("user_id", userIDStr), logger.C(err))
 			return nil, err

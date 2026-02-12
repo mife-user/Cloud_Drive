@@ -10,5 +10,5 @@ type UserRepo interface {
 
 type FileRepo interface {
 	UploadFile(ctx context.Context, files []*File) error
-	ViewFile(ctx context.Context, userID uint) ([]File, error)
+	ViewFile(ctx context.Context, userID any) ([]File, error)
 }

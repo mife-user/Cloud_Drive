@@ -4,9 +4,9 @@ import (
 	"context"
 	"drive/internal/domain"
 	"drive/pkg/errorer"
+	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"drive/pkg/pool"
-	"encoding/json"
 	"fmt"
 	"sync"
 )
@@ -36,13 +36,13 @@ func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File) error {
 		pool.Submit(func() {
 			defer wg.Done()
 			// 将文件信息序列化为 JSON
-			fileJSON, err := json.Marshal(f)
+			fileJSON, err := exc.ExcFileToJSON(*f)
 			if err != nil {
 				logger.Error("序列化文件信息失败", logger.C(err))
 				return // 继续处理其他文件，不影响整体操作
 			}
 			// 缓存单个文件信息
-			if err := r.rd.HSet(ctx, userKey, f.FileName, string(fileJSON)).Err(); err != nil {
+			if err := r.rd.HSet(ctx, userKey, f.FileName, fileJSON).Err(); err != nil {
 				logger.Error("缓存文件信息失败", logger.C(err))
 				return
 			}

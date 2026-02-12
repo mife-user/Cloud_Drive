@@ -9,9 +9,12 @@ const (
 	ErrUserNotExist     = "用户不存在"   // ErrUserNotExist 用户不存在
 	ErrUserNameNotFound = "用户名不可为空" // ErrUserNameNotFound 用户名不可为空
 	ErrUpdateUserFailed = "更新用户失败"  // ErrUpdateUserFailed 更新用户失败
-	ErrFileNotExist     = "文件不存在"   // ErrFileNotExist 文件不存在
-	ErrPasswordNotFound = "密码不可为空"  // ErrPasswordNotFound 密码不可为空
-	ErrEmptySlice       = "空切片"     // ErrEmptySlice 空切片
+	// 文件错误
+	ErrFileNotExist     = "文件不存在"  // ErrFileNotExist 文件不存在
+	ErrPasswordNotFound = "密码不可为空" // ErrPasswordNotFound 密码不可为空
+	ErrEmptySlice       = "空切片"    // ErrEmptySlice 空切片
+	// 其他错误
+	ErrTypeError = "类型错误" // ErrTypeError 类型错误
 )
 
 // New 创建一个新的错误
