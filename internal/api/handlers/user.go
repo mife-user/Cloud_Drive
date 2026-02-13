@@ -58,6 +58,7 @@ func (h *UserHandler) RemixUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "修改失败"})
 		return
 	}
+	// 修改用户信息
 	if err := h.userRepo.RemixUser(c, DMUser); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "修改失败"})
 		return

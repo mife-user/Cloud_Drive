@@ -4,6 +4,7 @@ import (
 	"context"
 	"drive/internal/domain"
 	"drive/pkg/errorer"
+	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"drive/pkg/utils"
 	"encoding/json"
@@ -76,7 +77,7 @@ func (r *userRepo) Logon(ctx context.Context, user *domain.User) error {
 	var existingUser domain.User
 	userjsonOut, errjsonout := r.rd.Get(ctx, "user:"+user.UserName).Result()
 	if errjsonout == nil {
-		if err := json.Unmarshal([]byte(userjsonOut), &existingUser); err != nil {
+		if err := exc.ExcJSONToFile(userjsonOut, &existingUser); err != nil {
 			logger.Error("缓存用户信息失败", logger.S("user_name", user.UserName), logger.C(err))
 			return err
 		}
@@ -87,19 +88,15 @@ func (r *userRepo) Logon(ctx context.Context, user *domain.User) error {
 			return err
 		}
 		// 缓存用户信息
-		userjsonIn, errjsonIn := json.Marshal(existingUser)
+		userjsonIn, errjsonIn := exc.ExcFileToJSON(existingUser)
 		if errjsonIn != nil {
 			logger.Error("缓存用户信息失败", logger.S("user_name", user.UserName), logger.C(errjsonIn))
 			// 缓存失败不影响登录结果
 		}
-		if err := r.rd.Set(ctx, "user:"+user.UserName, string(userjsonIn), time.Hour*3).Err(); err != nil {
+		if err := r.rd.Set(ctx, "user:"+user.UserName, userjsonIn, time.Hour*3).Err(); err != nil {
 			logger.Error("缓存用户信息失败", logger.S("user_name", user.UserName), logger.C(err))
 			// 缓存失败不影响登录结果
 		}
-	}
-	// 确保用户信息不为空
-	if existingUser.ID == 0 {
-		return errorer.New(errorer.ErrUserNameNotFound)
 	}
 	// 验证密码
 	if !utils.CheckPasswordHash(user.PassWord, existingUser.PassWord) {

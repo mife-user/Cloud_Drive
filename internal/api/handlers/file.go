@@ -35,14 +35,18 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 	// 获取上传的文件头
 	files := file.File["files"]
 	// 获取当前登录用户ID
-	userID, exists := c.Get("user_id")
-	if !exists {
+	userID, existsID := c.Get("user_id")
+	if !existsID {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
-
+	userName, existsNM := c.Get("user_name")
+	if !existsNM {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
+		return
+	}
 	// 保存文件
-	fileRecords, err := service.SaveFiles(files, userID)
+	fileRecords, err := service.SaveFiles(files, userID, userName)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件失败: " + err.Error()})
 		return

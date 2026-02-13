@@ -12,11 +12,17 @@ import (
 	"go.uber.org/zap"
 )
 
-func SaveFiles(files []*multipart.FileHeader, userID any) (*[]*domain.File, error) {
+func SaveFiles(files []*multipart.FileHeader, userID any, userName any) (*[]*domain.File, error) {
 	// 转换userID为uint类型
 	userIDUint, ok := userID.(uint)
 	if !ok {
 		logger.Error("userID类型转换失败")
+		return nil, errorer.New(errorer.ErrTypeError)
+	}
+	// 转换userName为string类型
+	userNameStr, ok := userName.(string)
+	if !ok {
+		logger.Error("userName类型转换失败")
 		return nil, errorer.New(errorer.ErrTypeError)
 	}
 	// 创建文件记录通道
@@ -31,7 +37,7 @@ func SaveFiles(files []*multipart.FileHeader, userID any) (*[]*domain.File, erro
 		// 提交任务到协程池
 		pool.Submit(func() {
 			defer wg.Done()
-			fileRecord, err := utils.SaveFile(h, userIDUint)
+			fileRecord, err := utils.SaveFile(h, userIDUint, userNameStr)
 			if err != nil {
 				logger.Error("保存文件失败: %v", zap.Error(err))
 				return

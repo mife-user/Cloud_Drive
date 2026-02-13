@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func SaveFile(header *multipart.FileHeader, userID uint) (*domain.File, error) {
+func SaveFile(header *multipart.FileHeader, userID uint, userName string) (*domain.File, error) {
 	// 打开文件
 	file, err := header.Open()
 	if err != nil {
@@ -59,6 +59,7 @@ func SaveFile(header *multipart.FileHeader, userID uint) (*domain.File, error) {
 		Size:        header.Size,
 		Path:        tempPath,
 		UserID:      userID,
+		Owner:       userName,
 		Permissions: "private",
 	}
 	return fileRecord, nil
