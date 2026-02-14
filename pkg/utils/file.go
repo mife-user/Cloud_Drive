@@ -9,7 +9,11 @@ import (
 	"time"
 )
 
-func SaveFile(header *multipart.FileHeader, userID uint, userName string) (*domain.File, error) {
+func SaveFile(header *multipart.FileHeader, k *domain.File) (*domain.File, error) {
+	// 检查文件大小是否超过限制
+	if header.Size > k.Size { // 100MB 示例限制
+		return nil, fmt.Errorf("单个文件大小超过限制: %v", header.Size)
+	}
 	// 打开文件
 	file, err := header.Open()
 	if err != nil {
@@ -22,7 +26,7 @@ func SaveFile(header *multipart.FileHeader, userID uint, userName string) (*doma
 	fileName := filepath.Base(header.Filename) // 文件名
 
 	// 创建存储目录结构
-	storageBase := fmt.Sprintf("./storage/%v", userID)
+	storageBase := fmt.Sprintf("./storage/%v", k.UserID)
 	storageDir := filepath.Join(storageBase, dirPath)
 	// 检查目录是否存在，不存在则创建
 	if err := os.MkdirAll(storageDir, 0755); err != nil {
@@ -58,9 +62,9 @@ func SaveFile(header *multipart.FileHeader, userID uint, userName string) (*doma
 		FileName:    header.Filename,
 		Size:        header.Size,
 		Path:        tempPath,
-		UserID:      userID,
-		Owner:       userName,
-		Permissions: "private",
+		UserID:      k.UserID,
+		Owner:       k.Owner,
+		Permissions: k.Permissions,
 	}
 	return fileRecord, nil
 }

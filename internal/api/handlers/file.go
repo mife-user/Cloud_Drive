@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"drive/internal/api/dtos"
 	"drive/internal/domain"
 	"drive/internal/service"
 	"drive/pkg/conf"
@@ -26,6 +27,12 @@ func NewFileHandler(fileRepo domain.FileRepo, config *conf.Config) *FileHandler 
 
 // UploadFile 文件上传
 func (h *FileHandler) UploadFile(c *gin.Context) {
+	// 绑定 JSON 请求体到 FileDtos
+	var fileDto dtos.FileDtos
+	if err := c.ShouldBindJSON(&fileDto); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})
+		return
+	}
 	// 获取上传的文件
 	file, err := c.MultipartForm()
 	if err != nil {
@@ -40,13 +47,19 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
+	// 获取当前登录用户名
 	userName, existsNM := c.Get("user_name")
 	if !existsNM {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
+	userRole, existsRole := c.Get("user_role")
+	if !existsRole {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
+		return
+	}
 	// 保存文件
-	fileRecords, err := service.SaveFiles(files, userID, userName)
+	fileRecords, err := service.SaveFiles(files, userID, userName, userRole, fileDto.ToDMFile())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件失败: " + err.Error()})
 		return

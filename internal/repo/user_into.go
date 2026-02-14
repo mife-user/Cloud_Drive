@@ -7,7 +7,6 @@ import (
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"drive/pkg/utils"
-	"encoding/json"
 	"time"
 )
 
@@ -48,12 +47,12 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 		return err
 	}
 	// 缓存用户所有信息
-	userjson, errjson := json.Marshal(user)
+	userjson, errjson := exc.ExcFileToJSON(user)
 	if errjson != nil {
 		logger.Error("注册用户失败", logger.S("user_name", user.UserName), logger.C(errjson))
 		return errjson
 	}
-	if err := r.rd.Set(ctx, "user:"+user.UserName, string(userjson), time.Hour*3).Err(); err != nil {
+	if err := r.rd.Set(ctx, "user:"+user.UserName, userjson, time.Hour*3).Err(); err != nil {
 		logger.Error("缓存用户信息失败", logger.S("user_name", user.UserName), logger.C(err))
 		// 缓存失败不影响注册结果
 	}

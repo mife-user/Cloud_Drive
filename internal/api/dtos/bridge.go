@@ -13,10 +13,6 @@ func (u *UserDtos) ToDMUser() *domain.User {
 // 将 FileDtos 转换为 domain.File
 func (f *FileDtos) ToDMFile() *domain.File {
 	return &domain.File{
-		FileName:    f.FileName,
-		Size:        f.Size,
-		Path:        f.Path,
 		Permissions: f.Permissions,
-		Owner:       f.Owner,
 	}
 }

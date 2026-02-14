@@ -6,7 +6,7 @@ type User struct {
 	gorm.Model
 	UserName string `gorm:"type:varchar(100);not null;default:'默认用户';comment:用户名"`
 	PassWord string `gorm:"type:varchar(100);not null;comment:密码"`
-	Role     string `gorm:"type:varchar(50);not null;default:'普通用户';comment:角色"`
+	Role     string `gorm:"type:varchar(50);not null;default:'NOVIP';comment:角色"`
 	Files    []File `gorm:"foreignKey:UserID"`
 }
 
@@ -17,5 +17,5 @@ type File struct {
 	Path        string `gorm:"type:varchar(255);not null;default:'/';comment:文件路径"`
 	UserID      uint   `gorm:"not null;comment:用户ID"`
 	Owner       string `gorm:"type:varchar(100);not null;default:'默认用户';comment:文件所有者"`
-	Permissions string `gorm:"type:varchar(100);not null;default:'不可写';comment:权限"`
+	Permissions string `gorm:"type:varchar(100);not null;default:'可以共享';comment:权限"`
 }

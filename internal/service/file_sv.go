@@ -8,11 +8,20 @@ import (
 	"drive/pkg/utils"
 	"mime/multipart"
 	"sync"
-
-	"go.uber.org/zap"
 )
 
-func SaveFiles(files []*multipart.FileHeader, userID any, userName any) (*[]*domain.File, error) {
+func SaveFiles(files []*multipart.FileHeader, userID any, userName any, userRole any, filekey *domain.File) (*[]*domain.File, error) {
+	// 检查用户角色是否为会员
+	userRoleStr, ok := userRole.(string)
+	if !ok {
+		logger.Error("userRole类型转换失败")
+		return nil, errorer.New(errorer.ErrTypeError)
+	}
+	if userRoleStr != "VIP" {
+		filekey.Size = 1024 * 1024 * 1024 // 普通用户文件大小限制为1GB
+	} else {
+		filekey.Size = 1024 * 1024 * 2048 // 会员用户文件大小限制为2GB
+	}
 	// 转换userID为uint类型
 	userIDUint, ok := userID.(uint)
 	if !ok {
@@ -25,6 +34,9 @@ func SaveFiles(files []*multipart.FileHeader, userID any, userName any) (*[]*dom
 		logger.Error("userName类型转换失败")
 		return nil, errorer.New(errorer.ErrTypeError)
 	}
+	//初始化文件
+	filekey.Owner = userNameStr
+	filekey.UserID = userIDUint
 	// 创建文件记录通道
 	recordCh := make(chan *domain.File, len(files))
 	// 保存文件
@@ -37,9 +49,9 @@ func SaveFiles(files []*multipart.FileHeader, userID any, userName any) (*[]*dom
 		// 提交任务到协程池
 		pool.Submit(func() {
 			defer wg.Done()
-			fileRecord, err := utils.SaveFile(h, userIDUint, userNameStr)
+			fileRecord, err := utils.SaveFile(h, filekey)
 			if err != nil {
-				logger.Error("保存文件失败: %v", zap.Error(err))
+				logger.Error("保存文件失败: %v", logger.C(err))
 				return
 			}
 			// 将文件记录发送到通道
