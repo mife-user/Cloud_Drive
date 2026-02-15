@@ -19,3 +19,13 @@ type File struct {
 	Owner       string `gorm:"type:varchar(100);not null;default:'默认用户';comment:文件所有者"`
 	Permissions string `gorm:"type:varchar(100);not null;default:'可以共享';comment:权限"`
 }
+
+type FileShare struct {
+	gorm.Model
+	FileID    uint   `gorm:"not null;index;comment:文件ID"`
+	ShareID   string `gorm:"type:varchar(100);not null;uniqueIndex;comment:分享ID"`
+	AccessKey string `gorm:"type:varchar(100);not null;comment:访问密钥"`
+	UserID    uint   `gorm:"not null;comment:用户ID"`
+	Owner     string `gorm:"type:varchar(100);not null;default:'默认用户';comment:分享所有者"`
+	ExpiresAt int64  `gorm:"not null;comment:过期时间戳"`
+}

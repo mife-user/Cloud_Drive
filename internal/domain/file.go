@@ -11,3 +11,13 @@ type File struct {
 	Owner       string
 	Permissions string
 }
+
+type FileShare struct {
+	gorm.Model
+	FileID    uint
+	ShareID   string
+	AccessKey string
+	UserID    uint
+	Owner     string
+	ExpiresAt int64
+}

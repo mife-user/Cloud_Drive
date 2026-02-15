@@ -13,6 +13,11 @@ const (
 	ErrFileNotExist     = "文件不存在"  // ErrFileNotExist 文件不存在
 	ErrPasswordNotFound = "密码不可为空" // ErrPasswordNotFound 密码不可为空
 	ErrEmptySlice       = "空切片"    // ErrEmptySlice 空切片
+	// 文件共享错误
+	ErrShareNotExist    = "共享不存在"  // ErrShareNotExist 共享不存在
+	ErrInvalidAccessKey = "访问密钥无效" // ErrInvalidAccessKey 访问密钥无效
+	ErrShareExpired     = "共享已过期"  // ErrShareExpired 共享已过期
+	ErrNotFileOwner     = "非文件所有者" // ErrNotFileOwner 非文件所有者
 	// 其他错误
 	ErrTypeError = "类型错误" // ErrTypeError 类型错误
 )

@@ -56,12 +56,17 @@ func (r *Router) Setup() *gin.Engine {
 			user.POST("/login", r.authHandler.Login)
 		}
 
+		// 文件路由 - 公开访问（不需要认证）
+		api.GET("/file/share/:share_id", r.fileHandler.AccessShare)
+
 		// 文件路由 - 需要认证
 		file := api.Group("/file")
 		file.Use(middlewares.AuthMiddleware(r.config))
 		{
 			file.POST("/upload", r.fileHandler.UploadFile)
 			file.GET("/view", r.fileHandler.ViewFiles)
+			file.POST("/share", r.fileHandler.ShareFile)
+			file.PUT("/:file_id/permissions", r.fileHandler.UpdateFilePermissions)
 		}
 	}
 

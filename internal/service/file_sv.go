@@ -7,9 +7,11 @@ import (
 	"drive/pkg/pool"
 	"drive/pkg/utils"
 	"mime/multipart"
+	"strconv"
 	"sync"
 )
 
+// SaveFiles 保存文件
 func SaveFiles(files []*multipart.FileHeader, userID any, userName any, userRole any, filekey *domain.File) (*[]*domain.File, error) {
 	// 检查用户角色是否为会员
 	userRoleStr, ok := userRole.(string)
@@ -69,4 +71,29 @@ func SaveFiles(files []*multipart.FileHeader, userID any, userName any, userRole
 	// 关闭协程池
 	pool.Stop()
 	return &fileRecords, nil
+}
+func ExchangeFile(userID any, userName any) (uint, string, error) {
+	// 转换userID为uint类型
+	userIDUint, ok := userID.(uint)
+	if !ok {
+		logger.Error("userID类型转换失败")
+		return 0, "", errorer.New(errorer.ErrTypeError)
+	}
+	// 转换userName为string类型
+	userNameStr, ok := userName.(string)
+	if !ok {
+		logger.Error("userName类型转换失败")
+		return 0, "", errorer.New(errorer.ErrTypeError)
+	}
+	return userIDUint, userNameStr, nil
+}
+
+// 解析id
+func ParseID(idStr string) (uint, error) {
+	id, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		logger.Error("ID类型转换失败")
+		return 0, errorer.New(errorer.ErrTypeError)
+	}
+	return uint(id), nil
 }
