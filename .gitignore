@@ -26,3 +26,8 @@ go.work.sum
 FUTURE_PROJECT_STRUCTURE.md
 project_reference.md
 .trae/documents/解决 domain 层结构体绑定问题.md
+.trae/documents/file_permissions_dto_optimization_plan.md
+word.txt
+.trae/specs/file-sharing/tasks.md
+.trae/specs/file-sharing/spec.md
+.trae/specs/file-sharing/checklist.md

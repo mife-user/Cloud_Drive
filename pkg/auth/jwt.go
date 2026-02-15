@@ -51,13 +51,12 @@ func ValidateToken(tokenString, secret string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secret), nil
 	})
-
 	if err != nil {
 		return nil, err
 	}
-
+	// 验证token是否有效
 	if !token.Valid {
-		return nil, errors.New("invalid token")
+		return nil, errors.New("token无效")
 	}
 
 	return claims, nil
