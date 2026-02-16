@@ -67,6 +67,9 @@ func (r *Router) Setup() *gin.Engine {
 			file.GET("/view", r.fileHandler.ViewFiles)
 			file.POST("/share", r.fileHandler.ShareFile)
 			file.PUT("/:file_id/permissions", r.fileHandler.UpdateFilePermissions)
+			file.POST("/favorite", r.fileHandler.AddFavorite)
+			file.DELETE("/favorite/:file_id", r.fileHandler.RemoveFavorite)
+			file.GET("/favorites", r.fileHandler.GetFavorites)
 		}
 	}
 

@@ -18,6 +18,9 @@ const (
 	ErrInvalidAccessKey = "访问密钥无效" // ErrInvalidAccessKey 访问密钥无效
 	ErrShareExpired     = "共享已过期"  // ErrShareExpired 共享已过期
 	ErrNotFileOwner     = "非文件所有者" // ErrNotFileOwner 非文件所有者
+	// 文件收藏错误
+	ErrFavoriteExist    = "文件已收藏"  // ErrFavoriteExist 文件已收藏
+	ErrFavoriteNotExist = "收藏不存在"  // ErrFavoriteNotExist 收藏不存在
 	// 其他错误
 	ErrTypeError = "类型错误" // ErrTypeError 类型错误
 )

@@ -29,3 +29,9 @@ type FileShare struct {
 	Owner     string `gorm:"type:varchar(100);not null;default:'默认用户';comment:分享所有者"`
 	ExpiresAt int64  `gorm:"not null;comment:过期时间戳"`
 }
+
+type FileFavorite struct {
+	gorm.Model
+	UserID uint `gorm:"not null;index;comment:用户ID"`
+	FileID uint `gorm:"not null;index;comment:文件ID"`
+}

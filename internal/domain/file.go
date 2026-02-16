@@ -21,3 +21,9 @@ type FileShare struct {
 	Owner     string
 	ExpiresAt int64
 }
+
+type FileFavorite struct {
+	gorm.Model
+	UserID uint
+	FileID uint
+}
