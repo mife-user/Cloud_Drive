@@ -4,11 +4,12 @@ var globalConfig Config
 
 // 配置结构体
 type Config struct {
-	Env   string      `mapstructure:"env"`
-	Mysql MysqlConfig `mapstructure:"mysql"`
-	Redis RedisConfig `mapstructure:"redis"`
-	Gin   GinConfig   `mapstructure:"gin"`
-	JWT   JWTConfig   `mapstructure:"jwt"`
+	Env    string       `mapstructure:"env"`
+	Mysql  MysqlConfig  `mapstructure:"mysql"`
+	Redis  RedisConfig  `mapstructure:"redis"`
+	Gin    GinConfig    `mapstructure:"gin"`
+	JWT    JWTConfig    `mapstructure:"jwt"`
+	Upload UploadConfig `mapstructure:"upload"`
 }
 
 // mysql配置结构体
@@ -43,4 +44,10 @@ type CorsConfig struct {
 // JWT配置结构体
 type JWTConfig struct {
 	Secret string `mapstructure:"secret"`
+}
+
+// upload配置结构体
+type UploadConfig struct {
+	AllowedFileTypes []string `mapstructure:"allowed_file_types"`
+	allowedTypesSet  map[string]bool
 }

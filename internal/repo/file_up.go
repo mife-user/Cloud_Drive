@@ -9,6 +9,7 @@ import (
 	"drive/pkg/pool"
 	"fmt"
 	"sync"
+	"time"
 )
 
 // 文件上传
@@ -41,11 +42,13 @@ func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File) error {
 				logger.Error("序列化文件信息失败", logger.C(err))
 				return // 继续处理其他文件，不影响整体操作
 			}
+			fileIDSTR := fmt.Sprintf("file:%d", f.ID)
 			// 缓存单个文件信息
-			if err := r.rd.HSet(ctx, userKey, f.FileName, fileJSON).Err(); err != nil {
+			if err := r.rd.HSet(ctx, userKey, fileIDSTR, fileJSON).Err(); err != nil {
 				logger.Error("缓存文件信息失败", logger.C(err))
 				return
 			}
+			r.rd.Expire(ctx, userKey, 24*time.Hour) // 设置缓存过期时间为24小时
 		})
 	}
 	// 等待所有任务完成

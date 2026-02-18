@@ -54,6 +54,8 @@ func LoadConfig() (*Config, error) {
 		globalConfig.Redis.Password = password
 	}
 
+	globalConfig.Upload.initAllowedTypesSet()
+
 	return &globalConfig, nil
 }
 
@@ -69,6 +71,10 @@ func StatusConfig() error {
 	// Redis配置检查
 	if globalConfig.Redis.Port == "" {
 		return fmt.Errorf("redis端口未配置")
+	}
+	//jwt配置检查
+	if globalConfig.JWT.Secret == "" {
+		return fmt.Errorf("jwt密钥未配置")
 	}
 	return nil
 }

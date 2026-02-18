@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// RemixUser 修改用户信息
 func (r *userRepo) RemixUser(ctx context.Context, user *domain.User) error {
 	// 检查用户名是否为空
 	if user.UserName == "" {

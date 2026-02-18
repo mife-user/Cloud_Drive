@@ -6,12 +6,13 @@ import (
 	"mime/multipart"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
 func SaveFile(header *multipart.FileHeader, k *domain.File) (*domain.File, error) {
 	// 检查文件大小是否超过限制
-	if header.Size > k.Size { // 100MB 示例限制
+	if header.Size > k.Size {
 		return nil, fmt.Errorf("单个文件大小超过限制: %v", header.Size)
 	}
 	// 打开文件
@@ -24,7 +25,10 @@ func SaveFile(header *multipart.FileHeader, k *domain.File) (*domain.File, error
 	// 提取目录路径和文件名
 	dirPath := filepath.Dir(header.Filename)   // 包含子目录路径
 	fileName := filepath.Base(header.Filename) // 文件名
-
+	//查看路径是否包含..
+	if strings.ContainsRune(dirPath, filepath.Separator) {
+		return nil, fmt.Errorf("目录路径包含无效路径分隔符: %s", dirPath)
+	}
 	// 创建存储目录结构
 	storageBase := fmt.Sprintf("./storage/%v", k.UserID)
 	storageDir := filepath.Join(storageBase, dirPath)

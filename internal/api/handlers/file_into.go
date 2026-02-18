@@ -15,16 +15,13 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 	defer logger.Info("文件上传请求处理完成")
 	// 绑定 JSON 请求体到 FileDtos
 	var fileDto dtos.FileDtos
-	if err := c.ShouldBindJSON(&fileDto); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})
-		return
-	}
 	// 获取上传的文件
 	file, err := c.MultipartForm()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "获取文件失败: " + err.Error()})
 		return
 	}
+	fileDto.Permissions = file.Value["permissions"][0]
 	// 获取上传的文件头
 	files := file.File["files"]
 	// 获取当前登录用户ID
