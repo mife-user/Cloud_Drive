@@ -7,7 +7,6 @@ import (
 	"drive/internal/domain"
 	"drive/internal/service"
 	"drive/pkg/conf"
-	"drive/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 )
@@ -28,8 +27,6 @@ func NewUserHandler(userRepo domain.UserRepo, config *conf.Config) *UserHandler 
 
 // Register 用户注册
 func (h *UserHandler) Register(c *gin.Context) {
-	logger.Info("开始处理注册请求")
-	defer logger.Info("注册请求处理完成")
 	var userDto dtos.UserDtos
 	if err := c.ShouldBindJSON(&userDto); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})
@@ -44,8 +41,6 @@ func (h *UserHandler) Register(c *gin.Context) {
 
 // 用户信息修改
 func (h *UserHandler) RemixUser(c *gin.Context) {
-	logger.Info("开始处理用户信息修改请求")
-	defer logger.Info("用户信息修改请求处理完成")
 	var userDto dtos.UserDtos
 	if err := c.ShouldBindJSON(&userDto); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})

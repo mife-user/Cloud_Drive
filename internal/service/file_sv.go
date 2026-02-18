@@ -72,8 +72,6 @@ func SaveFiles(files []*multipart.FileHeader, userID any, userName any, userRole
 	pool.Stop()
 	return &fileRecords, nil
 }
-
-// ExchangeFile 兑换文件
 func ExchangeFile(userID any, userName any) (uint, string, error) {
 	// 转换userID为uint类型
 	userIDUint, ok := userID.(uint)

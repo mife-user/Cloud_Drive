@@ -5,7 +5,6 @@ import (
 	"drive/internal/domain"
 	"drive/pkg/auth"
 	"drive/pkg/conf"
-	"drive/pkg/logger"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -27,9 +26,6 @@ func NewAuthHandler(userRepo domain.UserRepo, config *conf.Config) *AuthHandler 
 
 // Login 用户登录
 func (h *AuthHandler) Login(c *gin.Context) {
-	logger.Info("开始处理登录请求")
-	defer logger.Info("登录请求处理完成")
-
 	var userDtos dtos.UserDtos
 	if err := c.ShouldBindJSON(&userDtos); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误", "details": err.Error()})

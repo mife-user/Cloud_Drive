@@ -3,7 +3,6 @@ package handlers
 import (
 	"drive/internal/api/dtos"
 	"drive/internal/service"
-	"drive/pkg/logger"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,8 +10,6 @@ import (
 
 // UploadFile 文件上传
 func (h *FileHandler) UploadFile(c *gin.Context) {
-	logger.Info("开始处理文件上传请求")
-	defer logger.Info("文件上传请求处理完成")
 	// 绑定 JSON 请求体到 FileDtos
 	var fileDto dtos.FileDtos
 	if err := c.ShouldBindJSON(&fileDto); err != nil {
@@ -68,8 +65,6 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 
 // 查看所有文件
 func (h *FileHandler) ViewFiles(c *gin.Context) {
-	logger.Info("开始处理查看所有文件请求")
-	defer logger.Info("查看所有文件请求处理完成")
 
 	// 获取当前登录用户ID
 	userID, exists := c.Get("user_id")
