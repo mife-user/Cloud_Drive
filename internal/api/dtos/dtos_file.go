@@ -13,5 +13,6 @@ type AccessShareRequest struct {
 }
 
 type FavoriteFileRequest struct {
-	FileID uint `json:"file_id"`
+	FileID    uint   `json:"file_id"`
+	AccessKey string `json:"access_key,omitempty"`
 }
