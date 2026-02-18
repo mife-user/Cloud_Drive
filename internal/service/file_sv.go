@@ -1,54 +1,58 @@
 package service
 
 import (
+	"context"
+	"drive/internal/api/dtos"
 	"drive/internal/domain"
 	"drive/pkg/errorer"
 	"drive/pkg/logger"
 	"drive/pkg/pool"
 	"drive/pkg/utils"
 	"mime/multipart"
+	"os"
+	"path/filepath"
 	"strconv"
 	"sync"
+	"time"
 )
 
-// SaveFiles 保存文件
+type ChunkUploadResult struct {
+	UploadTaskID uint
+	Completed    bool
+	FileRecord   *domain.File
+	Progress     float64
+}
+
 func SaveFiles(files []*multipart.FileHeader, userID any, userName any, userRole any, filekey *domain.File) (*[]*domain.File, error) {
-	// 检查用户角色是否为会员
 	userRoleStr, ok := userRole.(string)
 	if !ok {
 		logger.Error("userRole类型转换失败")
 		return nil, errorer.New(errorer.ErrTypeError)
 	}
 	if userRoleStr != "VIP" {
-		filekey.Size = 1024 * 1024 * 1024 // 普通用户文件大小限制为1GB
+		filekey.Size = 1024 * 1024 * 1024
 	} else {
-		filekey.Size = 1024 * 1024 * 2048 // 会员用户文件大小限制为2GB
+		filekey.Size = 1024 * 1024 * 2048
 	}
-	// 转换userID为uint类型
 	userIDUint, ok := userID.(uint)
 	if !ok {
 		logger.Error("userID类型转换失败")
 		return nil, errorer.New(errorer.ErrTypeError)
 	}
-	// 转换userName为string类型
 	userNameStr, ok := userName.(string)
 	if !ok {
 		logger.Error("userName类型转换失败")
 		return nil, errorer.New(errorer.ErrTypeError)
 	}
-	//初始化文件
 	filekey.Owner = userNameStr
 	filekey.UserID = userIDUint
-	// 创建文件记录通道
 	recordCh := make(chan *domain.File, len(files))
-	// 保存文件
-	pool := pool.NewPool(4) // 可根据系统配置调整大小
+	pool := pool.NewPool(4)
 	pool.Start()
 	var wg sync.WaitGroup
 	for _, header := range files {
 		h := header
 		wg.Add(1)
-		// 提交任务到协程池
 		pool.Submit(func() {
 			defer wg.Done()
 			fileRecord, err := utils.SaveFile(h, filekey)
@@ -56,32 +60,156 @@ func SaveFiles(files []*multipart.FileHeader, userID any, userName any, userRole
 				logger.Error("保存文件失败: %v", logger.C(err))
 				return
 			}
-			// 将文件记录发送到通道
 			recordCh <- fileRecord
 		})
 	}
 	wg.Wait()
 	close(recordCh)
-	// 从通道中收集文件记录
 	fileRecords := make([]*domain.File, 0, len(files))
 	for record := range recordCh {
 		fileRecords = append(fileRecords, record)
 	}
-
-	// 关闭协程池
 	pool.Stop()
 	return &fileRecords, nil
 }
 
-// ExchangeFile 兑换文件
+func HandleChunkUpload(ctx context.Context, fileRepo domain.FileRepo, header *multipart.FileHeader, fileDto *dtos.FileDtos, userID uint, userName string, permissions string) (*ChunkUploadResult, error) {
+	var task *domain.UploadTask
+	var err error
+
+	if fileDto.UploadTaskID == 0 {
+		task, err = fileRepo.GetUploadTaskByMD5(ctx, userID, fileDto.FileMD5)
+		if err == nil && task != nil {
+			fileDto.UploadTaskID = task.ID
+		} else {
+			task = &domain.UploadTask{
+				UserID:          userID,
+				FileName:        header.Filename,
+				FileSize:        header.Size,
+				FileMD5:         fileDto.FileMD5,
+				TotalChunks:     fileDto.TotalChunks,
+				CompletedChunks: "[]",
+				Status:          0,
+			}
+			if err := fileRepo.CreateUploadTask(ctx, task); err != nil {
+				return nil, err
+			}
+			fileDto.UploadTaskID = task.ID
+		}
+	} else {
+		task, err = fileRepo.GetUploadTaskByID(ctx, fileDto.UploadTaskID)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if err := utils.SaveChunk(header, userID, fileDto.UploadTaskID, fileDto.ChunkIndex); err != nil {
+		return nil, err
+	}
+
+	completedChunks, _ := utils.ParseCompletedChunks(task.CompletedChunks)
+	chunkExists := false
+	for _, idx := range completedChunks {
+		if idx == fileDto.ChunkIndex {
+			chunkExists = true
+			break
+		}
+	}
+	if !chunkExists {
+		completedChunks = append(completedChunks, fileDto.ChunkIndex)
+		task.CompletedChunks = utils.SerializeCompletedChunks(completedChunks)
+		if err := fileRepo.UpdateUploadTask(ctx, task); err != nil {
+			return nil, err
+		}
+	}
+
+	progress := float64(len(completedChunks)) / float64(task.TotalChunks) * 100
+
+	if len(completedChunks) == task.TotalChunks {
+		storageBase := "./storage/" + strconv.FormatUint(uint64(userID), 10)
+		if err := os.MkdirAll(storageBase, 0755); err != nil {
+			return nil, err
+		}
+
+		ext := filepath.Ext(task.FileName)
+		baseName := task.FileName[:len(task.FileName)-len(ext)]
+		finalFileName := task.FileName
+		tempPath := filepath.Join(storageBase, finalFileName)
+
+		if _, err := os.Stat(tempPath); err == nil {
+			finalFileName = baseName + "_" + strconv.FormatInt(time.Now().UnixNano(), 10) + ext
+			tempPath = filepath.Join(storageBase, finalFileName)
+		}
+
+		if err := utils.MergeChunks(userID, fileDto.UploadTaskID, task.TotalChunks, tempPath); err != nil {
+			return nil, err
+		}
+
+		calculatedMD5, err := utils.CalculateFileMD5(tempPath)
+		if err != nil {
+			return nil, err
+		}
+		if calculatedMD5 != task.FileMD5 {
+			os.Remove(tempPath)
+			utils.CleanupChunks(userID, fileDto.UploadTaskID)
+			return nil, errorer.New("文件校验失败")
+		}
+
+		task.Status = 1
+		fileRepo.UpdateUploadTask(ctx, task)
+
+		fileRecord := &domain.File{
+			FileName:    task.FileName,
+			Size:        task.FileSize,
+			Path:        tempPath,
+			UserID:      userID,
+			Owner:       userName,
+			Permissions: permissions,
+		}
+
+		utils.CleanupChunks(userID, fileDto.UploadTaskID)
+
+		return &ChunkUploadResult{
+			UploadTaskID: fileDto.UploadTaskID,
+			Completed:    true,
+			FileRecord:   fileRecord,
+			Progress:     100,
+		}, nil
+	}
+
+	return &ChunkUploadResult{
+		UploadTaskID: fileDto.UploadTaskID,
+		Completed:    false,
+		Progress:     progress,
+	}, nil
+}
+
+func GetUploadStatus(ctx context.Context, fileRepo domain.FileRepo, taskID uint) (*dtos.UploadStatusResponse, error) {
+	task, err := fileRepo.GetUploadTaskByID(ctx, taskID)
+	if err != nil {
+		return nil, err
+	}
+
+	completedChunks, _ := utils.ParseCompletedChunks(task.CompletedChunks)
+	progress := float64(len(completedChunks)) / float64(task.TotalChunks) * 100
+
+	return &dtos.UploadStatusResponse{
+		UploadTaskID:     task.ID,
+		FileName:         task.FileName,
+		FileSize:         task.FileSize,
+		TotalChunks:      task.TotalChunks,
+		CompletedChunks:  completedChunks,
+		Progress:         progress,
+		Status:           task.Status,
+	}, nil
+}
+
 func ExchangeFile(userID any, userName any) (uint, string, error) {
-	// 转换userID为uint类型
 	userIDUint, ok := userID.(uint)
 	if !ok {
 		logger.Error("userID类型转换失败")
 		return 0, "", errorer.New(errorer.ErrTypeError)
 	}
-	// 转换userName为string类型
 	userNameStr, ok := userName.(string)
 	if !ok {
 		logger.Error("userName类型转换失败")
@@ -90,7 +218,6 @@ func ExchangeFile(userID any, userName any) (uint, string, error) {
 	return userIDUint, userNameStr, nil
 }
 
-// 解析id
 func ParseID(idStr string) (uint, error) {
 	id, err := strconv.ParseUint(idStr, 10, 32)
 	if err != nil {
