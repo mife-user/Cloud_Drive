@@ -6,10 +6,11 @@ import (
 	"drive/pkg/errorer"
 	"drive/pkg/logger"
 	"fmt"
+	"time"
 )
 
 // AddFavorite 添加文件收藏
-func (r *fileRepo) AddFavorite(ctx context.Context, userID uint, fileID uint) error {
+func (r *fileRepo) AddFavorite(ctx context.Context, userID uint, fileID uint, accessKey string) error {
 	logger.Info("开始添加收藏", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
 
 	var file domain.File
@@ -18,8 +19,26 @@ func (r *fileRepo) AddFavorite(ctx context.Context, userID uint, fileID uint) er
 		return errorer.New(errorer.ErrFileNotExist)
 	}
 
-	if file.UserID != userID {
-		logger.Error("非文件所有者，无法收藏", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
+	hasPermission := false
+	if file.UserID == userID {
+		logger.Info("用户是文件所有者，有权限收藏", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
+		hasPermission = true
+	} else if accessKey != "" {
+		var fileShare domain.FileShare
+		if err := r.db.Where("file_id = ? AND access_key = ?", fileID, accessKey).First(&fileShare).Error; err == nil {
+			if time.Now().Unix() <= fileShare.ExpiresAt {
+				logger.Info("用户持有有效的访问密钥，有权限收藏", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
+				hasPermission = true
+			} else {
+				logger.Error("访问密钥已过期", logger.S("file_id", fmt.Sprintf("%d", fileID)))
+			}
+		} else {
+			logger.Error("访问密钥无效", logger.S("file_id", fmt.Sprintf("%d", fileID)))
+		}
+	}
+
+	if !hasPermission {
+		logger.Error("用户无权限收藏文件", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
 		return errorer.New(errorer.ErrNotFileOwner)
 	}
 
