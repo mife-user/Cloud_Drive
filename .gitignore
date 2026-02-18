@@ -34,3 +34,6 @@ word.txt
 .trae/specs/file-favorites/checklist.md
 .trae/specs/file-favorites/spec.md
 .trae/specs/file-favorites/tasks.md
+.trae/specs/chunked_upload_spec/checklist.md
+.trae/specs/chunked_upload_spec/spec.md
+.trae/specs/chunked_upload_spec/tasks.md
