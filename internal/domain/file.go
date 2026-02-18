@@ -27,3 +27,14 @@ type FileFavorite struct {
 	UserID uint
 	FileID uint
 }
+
+type UploadTask struct {
+	gorm.Model
+	UserID           uint
+	FileName         string
+	FileSize         int64
+	FileMD5          string
+	TotalChunks      int
+	CompletedChunks  string
+	Status           int
+}

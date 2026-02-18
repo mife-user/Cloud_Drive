@@ -70,6 +70,7 @@ func (r *Router) Setup() *gin.Engine {
 			file.POST("/favorite", r.fileHandler.AddFavorite)
 			file.DELETE("/favorite/:file_id", r.fileHandler.RemoveFavorite)
 			file.GET("/favorites", r.fileHandler.GetFavorites)
+			file.GET("/upload/status/:task_id", r.fileHandler.GetUploadStatus)
 		}
 	}
 

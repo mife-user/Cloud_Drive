@@ -35,3 +35,14 @@ type FileFavorite struct {
 	UserID uint `gorm:"not null;index;comment:用户ID"`
 	FileID uint `gorm:"not null;index;comment:文件ID"`
 }
+
+type UploadTask struct {
+	gorm.Model
+	UserID           uint   `gorm:"not null;index;comment:用户ID"`
+	FileName         string `gorm:"type:varchar(255);not null;default:'未命名文件';comment:文件名"`
+	FileSize         int64  `gorm:"not null;default:0;comment:文件大小"`
+	FileMD5          string `gorm:"type:varchar(255);not null;default:'';comment:文件MD5"`
+	TotalChunks      int    `gorm:"not null;default:0;comment:总分片数"`
+	CompletedChunks  string `gorm:"type:text;comment:已完成的分片索引列表"`
+	Status           int    `gorm:"not null;default:0;comment:状态：0-进行中，1-已完成，2-已取消"`
+}
