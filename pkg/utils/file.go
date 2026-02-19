@@ -26,8 +26,8 @@ func SaveFile(header *multipart.FileHeader, k *domain.File) (*domain.File, error
 	dirPath := filepath.Dir(header.Filename)   // 包含子目录路径
 	fileName := filepath.Base(header.Filename) // 文件名
 	//查看路径是否包含..
-	if strings.ContainsRune(dirPath, filepath.Separator) {
-		return nil, fmt.Errorf("目录路径包含无效路径分隔符: %s", dirPath)
+	if strings.Contains(dirPath, "..") || strings.Contains(fileName, "..") {
+		return nil, fmt.Errorf("文件名包含无效路径: %s", header.Filename)
 	}
 	// 创建存储目录结构
 	storageBase := fmt.Sprintf("./storage/%v", k.UserID)

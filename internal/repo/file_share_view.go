@@ -13,7 +13,7 @@ import (
 func (r *fileRepo) AccessShare(ctx context.Context, shareID string, accessKey string) (*domain.File, error) {
 	logger.Info("开始访问分享", logger.S("share_id", shareID))
 	// 获取分享记录
-	fileShare, err := r.getShare(ctx, shareID, accessKey)
+	fileShare, err := r.getShareRecord(ctx, shareID, accessKey)
 	if err != nil {
 		logger.Error("获取分享记录失败", logger.S("share_id", shareID), logger.C(err))
 		return nil, err
@@ -28,8 +28,8 @@ func (r *fileRepo) AccessShare(ctx context.Context, shareID string, accessKey st
 	return file, nil
 }
 
-// getShare 获取分享记录
-func (r *fileRepo) getShare(ctx context.Context, shareID string, accessKey string) (*domain.FileShare, error) {
+// getShareRecord 获取分享记录
+func (r *fileRepo) getShareRecord(ctx context.Context, shareID string, accessKey string) (*domain.FileShare, error) {
 	var fileShare domain.FileShare
 	// 从缓存中获取分享记录
 	if err := r.rd.Get(ctx, fmt.Sprintf("share:%s", shareID)).Scan(&fileShare); err != nil {

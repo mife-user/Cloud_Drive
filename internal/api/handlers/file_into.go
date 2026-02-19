@@ -36,7 +36,7 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
-	userRole, existsRole := c.Get("user_role")
+	userRole, existsRole := c.Get("role")
 	if !existsRole {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
