@@ -7,8 +7,9 @@ import (
 )
 
 func (r *fileRepo) CheckUserSize(ctx context.Context, userID uint, totalSize int64) (int64, bool) {
+	var err error
 	var user domain.User
-	if err := r.db.Where("user_id", userID).First(&user).Error; err != nil {
+	if err = r.db.Where("id", userID).First(&user).Error; err != nil {
 		logger.Error("查询用户失败", logger.C(err))
 		return 0, false
 	}

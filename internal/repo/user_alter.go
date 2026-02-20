@@ -4,14 +4,15 @@ import (
 	"context"
 	"drive/internal/domain"
 	"drive/pkg/errorer"
+	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"drive/pkg/utils"
-	"encoding/json"
 	"time"
 )
 
 // RemixUser 修改用户信息
 func (r *userRepo) RemixUser(ctx context.Context, user *domain.User) error {
+	var err error
 	// 检查用户名是否为空
 	if user.UserName == "" {
 		logger.Debug("修改用户失败" + errorer.ErrUserNameNotFound)
@@ -24,7 +25,7 @@ func (r *userRepo) RemixUser(ctx context.Context, user *domain.User) error {
 	}
 	var oldUser domain.User
 	// 检查用户是否存在
-	if err := r.db.Where("id = ?", user.ID).First(&oldUser).Error; err == nil {
+	if err = r.db.Where("id = ?", user.ID).First(&oldUser).Error; err == nil {
 		// 加密密码
 		hashedPassword, err := utils.HashPassword(user.PassWord)
 		if err != nil {
@@ -36,19 +37,19 @@ func (r *userRepo) RemixUser(ctx context.Context, user *domain.User) error {
 		user.Role = oldUser.Role
 		user.ID = oldUser.ID
 		// 更新用户信息
-		if err := r.db.Model(&domain.User{}).
+		if err = r.db.Model(&domain.User{}).
 			Where("id = ?", user.ID).
 			Updates(user).Error; err != nil {
 			logger.Error("修改用户失败"+errorer.ErrUpdateUserFailed, logger.C(err))
 			return err
 		}
 		// 缓存用户信息
-		userjsonIn, errjson := json.Marshal(user)
-		if errjson != nil {
-			logger.Error("修改用户失败"+errorer.ErrUpdateUserFailed, logger.C(errjson))
-			return errjson
+		userjsonIn, err := exc.ExcFileToJSON(user)
+		if err != nil {
+			logger.Error("修改用户失败"+errorer.ErrUpdateUserFailed, logger.C(err))
+			return err
 		}
-		if err := r.rd.Set(ctx, "user:"+user.UserName, string(userjsonIn), time.Hour*3).Err(); err != nil {
+		if err = r.rd.Set(ctx, "user:"+user.UserName, userjsonIn, time.Hour*3).Err(); err != nil {
 			logger.Debug("修改用户失败"+errorer.ErrUpdateUserFailed, logger.C(err))
 			return err
 		}

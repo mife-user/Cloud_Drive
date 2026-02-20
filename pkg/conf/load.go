@@ -44,10 +44,7 @@ func LoadConfig() (*Config, error) {
 		return nil, fmt.Errorf("解析配置失败：%w", err)
 	}
 
-	globalConfig.Upload.initAllowedTypesSet()
-	//直接输出所有配置，用于检查
-	fmt.Println("所有配置:", globalConfig)
-
+	globalConfig.Upload.InitAllowedTypesSet()
 	return &globalConfig, nil
 }
 

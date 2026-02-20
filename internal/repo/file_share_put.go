@@ -13,14 +13,11 @@ import (
 )
 
 // ShareFile 生成文件分享
-func (r *fileRepo) ShareFile(ctx context.Context, fileID uint, userID uint, owner string) (shareID string, accessKey string, err error) {
-	logger.Info("开始分享文件",
-		logger.S("file_id", fmt.Sprintf("%d", fileID)),
-		logger.S("user_id", fmt.Sprintf("%d", userID)))
+func (r *fileRepo) ShareFile(ctx context.Context, fileID uint, userID uint, owner string) (string, string, error) {
+	var err error
+	shareID := uuid.New().String() // 生成分享ID
 
-	shareID = uuid.New().String() // 生成分享ID
-
-	accessKey, err = utils.GenerateRandomString(32) // 生成访问密钥
+	accessKey, err := utils.GenerateRandomString(32) // 生成访问密钥
 	if err != nil {
 		logger.Error("生成访问密钥失败", logger.C(err))
 		return "", "", err
@@ -37,7 +34,7 @@ func (r *fileRepo) ShareFile(ctx context.Context, fileID uint, userID uint, owne
 		ExpiresAt: expiresAt,
 	}
 
-	if err := r.db.Create(fileShare).Error; err != nil { // 保存分享记录到数据库
+	if err = r.db.Create(fileShare).Error; err != nil { // 保存分享记录到数据库
 		logger.Error("创建分享记录失败", logger.C(err))
 		return "", "", err
 	}

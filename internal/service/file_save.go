@@ -12,9 +12,9 @@ import (
 // SaveFiles 保存文件
 func SaveFiles(files []*multipart.FileHeader, userID uint, userName string, userRole string, filekey *domain.File) (*[]*domain.File, error) {
 	if userRole != "VIP" {
-		filekey.Size = 1024 * 1024 * 1024 // 普通用户文件大小限制为1GB
+		filekey.Size = 1073741824 // 普通用户文件大小限制为1GB
 	} else {
-		filekey.Size = 1024 * 1024 * 2048 // 会员用户文件大小限制为2GB
+		filekey.Size = 2147483648 // 会员用户文件大小限制为2GB
 	}
 	//初始化文件
 	filekey.Owner = userName

@@ -12,6 +12,7 @@ import (
 
 // 用户登录
 func (r *userRepo) Logon(ctx context.Context, user *domain.User) error {
+	var err error
 	// 检查用户名是否为空
 	if user.UserName == "" {
 		logger.Debug("登录用户失败"+errorer.ErrUserNameNotFound, logger.S("user_name", user.UserName))
@@ -24,25 +25,25 @@ func (r *userRepo) Logon(ctx context.Context, user *domain.User) error {
 	}
 	// 先根据用户名查询用户
 	var existingUser domain.User
-	userjsonOut, errjsonout := r.rd.Get(ctx, "user:"+user.UserName).Result()
-	if errjsonout == nil {
-		if err := exc.ExcJSONToFile(userjsonOut, &existingUser); err != nil {
+	userjsonOut, err := r.rd.Get(ctx, "user:"+user.UserName).Result()
+	if err == nil {
+		if err = exc.ExcJSONToFile(userjsonOut, &existingUser); err != nil {
 			logger.Error("从缓存中解析用户信息失败", logger.S("user_name", user.UserName), logger.C(err))
 			return err
 		}
 	} else {
 		// 缓存中不存在用户，从数据库查询
-		if err := r.db.Where("user_name = ?", user.UserName).First(&existingUser).Error; err != nil {
+		if err = r.db.Where("user_name = ?", user.UserName).First(&existingUser).Error; err != nil {
 			logger.Error("登录用户失败", logger.S("user_name", user.UserName), logger.C(err))
 			return err
 		}
 		// 缓存用户信息
-		userjsonIn, errjsonIn := exc.ExcFileToJSON(existingUser)
-		if errjsonIn != nil {
-			logger.Error("缓存用户信息失败", logger.S("user_name", user.UserName), logger.C(errjsonIn))
+		userjsonIn, err := exc.ExcFileToJSON(existingUser)
+		if err != nil {
+			logger.Error("缓存用户信息失败", logger.S("user_name", user.UserName), logger.C(err))
 			// 缓存失败不影响登录结果
 		}
-		if err := r.rd.Set(ctx, "user:"+user.UserName, userjsonIn, time.Hour*3).Err(); err != nil {
+		if err = r.rd.Set(ctx, "user:"+user.UserName, userjsonIn, time.Hour*3).Err(); err != nil {
 			logger.Error("缓存用户信息失败", logger.S("user_name", user.UserName), logger.C(err))
 			// 缓存失败不影响登录结果
 		}

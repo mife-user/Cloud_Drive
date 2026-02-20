@@ -565,3 +565,67 @@ net/http.(*conn).serve
 02-19 16:39:49.724	开始访问分享	{"share_id": "269dfbda-8aa3-4ecb-af97-af3376d74e1a"}||
 02-19 16:39:49.736	访问分享成功	{"share_id": "269dfbda-8aa3-4ecb-af97-af3376d74e1a", "file_id": "1"}||
 02-19 16:39:49.736	访问分享成功	{"share_id": "269dfbda-8aa3-4ecb-af97-af3376d74e1a", "file_path": "storage/1/20250619114032_1.jpg"}||
+02-20 09:18:18.573	开始处理用户注册请求||
+02-20 09:18:18.645	注册用户成功	{"user_name": "mife"}||
+02-20 09:18:18.646	用户注册请求处理完成||
+02-20 09:18:22.271	登录用户成功	{"user_name": "mife"}||
+02-20 09:18:29.971	开始处理文件上传请求||
+02-20 09:18:29.972	查询用户失败	{"error": "Error 1054 (42S22): Unknown column 'user_id' in 'where clause'"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*fileRepo).CheckUserSize
+	/app/internal/repo/file_size_check.go:12
+drive/internal/api/handlers.(*FileHandler).UploadFile
+	/app/internal/api/handlers/file_save.go:55
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.TypeCheck.func3
+	/app/internal/api/middlewares/type.go:32
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-20 09:18:29.973	文件上传请求处理完成||
+02-20 09:36:01.838	开始处理用户注册请求||
+02-20 09:36:01.911	注册用户成功	{"user_name": "mife"}||
+02-20 09:36:01.913	用户注册请求处理完成||
+02-20 09:36:04.095	登录用户成功	{"user_name": "mife"}||
+02-20 09:36:06.900	开始处理文件上传请求||
+02-20 09:36:06.902	文件上传请求处理完成||
+02-20 09:43:35.789	开始处理用户注册请求||
+02-20 09:43:35.857	注册用户成功	{"user_name": "mife"}||
+02-20 09:43:35.857	用户注册请求处理完成||
+02-20 09:43:45.413	登录用户成功	{"user_name": "mife"}||
+02-20 09:44:04.266	开始处理文件上传请求||
+02-20 09:44:04.268	文件上传请求处理完成||
+02-20 09:46:41.675	开始处理用户注册请求||
+02-20 09:46:41.748	注册用户成功	{"user_name": "mife"}||
+02-20 09:46:41.749	用户注册请求处理完成||
+02-20 09:46:43.746	登录用户成功	{"user_name": "mife"}||
+02-20 09:46:50.271	开始处理文件上传请求||
+02-20 09:46:50.272	文件上传请求处理完成||
+02-20 09:48:05.866	开始处理用户注册请求||
+02-20 09:48:05.948	注册用户成功	{"user_name": "mife"}||
+02-20 09:48:05.949	用户注册请求处理完成||

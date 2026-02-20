@@ -10,12 +10,12 @@ import (
 
 // RemoveFavorite 取消文件收藏
 func (r *fileRepo) RemoveFavorite(ctx context.Context, userID uint, fileID uint) error {
-	logger.Info("开始取消收藏", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
+	var err error
 
 	result := r.db.Where("user_id = ? AND file_id = ?", userID, fileID).Delete(&domain.FileFavorite{})
-	if result.Error != nil {
-		logger.Error("取消收藏失败", logger.C(result.Error))
-		return result.Error
+	if err = result.Error; err != nil {
+		logger.Error("取消收藏失败", logger.C(err))
+		return err
 	}
 
 	if result.RowsAffected == 0 {

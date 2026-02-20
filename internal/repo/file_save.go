@@ -14,13 +14,14 @@ import (
 
 // 文件上传
 func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File, nowSize int64) error {
+	var err error
 	// 检查文件切片是否为空
 	if len(files) == 0 {
 		logger.Error("上传文件失败: " + errorer.ErrEmptySlice)
 		return fmt.Errorf(errorer.ErrEmptySlice)
 	}
 	// 上传文件到数据库
-	if err := r.db.Create(files).Error; err != nil {
+	if err = r.db.CreateInBatches(files, len(files)).Error; err != nil {
 		logger.Error("上传文件失败", logger.C(err))
 		return err
 	}
@@ -49,13 +50,13 @@ func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File, nowSize
 				logger.Error("缓存文件信息失败", logger.C(err))
 				return
 			}
-			r.rd.Expire(ctx, userKey, 24*time.Hour) // 设置缓存过期时间为24小时
 		})
 	}
+	pool.Stop()
 	// 等待所有任务完成
 	wg.Wait()
-	pool.Stop()
-	if err := r.db.Model(&domain.User{}).Where("user_id", userID).Update("now_size", nowSize).Error; err != nil {
+	r.rd.Expire(ctx, userKey, 24*time.Hour) // 设置缓存过期时间为24小时
+	if err = r.db.Model(&domain.User{}).Where("user_id", userID).Update("now_size", nowSize).Error; err != nil {
 		logger.Error("更新用户空间失败", logger.C(err))
 		return err
 	}
