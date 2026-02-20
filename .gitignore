@@ -38,3 +38,6 @@ word.txt
 .trae/specs/upload-security-speed-limiting/spec.md
 .trae/documents/file-type-check-optimization_plan.md
 .trae/specs/upload-security-speed-limiting/tasks.md
+.trae/specs/cloud-drive-frontend/checklist.md
+.trae/specs/cloud-drive-frontend/spec.md
+.trae/specs/cloud-drive-frontend/tasks.md

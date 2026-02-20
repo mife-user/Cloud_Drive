@@ -10,7 +10,8 @@ type UserRepo interface {
 
 type FileRepo interface {
 	UploadFile(ctx context.Context, files []*File) error
-	ViewFile(ctx context.Context, userID any) ([]File, error)
+	ViewFilesNote(ctx context.Context, userID uint) ([]File, error)
+	ViewFile(ctx context.Context, fileID uint) (*File, error)
 	ShareFile(ctx context.Context, fileID uint, userID uint, owner string) (shareID string, accessKey string, err error)
 	AccessShare(ctx context.Context, shareID string, accessKey string) (*File, error)
 	UpdateFilePermissions(ctx context.Context, fileID uint, userID uint, permissions string) error

@@ -357,3 +357,211 @@ drive/pkg/pool.(*Pool).Start.func1
 02-12 08:19:57.962	登录用户成功	{"user_name": "mife"}||
 02-12 08:20:02.128	上传文件成功||
 02-12 08:20:07.993	查询文件成功||
+02-19 16:25:03.845	注册用户成功	{"user_name": "mife"}||
+02-19 16:25:07.483	登录用户成功	{"user_name": "mife"}||
+02-19 16:27:50.628	开始处理文件上传请求||
+02-19 16:27:50.648	上传文件成功||
+02-19 16:27:50.649	文件上传请求处理完成||
+02-19 16:27:54.943	开始处理查看所有文件请求||
+02-19 16:27:54.944	查询文件成功||
+02-19 16:27:54.945	查看所有文件请求处理完成||
+02-19 16:31:46.060	开始处理分享文件请求||
+02-19 16:31:46.066	绑定请求参数失败	{"error": "EOF"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/api/handlers.(*FileHandler).ShareFile
+	/app/internal/api/handlers/file_share.go:20
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-19 16:31:51.880	开始处理分享文件请求||
+02-19 16:31:51.881	绑定请求参数失败	{"error": "EOF"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/api/handlers.(*FileHandler).ShareFile
+	/app/internal/api/handlers/file_share.go:20
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-19 16:32:57.228	开始处理分享文件请求||
+02-19 16:32:57.229	绑定请求参数失败	{"error": "invalid character '=' after object key"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/api/handlers.(*FileHandler).ShareFile
+	/app/internal/api/handlers/file_share.go:20
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-19 16:33:01.028	开始处理分享文件请求||
+02-19 16:33:01.029	绑定请求参数失败	{"error": "invalid character '=' after object key"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/api/handlers.(*FileHandler).ShareFile
+	/app/internal/api/handlers/file_share.go:20
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-19 16:33:06.541	开始处理分享文件请求||
+02-19 16:33:06.541	绑定请求参数失败	{"error": "invalid character '=' after object key"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/api/handlers.(*FileHandler).ShareFile
+	/app/internal/api/handlers/file_share.go:20
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-19 16:34:12.820	开始处理分享文件请求||
+02-19 16:34:12.821	绑定请求参数失败	{"error": "json: cannot unmarshal string into Go struct field ShareFileRequest.file_id of type uint"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/api/handlers.(*FileHandler).ShareFile
+	/app/internal/api/handlers/file_share.go:20
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-19 16:34:32.941	开始处理分享文件请求||
+02-19 16:34:32.941	开始分享文件	{"file_id": "1", "user_id": "1"}||
+02-19 16:34:32.957	分享文件成功	{"share_id": "269dfbda-8aa3-4ecb-af97-af3376d74e1a"}||
+02-19 16:34:32.958	分享文件成功	{"share_id": "269dfbda-8aa3-4ecb-af97-af3376d74e1a", "file_id": "1"}||
+02-19 16:39:49.723	开始处理访问分享请求||
+02-19 16:39:49.724	开始访问分享	{"share_id": "269dfbda-8aa3-4ecb-af97-af3376d74e1a"}||
+02-19 16:39:49.736	访问分享成功	{"share_id": "269dfbda-8aa3-4ecb-af97-af3376d74e1a", "file_id": "1"}||
+02-19 16:39:49.736	访问分享成功	{"share_id": "269dfbda-8aa3-4ecb-af97-af3376d74e1a", "file_path": "storage/1/20250619114032_1.jpg"}||

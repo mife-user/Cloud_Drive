@@ -21,9 +21,12 @@ func LoadConfig() (*Config, error) {
 	//配置文件名称和类型
 	v.SetConfigName("config")
 	v.SetConfigType("yaml")
-	//环境变量配置
-	v.AutomaticEnv()           //自动绑定环境变量
-	v.SetEnvPrefix("CLOUDPAN") //环境变量前缀
+	//显式绑定环境变量
+	v.BindEnv("Env", "CLOUDPAN_ENV")
+	v.BindEnv("Mysql.Dsn", "CLOUDPAN_MYSQL_DSN")
+	v.BindEnv("Redis.Host", "CLOUDPAN_REDIS_HOST")
+	v.BindEnv("JWT.Secret", "CLOUDPAN_JWT_SECRET")
+	v.BindEnv("Redis.Password", "CLOUDPAN_REDIS_PASSWORD")
 	//读取主配置文件
 	if err := v.ReadInConfig(); err != nil {
 		return nil, fmt.Errorf("加载主配置失败：%w", err)
@@ -35,26 +38,15 @@ func LoadConfig() (*Config, error) {
 			return nil, fmt.Errorf("加载 %s 配置失败：%w", env, err)
 		}
 	}
+
 	//配置到结构体
 	if err := v.Unmarshal(&globalConfig); err != nil {
 		return nil, fmt.Errorf("解析配置失败：%w", err)
 	}
 
-	// 从环境变量中读取敏感信息
-	if dsn := v.GetString("mysql_dsn"); dsn != "" {
-		globalConfig.Mysql.Dsn = dsn
-	}
-	if host := v.GetString("redis_host"); host != "" {
-		globalConfig.Redis.Host = host
-	}
-	if port := v.GetString("redis_port"); port != "" {
-		globalConfig.Redis.Port = port
-	}
-	if password := v.GetString("redis_password"); password != "" {
-		globalConfig.Redis.Password = password
-	}
-
 	globalConfig.Upload.initAllowedTypesSet()
+	//直接输出所有配置，用于检查
+	fmt.Println("所有配置:", globalConfig)
 
 	return &globalConfig, nil
 }

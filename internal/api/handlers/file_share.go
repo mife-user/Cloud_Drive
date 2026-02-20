@@ -4,6 +4,7 @@ import (
 	"drive/internal/api/dtos"
 	"drive/internal/service"
 	"drive/pkg/errorer"
+	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"fmt"
 	"net/http"
@@ -110,7 +111,7 @@ func (h *FileHandler) UpdateFilePermissions(c *gin.Context) {
 		return
 	}
 
-	fileID, err := service.ParseID(fileIDStr)
+	fileID, err := exc.StrToUint(fileIDStr)
 	if err != nil {
 		logger.Error("文件ID格式错误", logger.C(err))
 		c.JSON(http.StatusBadRequest, gin.H{"error": "文件ID格式错误"})
@@ -214,7 +215,7 @@ func (h *FileHandler) RemoveFavorite(c *gin.Context) {
 		return
 	}
 
-	fileID, err := service.ParseID(fileIDStr)
+	fileID, err := exc.StrToUint(fileIDStr)
 	if err != nil {
 		logger.Error("文件ID格式错误", logger.C(err))
 		c.JSON(http.StatusBadRequest, gin.H{"error": "文件ID格式错误"})

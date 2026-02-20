@@ -48,6 +48,5 @@ func (r *fileRepo) ShareFile(ctx context.Context, fileID uint, userID uint, owne
 	}
 	r.rd.Set(ctx, fmt.Sprintf("share:%s", shareID), shareJSON, 24*time.Hour) // 缓存分享记录
 
-	logger.Info("分享文件成功", logger.S("share_id", shareID))
 	return shareID, accessKey, nil
 }
