@@ -7,4 +7,6 @@ type User struct {
 	UserName string
 	PassWord string
 	Role     string
+	Size     int64
+	NowSize  int64
 }

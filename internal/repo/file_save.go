@@ -13,7 +13,7 @@ import (
 )
 
 // 文件上传
-func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File) error {
+func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File, nowSize int64) error {
 	// 检查文件切片是否为空
 	if len(files) == 0 {
 		logger.Error("上传文件失败: " + errorer.ErrEmptySlice)
@@ -24,6 +24,7 @@ func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File) error {
 		logger.Error("上传文件失败", logger.C(err))
 		return err
 	}
+
 	// 缓存文件信息
 	userID := files[0].UserID
 	userKey := fmt.Sprintf("files:%d", userID)
@@ -54,6 +55,10 @@ func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File) error {
 	// 等待所有任务完成
 	wg.Wait()
 	pool.Stop()
+	if err := r.db.Model(&domain.User{}).Where("user_id", userID).Update("now_size", nowSize).Error; err != nil {
+		logger.Error("更新用户空间失败", logger.C(err))
+		return err
+	}
 	logger.Info("上传文件成功")
 	return nil
 }

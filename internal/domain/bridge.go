@@ -9,7 +9,8 @@ type UserRepo interface {
 }
 
 type FileRepo interface {
-	UploadFile(ctx context.Context, files []*File) error
+	CheckUserSize(ctx context.Context, userID uint, totalSize int64) (int64, bool)
+	UploadFile(ctx context.Context, files []*File, nowSize int64) error
 	ViewFilesNote(ctx context.Context, userID uint) ([]File, error)
 	ViewFile(ctx context.Context, fileID uint) (*File, error)
 	ShareFile(ctx context.Context, fileID uint, userID uint, owner string) (shareID string, accessKey string, err error)

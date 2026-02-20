@@ -210,34 +210,30 @@ func (h *FileHandler) RemoveFavorite(c *gin.Context) {
 
 	fileIDStr := c.Param("file_id")
 	if fileIDStr == "" {
-		logger.Error("文件ID为空")
 		c.JSON(http.StatusBadRequest, gin.H{"error": "文件ID不能为空"})
 		return
 	}
 
 	fileID, err := exc.StrToUint(fileIDStr)
 	if err != nil {
-		logger.Error("文件ID格式错误", logger.C(err))
 		c.JSON(http.StatusBadRequest, gin.H{"error": "文件ID格式错误"})
 		return
 	}
 
 	userID, existsID := c.Get("user_id")
 	if !existsID {
-		logger.Error("获取用户ID失败")
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
 
 	userIDUint, ok := userID.(uint)
 	if !ok {
-		logger.Error("用户ID类型转换失败")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "类型错误"})
 		return
 	}
 
 	if err := h.fileRepo.RemoveFavorite(c.Request.Context(), userIDUint, fileID); err != nil {
-		logger.Error("取消收藏失败", logger.S("file_id", fileIDStr), logger.C(err))
+
 		switch err.Error() {
 		case errorer.ErrFavoriteNotExist:
 			c.JSON(http.StatusNotFound, gin.H{"error": "收藏不存在"})

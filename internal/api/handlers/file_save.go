@@ -18,6 +18,7 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 	// 获取上传的文件
 	file, err := c.MultipartForm()
 	if err != nil {
+
 		c.JSON(http.StatusBadRequest, gin.H{"error": "获取文件失败: " + err.Error()})
 		return
 	}
@@ -27,12 +28,14 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 	// 获取当前登录用户ID
 	userID, existsID := c.Get("user_id")
 	if !existsID {
+
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
 	// 获取当前登录用户名
 	userName, existsNM := c.Get("user_name")
 	if !existsNM {
+
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
@@ -41,8 +44,21 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
+	userIDUint, userNameSTR, userRoleSTR, ok := service.ExchangeType(userID, userName, userRole)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "类型转换失败"})
+		return
+	}
+	//获取上传文件所有大小
+	totalSize := service.GetTotalSize(files)
+	//检查用户额度是否足够
+	nowSize, ok := h.fileRepo.CheckUserSize(c, userIDUint, totalSize)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "用户空间不足"})
+		return
+	}
 	// 保存文件
-	fileRecords, err := service.SaveFiles(files, userID, userName, userRole, fileDto.ToDMFile())
+	fileRecords, err := service.SaveFiles(files, userIDUint, userNameSTR, userRoleSTR, fileDto.ToDMFile())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件失败: " + err.Error()})
 		return
@@ -53,7 +69,7 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件记录失败: 没有文件记录"})
 		return
 	}
-	if err := h.fileRepo.UploadFile(c, *fileRecords); err != nil {
+	if err := h.fileRepo.UploadFile(c, *fileRecords, nowSize); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件记录失败: " + err.Error()})
 		return
 	}

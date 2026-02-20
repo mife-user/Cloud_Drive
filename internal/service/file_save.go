@@ -2,7 +2,6 @@ package service
 
 import (
 	"drive/internal/domain"
-	"drive/pkg/errorer"
 	"drive/pkg/logger"
 	"drive/pkg/pool"
 	"drive/pkg/utils"
@@ -11,33 +10,15 @@ import (
 )
 
 // SaveFiles 保存文件
-func SaveFiles(files []*multipart.FileHeader, userID any, userName any, userRole any, filekey *domain.File) (*[]*domain.File, error) {
-	// 检查用户角色是否为会员
-	userRoleStr, ok := userRole.(string)
-	if !ok {
-		logger.Error("userRole类型转换失败")
-		return nil, errorer.New(errorer.ErrTypeError)
-	}
-	if userRoleStr != "VIP" {
+func SaveFiles(files []*multipart.FileHeader, userID uint, userName string, userRole string, filekey *domain.File) (*[]*domain.File, error) {
+	if userRole != "VIP" {
 		filekey.Size = 1024 * 1024 * 1024 // 普通用户文件大小限制为1GB
 	} else {
 		filekey.Size = 1024 * 1024 * 2048 // 会员用户文件大小限制为2GB
 	}
-	// 转换userID为uint类型
-	userIDUint, ok := userID.(uint)
-	if !ok {
-		logger.Error("userID类型转换失败")
-		return nil, errorer.New(errorer.ErrTypeError)
-	}
-	// 转换userName为string类型
-	userNameStr, ok := userName.(string)
-	if !ok {
-		logger.Error("userName类型转换失败")
-		return nil, errorer.New(errorer.ErrTypeError)
-	}
 	//初始化文件
-	filekey.Owner = userNameStr
-	filekey.UserID = userIDUint
+	filekey.Owner = userName
+	filekey.UserID = userID
 	// 创建文件记录通道
 	recordCh := make(chan *domain.File, len(files))
 	// 保存文件

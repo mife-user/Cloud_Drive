@@ -7,6 +7,8 @@ type User struct {
 	UserName string `gorm:"type:varchar(100);not null;default:'默认用户';comment:用户名"`
 	PassWord string `gorm:"type:varchar(100);not null;comment:密码"`
 	Role     string `gorm:"type:varchar(50);not null;default:'NOVIP';comment:角色"`
+	Size     int64  `gorm:"not null;default:1024*3;comment:用户空间大小"`
+	NowSize  int64  `gorm:"not null;default:0;comment:当前已用空间"`
 	Files    []File `gorm:"foreignKey:UserID"`
 }
 
