@@ -629,3 +629,362 @@ net/http.(*conn).serve
 02-20 09:48:05.866	开始处理用户注册请求||
 02-20 09:48:05.948	注册用户成功	{"user_name": "mife"}||
 02-20 09:48:05.949	用户注册请求处理完成||
+02-21 02:31:23.441	开始处理用户注册请求||
+02-21 02:31:23.523	注册用户成功	{"user_name": "mife"}||
+02-21 02:31:23.523	用户注册请求处理完成||
+02-21 02:31:27.292	登录用户成功	{"user_name": "mife"}||
+02-21 02:33:10.657	开始处理文件上传请求||
+02-21 02:33:10.672	更新用户空间失败	{"error": "Error 1054 (42S22): Unknown column 'user_id' in 'where clause'"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*fileRepo).UploadFile
+	/app/internal/repo/file_save.go:60
+drive/internal/api/handlers.(*FileHandler).UploadFile
+	/app/internal/api/handlers/file_save.go:72
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.TypeCheck.func3
+	/app/internal/api/middlewares/type.go:32
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-21 02:33:10.673	文件上传请求处理完成||
+02-21 02:41:16.220	开始处理用户注册请求||
+02-21 02:41:16.282	注册用户成功	{"user_name": "mife"}||
+02-21 02:41:16.285	用户注册请求处理完成||
+02-21 02:41:18.600	登录用户成功	{"user_name": "mife"}||
+02-21 02:41:41.181	开始处理文件上传请求||
+02-21 02:41:41.247	上传文件成功||
+02-21 02:41:41.247	文件上传请求处理完成||
+02-21 02:42:17.749	开始处理查看所有文件请求||
+02-21 02:42:17.751	查询文件成功||
+02-21 02:42:17.751	查看所有文件请求处理完成||
+02-21 02:44:26.058	开始处理查看单个文件请求||
+02-21 02:44:26.058	StrToUint类型转换失败
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/pkg/exc.StrToUint
+	/app/pkg/exc/exc_format.go:12
+drive/internal/api/handlers.(*FileHandler).ViewFile
+	/app/internal/api/handlers/file_view.go:18
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-21 02:44:26.059	查看单个文件请求处理完成||
+02-21 02:45:30.996	开始处理查看单个文件请求||
+02-21 02:45:31.004	查看单个文件请求处理完成||
+02-21 02:45:52.340	开始处理分享文件请求||
+02-21 02:45:52.355	分享文件成功	{"share_id": "d1502f5c-006d-46b2-9b2e-8532f576d22a", "file_id": "1"}||
+02-21 02:50:22.960	开始处理用户注册请求||
+02-21 02:50:23.030	注册用户成功	{"user_name": "mife"}||
+02-21 02:50:23.030	用户注册请求处理完成||
+02-21 02:50:26.386	登录用户成功	{"user_name": "mife"}||
+02-21 02:50:34.086	开始处理文件上传请求||
+02-21 02:50:34.127	上传文件成功||
+02-21 02:50:34.128	文件上传请求处理完成||
+02-21 02:50:40.569	开始处理查看所有文件请求||
+02-21 02:50:40.570	查询文件成功||
+02-21 02:50:40.570	查看所有文件请求处理完成||
+02-21 02:50:48.661	开始处理分享文件请求||
+02-21 02:50:48.722	分享文件成功	{"share_id": "ff1b97a7-6f10-4314-b28a-6b4510aeb137", "file_id": "1"}||
+02-21 02:54:18.051	开始处理访问分享请求||
+02-21 02:54:18.061	访问分享成功	{"share_id": "ff1b97a7-6f10-4314-b28a-6b4510aeb137", "file_path": "storage/1/20250619114032_1.jpg"}||
+02-21 03:02:57.015	开始处理更新文件权限请求||
+02-21 03:02:57.035	更新文件权限成功	{"file_id": "1"}||
+02-21 03:02:57.035	更新文件权限成功	{"file_id": "1"}||
+02-21 03:03:02.189	开始处理查看单个文件请求||
+02-21 03:03:02.191	查看单个文件请求处理完成||
+02-21 03:03:07.183	开始处理查看所有文件请求||
+02-21 03:03:07.186	查询文件成功||
+02-21 03:03:07.187	查看所有文件请求处理完成||
+02-21 03:03:11.619	开始处理查看所有文件请求||
+02-21 03:03:11.620	查询文件成功||
+02-21 03:03:11.620	查看所有文件请求处理完成||
+02-21 03:03:18.872	开始处理更新文件权限请求||
+02-21 03:03:18.889	更新文件权限成功	{"file_id": "1"}||
+02-21 03:03:18.890	更新文件权限成功	{"file_id": "1"}||
+02-21 03:03:25.020	开始处理查看所有文件请求||
+02-21 03:03:25.021	查询文件成功||
+02-21 03:03:25.021	查看所有文件请求处理完成||
+02-21 05:33:01.055	开始处理添加收藏请求||
+02-21 05:33:01.056	绑定请求参数失败	{"error": "invalid character '\"' after object key:value pair"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/api/handlers.(*FileHandler).AddFavorite
+	/app/internal/api/handlers/file_share.go:167
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-21 05:34:36.495	开始处理添加收藏请求||
+02-21 05:34:36.496	绑定请求参数失败	{"error": "invalid character '\"' after object key:value pair"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/api/handlers.(*FileHandler).AddFavorite
+	/app/internal/api/handlers/file_share.go:167
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-21 05:35:06.003	开始处理添加收藏请求||
+02-21 05:35:06.020	绑定请求参数失败	{"error": "invalid character 'ï' after object key:value pair"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/api/handlers.(*FileHandler).AddFavorite
+	/app/internal/api/handlers/file_share.go:167
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-21 05:35:38.657	开始处理添加收藏请求||
+02-21 05:35:38.692	添加收藏成功	{"user_id": "1", "file_id": "1"}||
+02-21 05:35:38.692	添加收藏成功	{"file_id": "1"}||
+02-21 05:37:41.444	开始处理获取收藏列表请求||
+02-21 05:37:41.448	获取收藏列表成功	{"count": "1"}||
+02-21 05:39:06.099	开始处理取消收藏请求||
+02-21 05:39:06.114	取消收藏成功	{"user_id": "1", "file_id": "1"}||
+02-21 05:39:06.117	取消收藏成功	{"file_id": "1"}||
+02-21 05:39:09.073	开始处理获取收藏列表请求||
+02-21 05:39:09.074	获取收藏列表成功	{"count": "0"}||
+02-21 08:23:13.506	开始处理用户注册请求||
+02-21 08:23:13.582	注册用户成功	{"user_name": "mife"}||
+02-21 08:23:13.583	用户注册请求处理完成||
+02-21 08:23:17.077	登录用户成功	{"user_name": "mife"}||
+02-21 08:23:25.338	开始处理文件上传请求||
+02-21 08:23:25.360	上传文件成功||
+02-21 08:23:25.360	文件上传请求处理完成||
+02-21 08:23:28.929	开始处理查看所有文件请求||
+02-21 08:23:28.930	查询文件成功||
+02-21 08:23:28.931	查看所有文件请求处理完成||
+02-21 08:34:09.774	开始处理用户注册请求||
+02-21 08:34:09.845	注册用户成功	{"user_name": "mife"}||
+02-21 08:34:09.845	用户注册请求处理完成||
+02-21 08:34:12.142	登录用户成功	{"user_name": "mife"}||
+02-21 08:34:14.768	开始处理文件上传请求||
+02-21 08:34:14.803	上传文件成功||
+02-21 08:34:14.804	文件上传请求处理完成||
+02-21 08:34:16.928	开始处理查看所有文件请求||
+02-21 08:34:16.929	查询文件成功||
+02-21 08:34:16.929	查看所有文件请求处理完成||
+02-21 08:34:27.309	开始处理分享文件请求||
+02-21 08:34:27.329	分享文件成功	{"share_id": "1bc4143c-fb63-4a7e-aef1-ecdb19f77deb", "file_id": "1"}||
+02-21 08:35:08.913	开始处理访问分享请求||
+02-21 08:35:08.916	访问分享成功	{"share_id": "1bc4143c-fb63-4a7e-aef1-ecdb19f77deb", "file_path": "storage/1/20250619114032_1.jpg"}||
+02-21 08:35:25.793	开始处理查看单个文件请求||
+02-21 08:35:25.797	查看单个文件请求处理完成||
+02-21 08:35:45.808	开始处理更新文件权限请求||
+02-21 08:35:45.810	更新文件权限失败	{"file_id": "1", "error": "unsupported data type: map[permissions:private]: Table not set, please set it like: db.Model(&user) or db.Table(\"users\")"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*fileRepo).UpdateFilePermissions
+	/app/internal/repo/file_share_alter.go:70
+drive/internal/api/handlers.(*FileHandler).UpdateFilePermissions
+	/app/internal/api/handlers/file_share.go:142
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-21 08:35:45.810	更新文件权限失败	{"file_id": "1", "error": "unsupported data type: map[permissions:private]: Table not set, please set it like: db.Model(&user) or db.Table(\"users\")"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/api/handlers.(*FileHandler).UpdateFilePermissions
+	/app/internal/api/handlers/file_share.go:143
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-21 08:38:29.573	开始处理添加收藏请求||
+02-21 08:38:29.589	添加收藏成功	{"user_id": "1", "file_id": "1"}||
+02-21 08:38:29.590	添加收藏成功	{"file_id": "1"}||
+02-21 08:38:37.749	开始处理获取收藏列表请求||
+02-21 08:38:37.751	获取收藏列表成功	{"count": "1"}||
+02-21 08:38:45.334	开始处理取消收藏请求||
+02-21 08:38:45.335	查询缓存收藏记录失败	{"error": "strconv.ParseBool: parsing \"{\\\"ID\\\":1,\\\"CreatedAt\\\":\\\"2026-02-21T08:38:29.578Z\\\",\\\"UpdatedAt\\\":\\\"2026-02-21T08:38:29.578Z\\\",\\\"DeletedAt\\\":null,\\\"UserID\\\":1,\\\"FileID\\\":1}\": invalid syntax"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*fileRepo).RemoveFavorite
+	/app/internal/repo/file_love_nix.go:20
+drive/internal/api/handlers.(*FileHandler).RemoveFavorite
+	/app/internal/api/handlers/file_share.go:235
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func2
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||

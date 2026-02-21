@@ -24,6 +24,9 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 		logger.Debug(fmt.Sprintf("注册用户失败%s", errorer.ErrPasswordNotFound), logger.S("user_name", user.UserName))
 		return errorer.New(errorer.ErrPasswordNotFound)
 	}
+	if user.Role == "" {
+		user.Role = "NOVIP"
+	}
 	//缓存检查用户是否已存在
 	if err = r.rd.Get(ctx, "user:"+user.UserName).Err(); err == nil {
 		logger.Debug(fmt.Sprintf("注册用户失败%s", errorer.ErrUserNameExist), logger.S("user_name", user.UserName))
@@ -48,7 +51,7 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 	}
 	user.PassWord = hashedPassword
 	// 创建用户
-	if err = r.db.Select("user_name", "pass_word").Create(user).Error; err != nil {
+	if err = r.db.Select("user_name", "pass_word", "role").Create(user).Error; err != nil {
 		logger.Error("注册用户失败", logger.S("user_name", user.UserName), logger.C(err))
 		return err
 	}

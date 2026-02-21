@@ -19,8 +19,8 @@ func (r *fileRepo) AddFavorite(ctx context.Context, userID uint, fileID uint) er
 		return errorer.New(errorer.ErrFileNotExist)
 	}
 
-	if file.UserID != userID {
-		logger.Error("非文件所有者，无法收藏", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
+	if file.UserID != userID && file.Permissions != "public" {
+		logger.Error("非文件所有者或文件权限不是公开，无法收藏", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
 		return errorer.New(errorer.ErrNotFileOwner)
 	}
 	if err = r.addLoveRecord(ctx, userID, fileID); err != nil {
@@ -68,12 +68,14 @@ func (r *fileRepo) getLoveRecord(ctx context.Context, userID uint, fileID uint) 
 // addLoveRecord 添加文件收藏记录
 func (r *fileRepo) addLoveRecord(ctx context.Context, userID uint, fileID uint) error {
 	var err error
-	userKey := fmt.Sprintf("loves:%d", userID)
-	fileIDSTR := fmt.Sprintf("love:%d", fileID)
-	if err = r.rd.Get(ctx, userKey).Err(); err == nil {
+	userKey := fmt.Sprintf("lover:%d", userID)
+	fileIDSTR := fmt.Sprintf("file:%d", fileID)
+	// 检查文件是否已收藏
+	if err = r.rd.HGet(ctx, userKey, fileIDSTR).Err(); err == nil {
 		logger.Info("文件已收藏", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
 		return errorer.New(errorer.ErrFavoriteExist)
 	}
+	// 检查数据库中是否已存在收藏记录
 	if err = r.db.Where("user_id = ? AND file_id = ?", userID, fileID).First(&domain.FileFavorite{}).Error; err == nil {
 		logger.Info("文件已收藏", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
 		return errorer.New(errorer.ErrFavoriteExist)
@@ -86,8 +88,18 @@ func (r *fileRepo) addLoveRecord(ctx context.Context, userID uint, fileID uint) 
 		logger.Error("添加收藏失败", logger.C(err))
 		return err
 	}
-	if err = r.rd.Set(ctx, userKey, fileIDSTR, 24*time.Hour).Err(); err != nil {
+	favoriteJSON, err := exc.ExcFileToJSON(favorite)
+	if err != nil {
+		logger.Error("序列化收藏记录失败", logger.C(err))
+		return err
+	}
+	if err = r.rd.HSet(ctx, userKey, fileIDSTR, favoriteJSON).Err(); err != nil {
 		logger.Error("缓存收藏记录失败", logger.C(err))
+		return err
+	}
+	// 设置缓存过期时间为3小时
+	if err = r.rd.Expire(ctx, userKey, 3*time.Hour).Err(); err != nil {
+		logger.Error("设置缓存过期时间失败", logger.C(err))
 		return err
 	}
 	return nil

@@ -19,7 +19,7 @@ type File struct {
 	Path        string `gorm:"type:varchar(255);not null;default:'/';comment:文件路径"`
 	UserID      uint   `gorm:"not null;comment:用户ID"`
 	Owner       string `gorm:"type:varchar(100);not null;default:'no_name_user';comment:文件所有者"`
-	Permissions string `gorm:"type:varchar(100);not null;default:'yes';comment:权限"`
+	Permissions string `gorm:"type:varchar(100);not null;default:'public';comment:权限"`
 }
 
 type FileShare struct {

@@ -43,7 +43,7 @@ func (r *fileRepo) ShareFile(ctx context.Context, fileID uint, userID uint, owne
 		logger.Error("序列化分享记录失败", logger.C(err))
 		return "", "", err
 	}
-	r.rd.Set(ctx, fmt.Sprintf("share:%s", shareID), shareJSON, 24*time.Hour) // 缓存分享记录
+	r.rd.Set(ctx, fmt.Sprintf("share:%s", shareID), shareJSON, 3*time.Hour) // 缓存分享记录
 
 	return shareID, accessKey, nil
 }

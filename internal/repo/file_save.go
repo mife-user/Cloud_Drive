@@ -44,9 +44,9 @@ func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File, nowSize
 				logger.Error("序列化文件信息失败", logger.C(err))
 				return // 继续处理其他文件，不影响整体操作
 			}
-			fileIDSTR := fmt.Sprintf("file:%d", f.ID)
+			fileKey := fmt.Sprintf("file:%d", f.ID)
 			// 缓存单个文件信息
-			if err := r.rd.HSet(ctx, userKey, fileIDSTR, fileJSON).Err(); err != nil {
+			if err := r.rd.HSet(ctx, userKey, fileKey, fileJSON).Err(); err != nil {
 				logger.Error("缓存文件信息失败", logger.C(err))
 				return
 			}
@@ -55,8 +55,8 @@ func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File, nowSize
 	pool.Stop()
 	// 等待所有任务完成
 	wg.Wait()
-	r.rd.Expire(ctx, userKey, 24*time.Hour) // 设置缓存过期时间为24小时
-	if err = r.db.Model(&domain.User{}).Where("user_id", userID).Update("now_size", nowSize).Error; err != nil {
+	r.rd.Expire(ctx, userKey, 3*time.Hour) // 设置缓存过期时间为3小时
+	if err = r.db.Model(&domain.User{}).Where("id", userID).Update("now_size", nowSize).Error; err != nil {
 		logger.Error("更新用户空间失败", logger.C(err))
 		return err
 	}

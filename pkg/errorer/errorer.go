@@ -19,8 +19,10 @@ const (
 	ErrShareExpired     = "共享已过期"  // ErrShareExpired 共享已过期
 	ErrNotFileOwner     = "非文件所有者" // ErrNotFileOwner 非文件所有者
 	// 文件收藏错误
-	ErrFavoriteExist    = "文件已收藏"  // ErrFavoriteExist 文件已收藏
-	ErrFavoriteNotExist = "收藏不存在"  // ErrFavoriteNotExist 收藏不存在
+	ErrFavoriteExist    = "文件已收藏" // ErrFavoriteExist 文件已收藏
+	ErrFavoriteNotExist = "收藏不存在" // ErrFavoriteNotExist 收藏不存在
+	// 文件权限错误
+	ErrInvalidPermissions = "无效的权限参数" // ErrInvalidPermissions 无效的权限参数
 	// 其他错误
 	ErrTypeError = "类型错误" // ErrTypeError 类型错误
 )

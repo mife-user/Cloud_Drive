@@ -21,7 +21,7 @@ func (r *fileRepo) ViewFilesNote(ctx context.Context, userID uint) ([]domain.Fil
 	userKey := fmt.Sprintf("files:%s", userIDStr)         // 缓存键名
 	fileJSONs, err := r.rd.HGetAll(ctx, userKey).Result() // 查询缓存中的所有文件信息
 	if err != nil {
-		logger.Error("查询缓存文件失败", logger.S("user_id", userIDStr), logger.C(err))
+		logger.Error("查询缓存文件信息失败", logger.C(err))
 		return nil, err
 	}
 	// 并发解析缓存中的文件信息
