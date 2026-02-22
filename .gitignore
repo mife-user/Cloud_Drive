@@ -23,25 +23,4 @@ go.work.sum
 
 # env file
 .env
-FUTURE_PROJECT_STRUCTURE.md
-project_reference.md
-.trae/documents/解决 domain 层结构体绑定问题.md
-.trae/documents/file_permissions_dto_optimization_plan.md
-word.txt
-.trae/specs/file-sharing/tasks.md
-.trae/specs/file-sharing/spec.md
-.trae/specs/file-sharing/checklist.md
-.trae/specs/file-favorites/checklist.md
-.trae/specs/file-favorites/spec.md
-.trae/specs/file-favorites/tasks.md
-.trae/specs/upload-security-speed-limiting/checklist.md
-.trae/specs/upload-security-speed-limiting/spec.md
-.trae/documents/file-type-check-optimization_plan.md
-.trae/specs/upload-security-speed-limiting/tasks.md
-.trae/specs/cloud-drive-frontend/checklist.md
-.trae/specs/cloud-drive-frontend/spec.md
-.trae/specs/cloud-drive-frontend/tasks.md
-.trae/documents/fix_file_view_note_plan.md
-.trae/specs/fix-registration-record-not-found/checklist.md
-.trae/specs/fix-registration-record-not-found/spec.md
-.trae/specs/fix-registration-record-not-found/tasks.md
+
