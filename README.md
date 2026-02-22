@@ -35,4 +35,5 @@ Lanshan寒假考核
 - [x] Redis
 - [x] Docker
 ## 前端测试链接
+[测试链接](https://github.com/mife-user/Cloud_Drive/blob/main/%E5%89%8D%E7%AB%AF%E6%B5%8B%E8%AF%95.md)
 
