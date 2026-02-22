@@ -11,6 +11,11 @@ type User struct {
 	NowSize  int64  `gorm:"not null;default:0;comment:当前已用空间"`
 	Files    []File `gorm:"foreignKey:UserID"`
 }
+type UserHeader struct {
+	gorm.Model
+	UserID     uint   `gorm:"not null;index;comment:用户ID"`
+	HeaderPath string `gorm:"type:varchar(255);not null;default:'/Header';comment:用户头像路径"`
+}
 
 type File struct {
 	gorm.Model

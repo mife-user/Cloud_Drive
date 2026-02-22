@@ -54,6 +54,7 @@ func (r *Router) Setup() *gin.Engine {
 		{
 			user.POST("/register", r.userHandler.Register)
 			user.POST("/login", r.authHandler.Login)
+			user.POST("/header", r.userHandler.UpdateHeader)
 		}
 
 		// 文件路由 - 公开访问（不需要认证）

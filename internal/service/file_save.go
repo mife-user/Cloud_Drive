@@ -4,7 +4,7 @@ import (
 	"drive/internal/domain"
 	"drive/pkg/logger"
 	"drive/pkg/pool"
-	"drive/pkg/utils"
+	"drive/pkg/save"
 	"mime/multipart"
 	"sync"
 )
@@ -31,13 +31,20 @@ func SaveFiles(files []*multipart.FileHeader, userID uint, userName string, user
 		// 提交任务到协程池
 		pool.Submit(func() {
 			defer wg.Done()
-			fileRecord, err := utils.SaveFile(h, filekey)
+			fileName, size, tempPath, err := save.SaveFile(h, filekey.Size, userID)
 			if err != nil {
 				logger.Error("保存文件失败: %v", logger.C(err))
 				return
 			}
 			// 将文件记录发送到通道
-			recordCh <- fileRecord
+			recordCh <- &domain.File{
+				FileName:    fileName,
+				Size:        size,
+				Path:        tempPath,
+				Owner:       userName,
+				UserID:      userID,
+				Permissions: filekey.Permissions,
+			}
 		})
 	}
 	wg.Wait()

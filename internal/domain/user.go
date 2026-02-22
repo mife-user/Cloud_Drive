@@ -10,3 +10,8 @@ type User struct {
 	Size     int64
 	NowSize  int64
 }
+type UserHeader struct {
+	gorm.Model
+	UserID     uint
+	HeaderPath string
+}
