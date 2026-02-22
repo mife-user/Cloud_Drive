@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"context"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,6 +14,9 @@ import (
 // GetFavorites 获取收藏列表
 func (h *FileHandler) GetFavorites(c *gin.Context) {
 	logger.Info("开始处理获取收藏列表请求")
+	// 设置合理的超时时间，获取收藏列表涉及数据库查询
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
+	defer cancel()
 
 	userID, existsID := c.Get("user_id")
 	if !existsID {
@@ -27,7 +32,7 @@ func (h *FileHandler) GetFavorites(c *gin.Context) {
 		return
 	}
 
-	files, err := h.fileRepo.GetFavorites(c, userIDUint)
+	files, err := h.fileRepo.GetFavorites(ctx, userIDUint)
 	if err != nil {
 		logger.Error("获取收藏列表失败", logger.C(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "获取收藏列表失败"})

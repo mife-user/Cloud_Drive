@@ -1,6 +1,7 @@
 package save
 
 import (
+	"context"
 	"fmt"
 	"mime/multipart"
 	"os"
@@ -10,7 +11,7 @@ import (
 )
 
 // SaveFile 保存文件
-func SaveFile(header *multipart.FileHeader, size int64, userID uint) (string, int64, string, error) {
+func SaveFile(ctx context.Context, header *multipart.FileHeader, size int64, userID uint, rating int) (string, int64, string, error) {
 	// 检查文件大小是否超过限制
 	if header.Size > size {
 		return "", 0, "", fmt.Errorf("单个文件大小超过限制: %v", header.Size)
@@ -55,9 +56,10 @@ func SaveFile(header *multipart.FileHeader, size int64, userID uint) (string, in
 		return "", 0, "", fmt.Errorf("创建文件失败: %w", err)
 	}
 	defer dst.Close()
-
+	// 限制器
+	limiter := newReadLimit(ctx, file, rating, 1024*1024)
 	// 保存文件
-	if _, err := dst.ReadFrom(file); err != nil {
+	if _, err := dst.ReadFrom(limiter); err != nil {
 		return "", 0, "", fmt.Errorf("保存文件失败: %w", err)
 	}
 

@@ -54,7 +54,7 @@ func (r *Router) Setup() *gin.Engine {
 		{
 			user.POST("/register", r.userHandler.Register)
 			user.POST("/login", r.authHandler.Login)
-			user.POST("/header", r.userHandler.UpdateHeader)
+			user.POST("/header", middlewares.AuthMiddleware(r.config), r.userHandler.UpdateHeader)
 		}
 
 		// 文件路由 - 公开访问（不需要认证）
@@ -64,6 +64,7 @@ func (r *Router) Setup() *gin.Engine {
 		file := api.Group("/file")
 		file.Use(middlewares.AuthMiddleware(r.config))
 		{
+
 			file.POST("/upload", middlewares.TypeCheck(r.config), r.fileHandler.UploadFile)
 			file.GET("/view", r.fileHandler.ViewFilesNote)
 			file.GET("/view/:file_id", r.fileHandler.ViewFile)

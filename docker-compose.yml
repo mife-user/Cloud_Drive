@@ -38,7 +38,6 @@ services:
       - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
     volumes:
       - mysql-data:/var/lib/mysql
-      - ./deployments/docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
     networks:
       - cloudpan-net
 

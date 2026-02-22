@@ -1,11 +1,13 @@
 package handlers
 
 import (
+	"context"
 	"drive/internal/api/dtos"
 	"drive/internal/service"
 	"drive/pkg/logger"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,6 +15,10 @@ import (
 // ShareFile 分享文件
 func (h *FileHandler) ShareFile(c *gin.Context) {
 	logger.Info("开始处理分享文件请求")
+	// 设置合理的超时时间，分享文件涉及数据库和缓存操作
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
+	defer cancel()
+	defer logger.Info("分享文件请求处理完成")
 
 	var req dtos.ShareFileRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -43,7 +49,7 @@ func (h *FileHandler) ShareFile(c *gin.Context) {
 		return
 	}
 	// 分享文件
-	shareID, accessKey, err := h.fileRepo.ShareFile(c, req.FileID, userIDUint, userNameStr)
+	shareID, accessKey, err := h.fileRepo.ShareFile(ctx, req.FileID, userIDUint, userNameStr)
 	if err != nil {
 		logger.Error("分享文件失败", logger.S("file_id", fmt.Sprintf("%d", req.FileID)), logger.C(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"context"
 	"drive/internal/api/dtos"
 	"drive/pkg/errorer"
 	"drive/pkg/logger"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,6 +14,10 @@ import (
 // AccessShare 访问文件分享
 func (h *FileHandler) AccessShare(c *gin.Context) {
 	logger.Info("开始处理访问分享请求")
+	// 设置合理的超时时间，访问分享涉及数据库查询和文件下载
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 30*time.Second)
+	defer cancel()
+	defer logger.Info("访问分享请求处理完成")
 
 	shareID := c.Param("share_id")
 	if shareID == "" {
@@ -27,7 +33,7 @@ func (h *FileHandler) AccessShare(c *gin.Context) {
 		return
 	}
 
-	file, err := h.fileRepo.AccessShare(c.Request.Context(), shareID, req.AccessKey)
+	file, err := h.fileRepo.AccessShare(ctx, shareID, req.AccessKey)
 	if err != nil {
 		logger.Error("访问分享失败", logger.S("share_id", shareID), logger.C(err))
 		switch err.Error() {

@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"context"
 	"drive/internal/api/dtos"
 	"drive/pkg/logger"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,12 +14,15 @@ import (
 func (h *UserHandler) Register(c *gin.Context) {
 	logger.Info("开始处理用户注册请求")
 	defer logger.Info("用户注册请求处理完成")
+	// 设置合理的超时时间，注册操作涉及数据库写入和缓存
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
+	defer cancel()
 	var userDto dtos.UserDtos
 	if err := c.ShouldBindJSON(&userDto); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})
 		return
 	}
-	if err := h.userRepo.Register(c, userDto.ToDMUser()); err != nil {
+	if err := h.userRepo.Register(ctx, userDto.ToDMUser()); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "注册失败"})
 		return
 	}

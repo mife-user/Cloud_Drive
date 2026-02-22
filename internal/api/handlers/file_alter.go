@@ -1,11 +1,13 @@
 package handlers
 
 import (
+	"context"
 	"drive/internal/api/dtos"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +15,9 @@ import (
 // UpdateFilePermissions 更新文件权限
 func (h *FileHandler) UpdateFilePermissions(c *gin.Context) {
 	logger.Info("开始处理更新文件权限请求")
-
+	// 设置合理的超时时间，文件权限更新涉及数据库和缓存操作
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
+	defer cancel()
 	fileIDStr := c.Param("file_id")
 	if fileIDStr == "" {
 		logger.Error("文件ID为空")
@@ -49,7 +53,7 @@ func (h *FileHandler) UpdateFilePermissions(c *gin.Context) {
 		return
 	}
 
-	if err := h.fileRepo.UpdateFilePermissions(c.Request.Context(), fileID, userIDUint, req.Permissions); err != nil {
+	if err := h.fileRepo.UpdateFilePermissions(ctx, fileID, userIDUint, req.Permissions); err != nil {
 		logger.Error("更新文件权限失败", logger.S("file_id", fileIDStr), logger.C(err))
 		switch err.Error() {
 		case errorer.ErrFileNotExist:

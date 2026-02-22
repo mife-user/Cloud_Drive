@@ -1,11 +1,14 @@
 package handlers
 
 import (
+	"context"
 	"drive/internal/api/dtos"
 	"drive/internal/domain"
 	"drive/pkg/auth"
 	"drive/pkg/conf"
+	"drive/pkg/logger"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,6 +29,11 @@ func NewAuthHandler(userRepo domain.UserRepo, config *conf.Config) *AuthHandler 
 
 // Login 用户登录
 func (h *AuthHandler) Login(c *gin.Context) {
+	logger.Info("开始处理用户登录请求")
+	defer logger.Info("用户登录请求处理完成")
+	// 设置合理的超时时间，登录操作涉及数据库查询和缓存
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
+	defer cancel()
 	var userDtos dtos.UserDtos
 	if err := c.ShouldBindJSON(&userDtos); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误", "details": err.Error()})
@@ -39,7 +47,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	}
 
 	user := userDtos.ToDMUser()
-	if err := h.userRepo.Logon(c, user); err != nil {
+	if err := h.userRepo.Logon(ctx, user); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "用户名或密码错误"})
 		return
 	}

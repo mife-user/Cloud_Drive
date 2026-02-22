@@ -1,13 +1,14 @@
 package save
 
 import (
+	"context"
 	"fmt"
 	"mime/multipart"
 	"os"
 )
 
 // SaveHeader 保存用户头像
-func SaveHeader(fileHeader *multipart.FileHeader, userID uint) (uint, string, error) {
+func SaveHeader(ctx context.Context, fileHeader *multipart.FileHeader, userID uint, rating int) (uint, string, error) {
 	// 打开文件
 	file, err := fileHeader.Open()
 	if err != nil {
@@ -26,8 +27,10 @@ func SaveHeader(fileHeader *multipart.FileHeader, userID uint) (uint, string, er
 		return 0, "", fmt.Errorf("创建文件失败: %w", err)
 	}
 	defer dst.Close()
+	//限制器
+	limiter := newReadLimit(ctx, file, rating, 1024*1024)
 	// 保存文件
-	if _, err := dst.ReadFrom(file); err != nil {
+	if _, err := dst.ReadFrom(limiter); err != nil {
 		return 0, "", fmt.Errorf("保存文件失败: %w", err)
 	}
 	return userID, headerPath, nil

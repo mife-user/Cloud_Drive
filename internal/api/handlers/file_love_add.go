@@ -1,12 +1,14 @@
 package handlers
 
 import (
+	"context"
 	"drive/internal/api/dtos"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +16,9 @@ import (
 // AddFavorite 添加文件收藏
 func (h *FileHandler) AddFavorite(c *gin.Context) {
 	logger.Info("开始处理添加收藏请求")
+	// 设置合理的超时时间，收藏操作涉及数据库和缓存
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
+	defer cancel()
 
 	var req dtos.FavoriteFileRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -36,7 +41,7 @@ func (h *FileHandler) AddFavorite(c *gin.Context) {
 		return
 	}
 
-	if err := h.fileRepo.AddFavorite(c.Request.Context(), userIDUint, req.FileID); err != nil {
+	if err := h.fileRepo.AddFavorite(ctx, userIDUint, req.FileID); err != nil {
 		logger.Error("添加收藏失败", logger.S("file_id", fmt.Sprintf("%d", req.FileID)), logger.C(err))
 		switch err.Error() {
 		case errorer.ErrFileNotExist:

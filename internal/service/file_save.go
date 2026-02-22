@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"drive/internal/domain"
 	"drive/pkg/logger"
 	"drive/pkg/pool"
@@ -10,15 +11,19 @@ import (
 )
 
 // SaveFiles 保存文件
-func SaveFiles(files []*multipart.FileHeader, userID uint, userName string, userRole string, filekey *domain.File) (*[]*domain.File, error) {
+func SaveFiles(ctx context.Context, files []*multipart.FileHeader, userRole string, filekey *domain.File) (*[]*domain.File, error) {
+	var rating int
+	// 检查用户角色是否为VIP用户
+	if userRole != "VIP" {
+		rating = 512 * 1024
+	} else {
+		rating = 1024 * 1024
+	}
 	if userRole != "VIP" {
 		filekey.Size = 1073741824 // 普通用户文件大小限制为1GB
 	} else {
 		filekey.Size = 2147483648 // 会员用户文件大小限制为2GB
 	}
-	//初始化文件
-	filekey.Owner = userName
-	filekey.UserID = userID
 	// 创建文件记录通道
 	recordCh := make(chan *domain.File, len(files))
 	// 保存文件
@@ -31,7 +36,7 @@ func SaveFiles(files []*multipart.FileHeader, userID uint, userName string, user
 		// 提交任务到协程池
 		pool.Submit(func() {
 			defer wg.Done()
-			fileName, size, tempPath, err := save.SaveFile(h, filekey.Size, userID)
+			fileName, size, tempPath, err := save.SaveFile(ctx, h, filekey.Size, filekey.UserID, rating)
 			if err != nil {
 				logger.Error("保存文件失败: %v", logger.C(err))
 				return
@@ -41,8 +46,8 @@ func SaveFiles(files []*multipart.FileHeader, userID uint, userName string, user
 				FileName:    fileName,
 				Size:        size,
 				Path:        tempPath,
-				Owner:       userName,
-				UserID:      userID,
+				Owner:       filekey.Owner,
+				UserID:      filekey.UserID,
 				Permissions: filekey.Permissions,
 			}
 		})

@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"context"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,6 +14,9 @@ import (
 // RemoveFavorite 取消文件收藏
 func (h *FileHandler) RemoveFavorite(c *gin.Context) {
 	logger.Info("开始处理取消收藏请求")
+	// 设置合理的超时时间，取消收藏操作涉及数据库和缓存
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
+	defer cancel()
 
 	fileIDStr := c.Param("file_id")
 	if fileIDStr == "" {
@@ -37,7 +42,7 @@ func (h *FileHandler) RemoveFavorite(c *gin.Context) {
 		return
 	}
 
-	if err := h.fileRepo.RemoveFavorite(c.Request.Context(), userIDUint, fileID); err != nil {
+	if err := h.fileRepo.RemoveFavorite(ctx, userIDUint, fileID); err != nil {
 
 		switch err.Error() {
 		case errorer.ErrFavoriteNotExist:
