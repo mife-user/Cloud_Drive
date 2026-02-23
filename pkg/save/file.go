@@ -39,7 +39,7 @@ func SaveFile(ctx context.Context, header *multipart.FileHeader, size int64, use
 	}
 
 	// 生成唯一文件名（处理命名冲突）
-	ext := filepath.Ext(fileName)
+	ext := filepath.Ext(fileName) // 文件扩展名
 	baseName := fileName[:len(fileName)-len(ext)]
 	finalFileName := fileName
 	tempPath := filepath.Join(storageDir, finalFileName)

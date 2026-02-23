@@ -89,7 +89,7 @@ func (r *fileRepo) getFavoriteFiles(ctx context.Context, favorites []domain.File
 		// 缓存中不存在，查询数据库
 		if err != nil {
 			if err = r.db.Where("id = ?", favorite.FileID).First(&file).Error; err != nil {
-				logger.Debug("查询文件失败，跳过", logger.S("file_id", fmt.Sprintf("%d", favorite.FileID)), logger.C(err))
+				logger.Debug("查询文件失败，跳过", logger.C(err))
 				continue
 			}
 			if fileJSON, err = exc.ExcFileToJSON(file); err != nil {
@@ -101,7 +101,7 @@ func (r *fileRepo) getFavoriteFiles(ctx context.Context, favorites []domain.File
 				continue
 			}
 			if file.UserID != userID && file.Permissions != "public" {
-				logger.Debug("用户不再有文件访问权限，跳过", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", file.ID)))
+				logger.Debug("用户不再有文件访问权限，跳过", logger.U("user_id", userID), logger.S("file_id", fmt.Sprintf("%d", file.ID)))
 				continue
 			}
 			// 设置缓存过期时间为3小时
@@ -112,6 +112,10 @@ func (r *fileRepo) getFavoriteFiles(ctx context.Context, favorites []domain.File
 		} else {
 			if err = exc.ExcJSONToFile(fileJSON, &file); err != nil {
 				logger.Error("反序列化文件信息失败", logger.C(err))
+				continue
+			}
+			if file.DeletedAt.Valid {
+				logger.Error("文件已被删除", logger.U("file_id", favorite.FileID))
 				continue
 			}
 		}

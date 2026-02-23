@@ -15,7 +15,7 @@ var database *gorm.DB = nil
 func Init() error {
 	g := conf.GetConfig()
 	//重试机制
-	for i := 0; i < 3; i++ {
+	for i := 0; i < 5; i++ {
 		fmt.Printf("数据库连接尝试 %d\n", i+1)
 		conn, err := gorm.Open(mysql.Open(g.Mysql.Dsn), &gorm.Config{})
 		if err != nil {

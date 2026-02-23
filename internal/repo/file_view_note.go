@@ -35,6 +35,9 @@ func (r *fileRepo) ViewFilesNote(ctx context.Context, userID uint) ([]domain.Fil
 		workerPool.Submit(func() {
 			defer wg.Done()
 			var file domain.File
+			if file.DeletedAt.Valid {
+				return
+			}
 			if err = exc.ExcJSONToFile(fileJSON, &file); err != nil {
 				logger.Debug("解析缓存文件信息失败", logger.C(err))
 				return
@@ -65,9 +68,9 @@ func (r *fileRepo) ViewFilesNote(ctx context.Context, userID uint) ([]domain.Fil
 			logger.Error("查询文件失败", logger.S("user_id", userIDStr), logger.C(err))
 			return nil, err
 		}
-		logger.Info("从数据库查询文件成功")
+		logger.Info("从数据库查询文件成功", logger.S("user_id", userIDStr))
 		return filesNew, nil
 	}
-	logger.Info("查询文件成功")
+	logger.Info("查询文件成功", logger.S("user_id", userIDStr))
 	return files, nil
 }

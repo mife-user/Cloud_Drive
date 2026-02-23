@@ -64,7 +64,7 @@ func (r *Router) Setup() *gin.Engine {
 		file := api.Group("/file")
 		file.Use(middlewares.AuthMiddleware(r.config))
 		{
-
+			file.GET("/view/deleted", r.fileHandler.ViewDeletedFiles)
 			file.POST("/upload", middlewares.TypeCheck(r.config), r.fileHandler.UploadFile)
 			file.GET("/view", r.fileHandler.ViewFilesNote)
 			file.GET("/view/:file_id", r.fileHandler.ViewFile)
@@ -73,6 +73,8 @@ func (r *Router) Setup() *gin.Engine {
 			file.POST("/favorite", r.fileHandler.AddFavorite)
 			file.DELETE("/favorite/:file_id", r.fileHandler.RemoveFavorite)
 			file.GET("/favorites", r.fileHandler.GetFavorites)
+			file.DELETE("/delete/:file_id", r.fileHandler.DeleteFile)
+			file.DELETE("/delete/:file_id/forever", r.fileHandler.DeleteFileForever)
 		}
 	}
 

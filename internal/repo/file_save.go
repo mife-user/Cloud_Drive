@@ -17,7 +17,7 @@ func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File, nowSize
 	var err error
 	// 检查文件切片是否为空
 	if len(files) == 0 {
-		logger.Error("上传文件失败: " + errorer.ErrEmptySlice)
+		logger.Error(fmt.Sprintf("上传文件失败: %s", errorer.ErrEmptySlice))
 		return fmt.Errorf(errorer.ErrEmptySlice)
 	}
 	// 上传文件到数据库
@@ -63,6 +63,6 @@ func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File, nowSize
 		logger.Error("更新用户空间失败", logger.C(err))
 		return err
 	}
-	logger.Info("上传文件成功")
+	logger.Info("上传文件成功", logger.U("user_id", userID))
 	return nil
 }

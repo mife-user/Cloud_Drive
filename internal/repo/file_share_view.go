@@ -43,7 +43,7 @@ func (r *fileRepo) getShareRecord(ctx context.Context, shareID string, accessKey
 			return nil, err
 		}
 		// 序列化分享记录
-		shareJSON, err := exc.ExcFileToJSON(fileShare)
+		shareJSON, err = exc.ExcFileToJSON(fileShare)
 		if err != nil {
 			logger.Error("序列化分享记录失败", logger.C(err))
 			return nil, err
@@ -89,7 +89,7 @@ func (r *fileRepo) getShareFile(ctx context.Context, share *domain.FileShare) (*
 	if err = mapcmd.Err(); err != nil {
 		// 缓存中不存在，查询数据库
 		if err = r.db.Where("id = ?", share.FileID).First(&file).Error; err != nil {
-			logger.Error("查询文件失败", logger.S("file_id", fmt.Sprintf("%d", share.FileID)), logger.C(err))
+			logger.Error("查询文件失败", logger.C(err))
 			return nil, err
 		}
 		fileJSON, err = exc.ExcFileToJSON(file)
@@ -115,6 +115,10 @@ func (r *fileRepo) getShareFile(ctx context.Context, share *domain.FileShare) (*
 		if err = exc.ExcJSONToFile(fileJSON, &file); err != nil {
 			logger.Error("反序列化文件信息失败", logger.C(err))
 			return nil, err
+		}
+		if file.DeletedAt.Valid {
+			logger.Error("文件已被删除", logger.U("file_id", share.FileID))
+			return nil, errorer.New(errorer.ErrFileDeleted)
 		}
 	}
 	return &file, nil

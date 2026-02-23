@@ -14,6 +14,9 @@ import (
 // 用户注册
 func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 	var err error
+	// 按ID锁
+	unlock := r.LockByID(user.ID)
+	defer unlock()
 	// 检查用户名是否为空
 	if user.UserName == "" {
 		logger.Debug(fmt.Sprintf("注册用户失败%s", errorer.ErrUserNameNotFound), logger.S("user_name", user.UserName))
@@ -29,7 +32,7 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 	}
 	//缓存检查用户是否已存在
 	if err = r.rd.Get(ctx, "user:"+user.UserName).Err(); err == nil {
-		logger.Debug(fmt.Sprintf("注册用户失败%s", errorer.ErrUserNameExist), logger.S("user_name", user.UserName))
+		logger.Debug(fmt.Sprintf("注册用户失败%s", errorer.ErrUserNameExist), logger.S("user_name", user.UserName), logger.C(err))
 		return errorer.New(errorer.ErrUserNameExist)
 	}
 	// 检查用户名是否已存在
@@ -62,7 +65,7 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 		return errjson
 	}
 	if err = r.rd.Set(ctx, "user:"+user.UserName, userjson, time.Hour*3).Err(); err != nil {
-		logger.Error("缓存用户信息失败", logger.S("user_name", user.UserName), logger.C(err))
+		logger.Error("缓存用户信息失败", logger.C(err))
 		// 缓存失败不影响注册结果
 	}
 	logger.Info("注册用户成功", logger.S("user_name", user.UserName))

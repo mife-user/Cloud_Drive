@@ -47,29 +47,29 @@ func (r *fileRepo) UpdateFilePermissions(ctx context.Context, fileID uint, userI
 			logger.Error("反序列化文件信息失败", logger.C(err))
 			return err
 		}
+		if file.DeletedAt.Valid {
+			logger.Error("文件已被删除", logger.U("file_id", fileID))
+			return errorer.New(errorer.ErrFileDeleted)
+		}
 	}
 
 	// 检查文件是否存在
 	if err = r.db.Where("id = ?", fileID).First(&file).Error; err != nil {
-		logger.Error("查询文件失败",
-			logger.S("file_id", fmt.Sprintf("%d", fileID)),
-			logger.C(err))
+		logger.Error("查询文件失败", logger.C(err))
 		return err
 	}
 	// 检查文件所有者或是否为公共文件
 	if file.UserID != userID && permissions != "public" {
 		logger.Error("非文件所有者，无法更新权限",
-			logger.S("file_id", fmt.Sprintf("%d", fileID)),
-			logger.S("user_id", fmt.Sprintf("%d", userID)))
+			logger.U("file_id", fileID),
+			logger.U("user_id", userID))
 		return errorer.New(errorer.ErrNotFileOwner)
 	}
 
 	file.Permissions = permissions // 更新文件权限
 	// 保存文件权限到数据库
 	if err = r.db.Model(&domain.File{}).Where("id = ?", fileID).Update("permissions", file.Permissions).Error; err != nil {
-		logger.Error("更新文件权限失败",
-			logger.S("file_id", fmt.Sprintf("%d", fileID)),
-			logger.C(err))
+		logger.Error("更新文件权限失败", logger.C(err))
 		return err
 	}
 	// 更新缓存中的文件权限
@@ -88,6 +88,6 @@ func (r *fileRepo) UpdateFilePermissions(ctx context.Context, fileID uint, userI
 		return err
 	}
 	logger.Info("更新文件权限成功",
-		logger.S("file_id", fmt.Sprintf("%d", fileID)))
+		logger.U("file_id", fileID))
 	return nil
 }

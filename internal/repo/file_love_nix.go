@@ -11,6 +11,8 @@ import (
 // RemoveFavorite 取消文件收藏
 func (r *fileRepo) RemoveFavorite(ctx context.Context, userID uint, fileID uint) error {
 	var err error
+	//启动事务
+
 	// 缓存查询收藏记录
 	var rdExist bool
 	userKey := fmt.Sprintf("lover:%d", userID)
@@ -27,7 +29,7 @@ func (r *fileRepo) RemoveFavorite(ctx context.Context, userID uint, fileID uint)
 		return err
 	}
 	if count == 0 {
-		logger.Error("收藏不存在", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
+		logger.Error("收藏不存在", logger.U("user_id", userID), logger.U("file_id", fileID))
 		return errorer.New(errorer.ErrFavoriteNotExist)
 	}
 
@@ -44,6 +46,6 @@ func (r *fileRepo) RemoveFavorite(ctx context.Context, userID uint, fileID uint)
 			return err
 		}
 	}
-	logger.Info("取消收藏成功", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
+	logger.Info("取消收藏成功", logger.U("user_id", userID), logger.U("file_id", fileID))
 	return nil
 }

@@ -25,8 +25,20 @@ func (h *FileHandler) ViewFile(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "文件ID格式错误"})
 		return
 	}
+	// 获取用户ID
+	userID, ok := c.Get("user_id")
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "获取用户ID失败"})
+		return
+	}
+	// 检查用户ID是否为uint类型
+	userIDUint, ok := exc.IsUint(userID)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "用户ID格式错误"})
+		return
+	}
 	// 查看文件
-	file, err := h.fileRepo.ViewFile(ctx, fileIDUint)
+	file, err := h.fileRepo.ViewFile(ctx, fileIDUint, userIDUint)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "查看文件失败: " + err.Error()})
 		return

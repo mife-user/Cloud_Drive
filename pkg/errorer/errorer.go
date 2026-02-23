@@ -14,6 +14,8 @@ const (
 	ErrFileNotExist     = "文件不存在"    // ErrFileNotExist 文件不存在
 	ErrPasswordNotFound = "密码不可为空"   // ErrPasswordNotFound 密码不可为空
 	ErrEmptySlice       = "空切片"      // ErrEmptySlice 空切片
+	// 文件删除错误
+	ErrFileDeleted = "文件已删除" // ErrFileDeleted 文件已删除
 	// 文件共享错误
 	ErrShareNotExist    = "共享不存在"  // ErrShareNotExist 共享不存在
 	ErrInvalidAccessKey = "访问密钥无效" // ErrInvalidAccessKey 访问密钥无效

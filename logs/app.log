@@ -1149,3 +1149,207 @@ net/http.(*conn).serve
 02-22 15:51:13.363	用户登录请求处理完成||
 02-22 15:51:29.934	开始处理更新用户头像请求||
 02-22 15:51:29.936	更新用户头像请求处理完成||
+02-23 13:11:47.619	开始处理用户注册请求||
+02-23 13:11:47.688	注册用户成功	{"user_name": "mife"}||
+02-23 13:11:47.688	用户注册请求处理完成||
+02-23 13:11:50.907	开始处理用户登录请求||
+02-23 13:11:50.954	登录用户成功	{"user_name": "mife"}||
+02-23 13:11:50.955	用户登录请求处理完成||
+02-23 13:11:58.791	开始处理文件上传请求||
+02-23 13:11:58.816	上传文件成功	{"user_id": 1}||
+02-23 13:11:58.817	文件上传请求处理完成||
+02-23 13:12:01.382	开始处理查看所有文件请求||
+02-23 13:12:01.384	查询文件成功	{"user_id": "1"}||
+02-23 13:12:01.384	查看所有文件请求处理完成||
+02-23 13:12:07.391	开始处理分享文件请求||
+02-23 13:12:07.411	分享文件成功	{"share_id": "7844e1db-2e95-4138-bacb-a6e9a0dddfad", "file_id": "1"}||
+02-23 13:12:07.412	分享文件请求处理完成||
+02-23 13:12:32.020	开始处理访问分享请求||
+02-23 13:12:32.025	访问分享成功	{"share_id": "7844e1db-2e95-4138-bacb-a6e9a0dddfad", "file_path": "storage/1/20250619114032_1.jpg"}||
+02-23 13:12:32.027	访问分享请求处理完成||
+02-23 13:12:36.939	开始处理查看单个文件请求||
+02-23 13:12:36.940	查询文件成功	{"file_id": 1}||
+02-23 13:12:36.941	查看单个文件请求处理完成||
+02-23 13:12:41.437	开始处理更新文件权限请求||
+02-23 13:12:41.456	更新文件权限成功	{"file_id": 1}||
+02-23 13:12:41.456	更新文件权限成功	{"file_id": "1"}||
+02-23 13:12:50.857	开始处理添加收藏请求||
+02-23 13:12:50.883	添加收藏成功	{"user_id": 1, "file_id": 1}||
+02-23 13:12:50.884	添加收藏成功	{"file_id": "1"}||
+02-23 13:12:55.185	开始处理获取收藏列表请求||
+02-23 13:12:55.186	获取收藏列表成功	{"count": "1"}||
+02-23 13:14:33.347	开始处理取消收藏请求||
+02-23 13:14:33.372	取消收藏成功	{"user_id": 1, "file_id": 1}||
+02-23 13:14:33.373	取消收藏成功	{"file_id": "1"}||
+02-23 13:14:41.345	开始处理获取收藏列表请求||
+02-23 13:14:41.346	获取收藏列表成功	{"count": "0"}||
+02-23 13:14:51.616	开始处理更新用户头像请求||
+02-23 13:14:51.660	更新用户头像请求处理完成||
+02-23 13:16:03.559	开始处理文件删除请求||
+02-23 13:16:03.574	删除文件成功	{"file_id": 1}||
+02-23 13:16:03.574	文件删除请求处理完成||
+02-23 13:16:33.466	开始处理查看用户删除文件请求||
+02-23 13:16:33.467	反序列化文件失败	{"error": "invalid character 'd' looking for beginning of value"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/pkg/exc.ExcJSONToFile
+	/app/pkg/exc/exc_json.go:22
+drive/internal/repo.(*fileRepo).GetDeletedFiles.func1
+	/app/internal/repo/file_del_view.go:38
+drive/pkg/pool.(*Pool).Start.func1
+	/app/pkg/pool/pools.go:22||
+02-23 13:16:33.467	反序列化文件失败	{"error": "invalid character 'd' looking for beginning of value"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*fileRepo).GetDeletedFiles.func1
+	/app/internal/repo/file_del_view.go:39
+drive/pkg/pool.(*Pool).Start.func1
+	/app/pkg/pool/pools.go:22||
+02-23 13:16:33.468	查询用户删除的文件成功	{"user_id": 1}||
+02-23 13:16:33.468	查看用户删除文件请求处理完成||
+02-23 13:16:44.815	开始处理查看用户删除文件请求||
+02-23 13:16:44.816	反序列化文件失败	{"error": "invalid character 'd' looking for beginning of value"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/pkg/exc.ExcJSONToFile
+	/app/pkg/exc/exc_json.go:22
+drive/internal/repo.(*fileRepo).GetDeletedFiles.func1
+	/app/internal/repo/file_del_view.go:38
+drive/pkg/pool.(*Pool).Start.func1
+	/app/pkg/pool/pools.go:22||
+02-23 13:16:44.816	反序列化文件失败	{"error": "invalid character 'd' looking for beginning of value"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*fileRepo).GetDeletedFiles.func1
+	/app/internal/repo/file_del_view.go:39
+drive/pkg/pool.(*Pool).Start.func1
+	/app/pkg/pool/pools.go:22||
+02-23 13:16:44.817	查询用户删除的文件成功	{"user_id": 1}||
+02-23 13:16:44.823	查看用户删除文件请求处理完成||
+02-23 13:16:47.968	开始处理文件删除请求||
+02-23 13:16:47.971	查询文件失败	{"file_id": 1, "error": "record not found"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*fileRepo).DeleteFile
+	/app/internal/repo/file_del.go:24
+drive/internal/api/handlers.(*FileHandler).DeleteFile
+	/app/internal/api/handlers/file_del.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func3
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-23 13:16:47.972	删除文件失败	{"error": "record not found"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/api/handlers.(*FileHandler).DeleteFile
+	/app/internal/api/handlers/file_del.go:41
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func3
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+02-23 13:16:47.972	文件删除请求处理完成||
+02-23 13:16:52.144	开始处理查看用户删除文件请求||
+02-23 13:16:52.145	反序列化文件失败	{"error": "invalid character 'd' looking for beginning of value"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/pkg/exc.ExcJSONToFile
+	/app/pkg/exc/exc_json.go:22
+drive/internal/repo.(*fileRepo).GetDeletedFiles.func1
+	/app/internal/repo/file_del_view.go:38
+drive/pkg/pool.(*Pool).Start.func1
+	/app/pkg/pool/pools.go:22||
+02-23 13:16:52.146	反序列化文件失败	{"error": "invalid character 'd' looking for beginning of value"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*fileRepo).GetDeletedFiles.func1
+	/app/internal/repo/file_del_view.go:39
+drive/pkg/pool.(*Pool).Start.func1
+	/app/pkg/pool/pools.go:22||
+02-23 13:16:52.146	查询用户删除的文件成功	{"user_id": 1}||
+02-23 13:16:52.146	查看用户删除文件请求处理完成||
+02-23 13:17:13.661	开始处理永久删除文件请求||
+02-23 13:17:13.703	永久删除文件请求处理完成||
+02-23 13:17:16.655	开始处理永久删除文件请求||
+02-23 13:17:16.657	永久删除文件请求处理完成||
+02-23 13:44:28.782	开始处理用户注册请求||
+02-23 13:44:28.854	注册用户成功	{"user_name": "mife"}||
+02-23 13:44:28.854	用户注册请求处理完成||
+02-23 13:44:31.014	开始处理用户登录请求||
+02-23 13:44:31.063	登录用户成功	{"user_name": "mife"}||
+02-23 13:44:31.063	用户登录请求处理完成||
+02-23 13:44:33.698	开始处理文件上传请求||
+02-23 13:44:33.741	上传文件成功	{"user_id": 1}||
+02-23 13:44:33.741	文件上传请求处理完成||
+02-23 13:44:35.935	开始处理查看所有文件请求||
+02-23 13:44:35.935	查询文件成功	{"user_id": "1"}||
+02-23 13:44:35.936	查看所有文件请求处理完成||
+02-23 13:44:48.476	开始处理更新用户头像请求||
+02-23 13:44:48.521	更新用户头像请求处理完成||
+02-23 13:53:48.635	开始处理用户注册请求||
+02-23 13:53:48.731	注册用户成功	{"user_name": "mife"}||
+02-23 13:53:48.732	用户注册请求处理完成||
+02-23 13:53:50.694	开始处理用户登录请求||
+02-23 13:53:50.741	登录用户成功	{"user_name": "mife"}||
+02-23 13:53:50.743	用户登录请求处理完成||
+02-23 13:53:56.115	开始处理更新用户头像请求||
+02-23 13:53:56.125	更新用户头像请求处理完成||
+02-23 13:54:00.132	开始处理文件上传请求||
+02-23 13:54:00.163	上传文件成功	{"user_id": 1}||
+02-23 13:54:00.164	文件上传请求处理完成||
+02-23 13:54:03.138	开始处理文件删除请求||
+02-23 13:54:03.171	删除文件成功	{"file_id": 1}||
+02-23 13:54:03.172	文件删除请求处理完成||
+02-23 13:54:08.276	开始处理获取收藏列表请求||
+02-23 13:54:08.277	获取收藏列表成功	{"count": "0"}||
+02-23 13:54:25.986	开始处理查看用户删除文件请求||
+02-23 13:54:25.988	查询用户删除的文件成功	{"user_id": 1}||
+02-23 13:54:25.988	查看用户删除文件请求处理完成||
+02-23 13:54:36.232	开始处理永久删除文件请求||
+02-23 13:54:36.260	永久删除文件请求处理完成||
+02-23 13:54:42.019	开始处理查看用户删除文件请求||
+02-23 13:54:42.020	查询用户删除的文件成功	{"user_id": 1}||
+02-23 13:54:42.021	查看用户删除文件请求处理完成||

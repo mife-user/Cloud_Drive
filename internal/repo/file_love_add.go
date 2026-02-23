@@ -15,20 +15,20 @@ func (r *fileRepo) AddFavorite(ctx context.Context, userID uint, fileID uint) er
 	var err error
 	file, err := r.getLoveRecord(ctx, userID, fileID)
 	if err != nil {
-		logger.Error("查询文件失败", logger.S("file_id", fmt.Sprintf("%d", fileID)), logger.C(err))
+		logger.Error("查询文件失败", logger.C(err))
 		return errorer.New(errorer.ErrFileNotExist)
 	}
 
 	if file.UserID != userID && file.Permissions != "public" {
-		logger.Error("非文件所有者或文件权限不是公开，无法收藏", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
+		logger.Error("非文件所有者或文件权限不是公开，无法收藏", logger.U("user_id", userID), logger.U("file_id", fileID))
 		return errorer.New(errorer.ErrNotFileOwner)
 	}
 	if err = r.addLoveRecord(ctx, userID, fileID); err != nil {
-		logger.Error("添加收藏失败", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)), logger.C(err))
+		logger.Error("添加收藏失败", logger.C(err))
 		return err
 	}
 
-	logger.Info("添加收藏成功", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
+	logger.Info("添加收藏成功", logger.U("user_id", userID), logger.U("file_id", fileID))
 	return nil
 }
 
@@ -39,9 +39,10 @@ func (r *fileRepo) getLoveRecord(ctx context.Context, userID uint, fileID uint) 
 	var fileJSON string
 	userKey := fmt.Sprintf("files:%d", userID)
 	fileIDSTR := fmt.Sprintf("file:%d", fileID)
-	if fileJSON, err = r.rd.HGet(ctx, userKey, fileIDSTR).Result(); err != nil {
+	mapCmd := r.rd.HGet(ctx, userKey, fileIDSTR)
+	if err = mapCmd.Err(); err != nil {
 		if err = r.db.Where("id = ?", fileID).First(&fileLove).Error; err != nil {
-			logger.Error("查询文件失败", logger.S("file_id", fmt.Sprintf("%d", fileID)), logger.C(err))
+			logger.Error("查询文件失败", logger.C(err))
 			return nil, err
 		}
 		if fileJSON, err = exc.ExcFileToJSON(fileLove); err != nil {
@@ -57,9 +58,14 @@ func (r *fileRepo) getLoveRecord(ctx context.Context, userID uint, fileID uint) 
 			return nil, err
 		}
 	} else {
+		fileJSON = mapCmd.Val()
 		if err = exc.ExcJSONToFile(fileJSON, &fileLove); err != nil {
 			logger.Error("反序列化文件信息失败", logger.C(err))
 			return nil, err
+		}
+		if fileLove.DeletedAt.Valid {
+			logger.Error("文件已被删除", logger.U("file_id", fileID))
+			return nil, errorer.New(errorer.ErrFileDeleted)
 		}
 	}
 	return &fileLove, nil
@@ -72,12 +78,12 @@ func (r *fileRepo) addLoveRecord(ctx context.Context, userID uint, fileID uint) 
 	fileIDSTR := fmt.Sprintf("file:%d", fileID)
 	// 检查文件是否已收藏
 	if err = r.rd.HGet(ctx, userKey, fileIDSTR).Err(); err == nil {
-		logger.Info("文件已收藏", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
+		logger.Info("文件已收藏", logger.C(err))
 		return errorer.New(errorer.ErrFavoriteExist)
 	}
 	// 检查数据库中是否已存在收藏记录
 	if err = r.db.Where("user_id = ? AND file_id = ?", userID, fileID).First(&domain.FileFavorite{}).Error; err == nil {
-		logger.Info("文件已收藏", logger.S("user_id", fmt.Sprintf("%d", userID)), logger.S("file_id", fmt.Sprintf("%d", fileID)))
+		logger.Info("文件已收藏", logger.C(err))
 		return errorer.New(errorer.ErrFavoriteExist)
 	}
 	favorite := &domain.FileFavorite{

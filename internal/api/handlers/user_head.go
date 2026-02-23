@@ -52,12 +52,12 @@ func (h *UserHandler) UpdateHeader(c *gin.Context) {
 	// 调用服务层更新用户头像
 	fileRecord, err := service.UpdateHeader(ctx, file, userIDUint, userRoleSTR)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "更新用户头像失败"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "更新用户头像失败"})
 		switch err.Error() {
 		case errorer.ErrFileSizeExceeded:
 			c.JSON(http.StatusBadRequest, gin.H{"error": "文件大小超过10MB"})
 		default:
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "未知错误"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		}
 		return
 	}
