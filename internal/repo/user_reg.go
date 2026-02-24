@@ -3,12 +3,12 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/pkg/cache"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"drive/pkg/utils"
 	"fmt"
-	"time"
 )
 
 // 用户注册
@@ -31,9 +31,17 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 		user.Role = "NOVIP"
 	}
 	//缓存检查用户是否已存在
-	if err = r.rd.Get(ctx, "user:"+user.UserName).Err(); err == nil {
-		logger.Debug(fmt.Sprintf("注册用户失败%s", errorer.ErrUserNameExist), logger.S("user_name", user.UserName), logger.C(err))
-		return errorer.New(errorer.ErrUserNameExist)
+	key := "user:" + user.UserName
+	value, err := r.rd.Get(ctx, key).Result()
+	if err == nil {
+		if cache.IsNullValue(value) {
+			if err = r.rd.Del(ctx, key).Err(); err != nil {
+				logger.Warn("删除空值缓存失败", logger.C(err))
+			}
+		} else {
+			logger.Debug(fmt.Sprintf("注册用户失败%s", errorer.ErrUserNameExist), logger.S("user_name", user.UserName), logger.C(err))
+			return errorer.New(errorer.ErrUserNameExist)
+		}
 	}
 	// 检查用户名是否已存在
 	var count int64
@@ -64,7 +72,9 @@ func (r *userRepo) Register(ctx context.Context, user *domain.User) error {
 		logger.Error("注册用户失败", logger.S("user_name", user.UserName), logger.C(errjson))
 		return errjson
 	}
-	if err = r.rd.Set(ctx, "user:"+user.UserName, userjson, time.Hour*3).Err(); err != nil {
+	// 使用带随机偏移的缓存策略
+	ttl := cache.UserCacheConfig.RandomTTL()
+	if err = r.rd.Set(ctx, "user:"+user.UserName, userjson, ttl).Err(); err != nil {
 		logger.Error("缓存用户信息失败", logger.C(err))
 		// 缓存失败不影响注册结果
 	}

@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/pkg/cache"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"drive/pkg/pool"
@@ -21,6 +22,25 @@ func (r *fileRepo) GetDeletedFiles(ctx context.Context, userID uint) ([]domain.F
 		if err = r.db.Unscoped().Where("deleted_at IS NOT NULL AND user_id = ?", userID).Find(&files).Error; err != nil {
 			logger.Error("查询用户删除的文件失败", logger.U("user_id", userID), logger.C(err))
 			return nil, err
+		}
+		// 缓存用户删除的文件
+		for _, file := range files {
+			fileJSON, err := exc.ExcFileToJSON(file)
+			if err != nil {
+				logger.Error("序列化文件失败", logger.C(err))
+				continue
+			}
+			// 缓存文件信息
+			if err = r.rd.HSet(ctx, userKey, fmt.Sprintf("file:%d", file.ID), fileJSON).Err(); err != nil {
+				logger.Error("缓存文件信息失败", logger.C(err))
+				continue
+			}
+			// 设置缓存过期时间
+			ttl := cache.FileCacheConfig.RandomTTL()
+			if err = r.rd.Expire(ctx, userKey, ttl).Err(); err != nil {
+				logger.Error("设置缓存过期时间失败", logger.C(err))
+				continue
+			}
 		}
 	} else {
 		fileJSONs := mapcmd.Val()

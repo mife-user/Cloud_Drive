@@ -3,10 +3,10 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/pkg/cache"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"fmt"
-	"time"
 )
 
 // GetFavorites 获取用户收藏的文件列表
@@ -14,7 +14,7 @@ func (r *fileRepo) GetFavorites(ctx context.Context, userID uint) ([]domain.File
 	var err error
 	var favorites []domain.FileFavorite
 	// 从缓存中获取收藏列表
-	favorites, err = r.gerFavoriteRecord(ctx, userID)
+	favorites, err = r.getFavoriteRecord(ctx, userID)
 	if err != nil {
 		logger.Error("查询收藏列表失败", logger.C(err))
 		return nil, err
@@ -28,8 +28,8 @@ func (r *fileRepo) GetFavorites(ctx context.Context, userID uint) ([]domain.File
 	return files, nil
 }
 
-// gerFavoriteRecord 从缓存中获取收藏列表
-func (r *fileRepo) gerFavoriteRecord(ctx context.Context, userID uint) ([]domain.FileFavorite, error) {
+// getFavoriteRecord 从缓存中获取收藏列表
+func (r *fileRepo) getFavoriteRecord(ctx context.Context, userID uint) ([]domain.FileFavorite, error) {
 	var err error
 	var favorites []domain.FileFavorite
 	var lovesJSONs map[string]string
@@ -79,7 +79,7 @@ func (r *fileRepo) gerFavoriteRecord(ctx context.Context, userID uint) ([]domain
 
 // getFavoriteFiles 从缓存中获取收藏文件
 func (r *fileRepo) getFavoriteFiles(ctx context.Context, favorites []domain.FileFavorite, userID uint) ([]domain.File, error) {
-	var userKey = fmt.Sprintf("files:%d", userID)
+	userKey := fmt.Sprintf("files:%d", userID)
 	var files []domain.File
 	for _, favorite := range favorites {
 		var file domain.File
@@ -104,8 +104,9 @@ func (r *fileRepo) getFavoriteFiles(ctx context.Context, favorites []domain.File
 				logger.Debug("用户不再有文件访问权限，跳过", logger.U("user_id", userID), logger.S("file_id", fmt.Sprintf("%d", file.ID)))
 				continue
 			}
-			// 设置缓存过期时间为3小时
-			if err = r.rd.Expire(ctx, userKey, 3*time.Hour).Err(); err != nil {
+			// 设置缓存过期时间，使用带随机偏移的缓存策略
+			ttl := cache.FileCacheConfig.RandomTTL()
+			if err = r.rd.Expire(ctx, userKey, ttl).Err(); err != nil {
 				logger.Error("设置缓存过期时间失败", logger.C(err))
 				continue
 			}

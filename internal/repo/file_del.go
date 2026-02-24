@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/pkg/cache"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
@@ -15,10 +16,11 @@ import (
 func (r *fileRepo) DeleteFile(ctx context.Context, userID uint, fileID uint) error {
 	var err error
 	var file domain.File
-	var userKey = fmt.Sprintf("files:%d", userID)
-	var fileKey = fmt.Sprintf("file:%d", fileID)
+	userKey := fmt.Sprintf("files:%d", userID)
+	fileKey := fmt.Sprintf("file:%d", fileID)
 	// 按ID锁
-	unlock := r.LockByID(fileID)
+	delKey := fmt.Sprintf("del:%d", fileID)
+	unlock := r.LockByID(delKey)
 	defer unlock()
 	// 软删除文件记录
 	if err = r.db.Where("id = ?", fileID).First(&file).Error; err != nil {
@@ -36,12 +38,8 @@ func (r *fileRepo) DeleteFile(ctx context.Context, userID uint, fileID uint) err
 		return err
 	}
 	// 从Redis更新文件元数据
-	mapCmd := r.rd.HGet(ctx, userKey, fileKey)
-	if err = mapCmd.Err(); err != nil {
-		logger.Error("查询文件元数据失败", logger.U("file_id", fileID), logger.C(err))
-		return err
-	} else {
-		fileJSON := mapCmd.Val()
+	fileJSON, err := r.rd.HGet(ctx, userKey, fileKey).Result()
+	if err == nil {
 		if err = exc.ExcJSONToFile(fileJSON, &file); err != nil {
 			logger.Error("反序列化文件失败", logger.C(err))
 			return err
@@ -57,8 +55,15 @@ func (r *fileRepo) DeleteFile(ctx context.Context, userID uint, fileID uint) err
 				logger.Error("序列化文件失败", logger.C(err))
 				return err
 			}
+			// 更新缓存中的文件信息
 			if err = r.rd.HSet(ctx, userKey, fileKey, fileJSON).Err(); err != nil {
 				logger.Error("更新删除缓存数据失败", logger.U("file_id", fileID), logger.C(err))
+				return err
+			}
+			// 设置缓存过期时间
+			ttl := cache.FileCacheConfig.RandomTTL()
+			if err = r.rd.Expire(ctx, userKey, ttl).Err(); err != nil {
+				logger.Error("设置缓存过期时间失败", logger.C(err))
 				return err
 			}
 		}

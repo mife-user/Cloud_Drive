@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/pkg/cache"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"drive/pkg/utils"
@@ -43,7 +44,8 @@ func (r *fileRepo) ShareFile(ctx context.Context, fileID uint, userID uint, owne
 		logger.Error("序列化分享记录失败", logger.C(err))
 		return "", "", err
 	}
-	r.rd.Set(ctx, fmt.Sprintf("share:%s", shareID), shareJSON, 3*time.Hour) // 缓存分享记录
+	ttl := cache.ShareCacheConfig.RandomTTL()                       // 使用带随机偏移的缓存策略
+	r.rd.Set(ctx, fmt.Sprintf("share:%s", shareID), shareJSON, ttl) // 缓存分享记录
 
 	return shareID, accessKey, nil
 }

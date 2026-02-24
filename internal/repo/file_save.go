@@ -3,13 +3,13 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/pkg/cache"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"drive/pkg/pool"
 	"fmt"
 	"sync"
-	"time"
 )
 
 // 文件上传
@@ -58,7 +58,9 @@ func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File, nowSize
 		workerPool.Stop()
 	}()
 	wg.Wait()
-	r.rd.Expire(ctx, userKey, 3*time.Hour) // 设置缓存过期时间为3小时
+	// 使用带随机偏移的缓存策略
+	ttl := cache.FileCacheConfig.RandomTTL()
+	r.rd.Expire(ctx, userKey, ttl) // 设置缓存过期时间
 	if err = r.db.Model(&domain.User{}).Where("id = ?", userID).Update("now_size", nowSize).Error; err != nil {
 		logger.Error("更新用户空间失败", logger.C(err))
 		return err

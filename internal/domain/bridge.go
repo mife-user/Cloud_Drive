@@ -7,6 +7,7 @@ type UserRepo interface {
 	Logon(ctx context.Context, user *User) error
 	RemixUser(ctx context.Context, user *User) error
 	UpdateHeader(ctx context.Context, header *UserHeader) error
+	GetUserHeadPath(ctx context.Context, userName string) (headPath string, err error)
 }
 
 type FileRepo interface {

@@ -3,11 +3,11 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/pkg/cache"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"fmt"
-	"time"
 )
 
 // AddFavorite 添加文件收藏
@@ -39,9 +39,25 @@ func (r *fileRepo) getLoveRecord(ctx context.Context, userID uint, fileID uint) 
 	var fileJSON string
 	userKey := fmt.Sprintf("files:%d", userID)
 	fileIDSTR := fmt.Sprintf("file:%d", fileID)
-	mapCmd := r.rd.HGet(ctx, userKey, fileIDSTR)
-	if err = mapCmd.Err(); err != nil {
+	fileJSON, err = r.rd.HGet(ctx, userKey, fileIDSTR).Result()
+	if err == nil {
+		if cache.IsHashNullValue(fileJSON) {
+			logger.Error("查询文件失败", logger.U("file_id", fileID))
+			return nil, errorer.New(errorer.ErrFileNotExist)
+		}
+		if err = exc.ExcJSONToFile(fileJSON, &fileLove); err != nil {
+			logger.Error("反序列化文件信息失败", logger.C(err))
+			return nil, err
+		}
+		if fileLove.DeletedAt.Valid {
+			logger.Error("文件已被删除", logger.U("file_id", fileID))
+			return nil, errorer.New(errorer.ErrFileDeleted)
+		}
+	} else {
 		if err = r.db.Where("id = ?", fileID).First(&fileLove).Error; err != nil {
+			if err = cache.CacheHashNullValue(ctx, r.rd, userKey, fileIDSTR); err != nil {
+				logger.Warn("缓存空值失败", logger.C(err))
+			}
 			logger.Error("查询文件失败", logger.C(err))
 			return nil, err
 		}
@@ -53,19 +69,10 @@ func (r *fileRepo) getLoveRecord(ctx context.Context, userID uint, fileID uint) 
 			logger.Error("缓存文件信息失败", logger.C(err))
 			return nil, err
 		}
-		if err = r.rd.Expire(ctx, userKey, 24*time.Hour).Err(); err != nil {
+		ttl := cache.FileCacheConfig.RandomTTL()
+		if err = r.rd.Expire(ctx, userKey, ttl).Err(); err != nil {
 			logger.Error("设置缓存过期时间失败", logger.C(err))
 			return nil, err
-		}
-	} else {
-		fileJSON = mapCmd.Val()
-		if err = exc.ExcJSONToFile(fileJSON, &fileLove); err != nil {
-			logger.Error("反序列化文件信息失败", logger.C(err))
-			return nil, err
-		}
-		if fileLove.DeletedAt.Valid {
-			logger.Error("文件已被删除", logger.U("file_id", fileID))
-			return nil, errorer.New(errorer.ErrFileDeleted)
 		}
 	}
 	return &fileLove, nil
@@ -103,8 +110,9 @@ func (r *fileRepo) addLoveRecord(ctx context.Context, userID uint, fileID uint) 
 		logger.Error("缓存收藏记录失败", logger.C(err))
 		return err
 	}
-	// 设置缓存过期时间为3小时
-	if err = r.rd.Expire(ctx, userKey, 3*time.Hour).Err(); err != nil {
+	// 设置缓存过期时间，使用带随机偏移的缓存策略
+	ttl := cache.FavoriteCacheConfig.RandomTTL()
+	if err = r.rd.Expire(ctx, userKey, ttl).Err(); err != nil {
 		logger.Error("设置缓存过期时间失败", logger.C(err))
 		return err
 	}

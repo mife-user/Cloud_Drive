@@ -35,6 +35,9 @@ Lanshan寒假考核
 # ___技术___
 - [x] MYSQL
 - [x] Redis
+ - [x] 缓存击穿(singleflight)
+ - [x] 缓存雪崩(随机过期时间)
+ - [x] 缓存穿透(空对象缓存)
 - [x] Docker
 ## 前端测试链接
 [测试链接](https://github.com/mife-user/Cloud_Drive/blob/main/%E5%89%8D%E7%AB%AF%E6%B5%8B%E8%AF%95.md)
