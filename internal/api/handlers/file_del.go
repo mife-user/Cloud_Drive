@@ -42,5 +42,5 @@ func (h *FileHandler) DeleteFile(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "文件删除成功", "回收站保存时间": "1小时"})
+	c.JSON(http.StatusOK, gin.H{"message": "文件删除成功", "回收站保存时间": "24小时"})
 }

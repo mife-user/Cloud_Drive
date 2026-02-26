@@ -12,7 +12,7 @@ RUN go mod download
 COPY . .
 
 # 构建应用
-RUN CGO_ENABLED=0 GOOS=linux go build -o cloud_drive ./cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o cloud_drive ./cmd/main/main.go
 
 # 最终镜像
 FROM alpine:latest
@@ -26,7 +26,7 @@ COPY --from=builder /app/cloud_drive .
 COPY --from=builder /app/configs ./configs
 
 # 创建必要的目录
-RUN mkdir -p logs storage
+RUN mkdir -p logs storage header
 
 # 暴露端口
 EXPOSE 8080

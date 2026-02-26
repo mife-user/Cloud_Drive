@@ -3,12 +3,12 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
-	"drive/pkg/cache"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"drive/pkg/pool"
 	"fmt"
 	"sync"
+	"time"
 )
 
 func (r *fileRepo) GetDeletedFiles(ctx context.Context, userID uint) ([]domain.File, error) {
@@ -36,11 +36,25 @@ func (r *fileRepo) GetDeletedFiles(ctx context.Context, userID uint) ([]domain.F
 				continue
 			}
 			// 设置缓存过期时间
-			ttl := cache.FileCacheConfig.RandomTTL()
-			if err = r.rd.Expire(ctx, userKey, ttl).Err(); err != nil {
-				logger.Error("设置缓存过期时间失败", logger.C(err))
-				continue
+			ttl := time.Until(file.DeletedAt.Time.Add(24 * time.Hour))
+			if ttl > 0 {
+				if err = r.rd.Expire(ctx, userKey, ttl).Err(); err != nil {
+					logger.Error("设置缓存过期时间失败", logger.C(err))
+					continue
+				}
+			} else {
+				// 缓存过期，删除缓存(保险)
+				if err = r.rd.Del(ctx, userKey).Err(); err != nil {
+					logger.Error("删除缓存失败", logger.C(err))
+					continue
+				}
+				// 从数据库删除文件(保险)
+				if err = r.db.Unscoped().Where("id = ?", file.ID).Delete(&domain.File{}).Error; err != nil {
+					logger.Error("删除数据库文件失败", logger.C(err))
+					continue
+				}
 			}
+
 		}
 	} else {
 		fileJSONs := mapcmd.Val()
@@ -58,7 +72,7 @@ func (r *fileRepo) GetDeletedFiles(ctx context.Context, userID uint) ([]domain.F
 					logger.Error("反序列化文件失败", logger.C(err))
 					return
 				}
-				if file.DeletedAt.Valid {
+				if file.DeletedAt.Valid && file.DeletedAt.Time.Add(24*time.Hour).Before(time.Now()) {
 					fileChan <- file
 				} else {
 					return

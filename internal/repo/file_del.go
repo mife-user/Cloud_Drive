@@ -3,7 +3,6 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
-	"drive/pkg/cache"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
@@ -61,8 +60,7 @@ func (r *fileRepo) DeleteFile(ctx context.Context, userID uint, fileID uint) err
 				return err
 			}
 			// 设置缓存过期时间
-			ttl := cache.FileCacheConfig.RandomTTL()
-			if err = r.rd.Expire(ctx, userKey, ttl).Err(); err != nil {
+			if err = r.rd.Expire(ctx, userKey, 24*time.Hour).Err(); err != nil {
 				logger.Error("设置缓存过期时间失败", logger.C(err))
 				return err
 			}

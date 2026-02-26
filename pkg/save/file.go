@@ -23,7 +23,7 @@ func SaveFile(ctx context.Context, header *multipart.FileHeader, size int64, use
 	}
 	defer file.Close()
 
-	// 提取目录路径和文件名
+	// 提取目录路径和文件名*
 	dirPath := filepath.Dir(header.Filename)   // 包含子目录路径
 	fileName := filepath.Base(header.Filename) // 文件名
 	//查看路径是否包含..
