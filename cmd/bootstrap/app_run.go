@@ -7,6 +7,7 @@ import (
 	"drive/pkg/logger"
 )
 
+// NewApplication 创建应用实例
 func NewApplication() (*Application, error) {
 	var err error
 	app := &Application{}
@@ -40,11 +41,13 @@ func NewApplication() (*Application, error) {
 	return app, nil
 }
 
+// Run 运行应用
 func (a *Application) Run() error {
 	a.printStartupInfo()
 	return a.Engine.Run(fmt.Sprintf(":%d", a.Config.Gin.Port))
 }
 
+// initCron 初始化定时任务
 func (a *Application) initCron() {
 	a.Cron = cron.NewCron()
 	if err := a.Cron.AddCleanupTask(a.Database, 1); err != nil { // 清理1天前的已删除文件
@@ -53,6 +56,7 @@ func (a *Application) initCron() {
 	a.Cron.Start()
 }
 
+// printStartupInfo 打印启动信息
 func (a *Application) printStartupInfo() {
 	fmt.Println("应用初始化成功！")
 	fmt.Printf("配置环境: %s\n", a.Config.Env)
