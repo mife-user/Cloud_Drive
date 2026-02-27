@@ -26,7 +26,6 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 	// 获取上传的文件
 	file, err := c.MultipartForm()
 	if err != nil {
-
 		c.JSON(http.StatusBadRequest, gin.H{"error": "获取文件失败: " + err.Error()})
 		return
 	}

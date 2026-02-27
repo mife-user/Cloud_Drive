@@ -9,10 +9,10 @@ import (
 )
 
 // AddCleanupTask 添加清理已删除文件的定时任务
-func (c *Cron) AddCleanupTask(db *gorm.DB, retentionDays int) error {
+func (c *Cron) AddCleanupTask(db *gorm.DB, lastdays int) error {
 	spec := "0 1 * * *" // 每天凌晨1点执行
 	if _, err := c.AddFunc(spec, func() {
-		cleanDel(db, retentionDays)
+		cleanDel(db, lastdays)
 	}); err != nil {
 		return fmt.Errorf("添加清理已删除文件的定时任务失败: %w", err)
 	}
