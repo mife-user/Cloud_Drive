@@ -1,6 +1,10 @@
 package domain
 
-import "gorm.io/gorm"
+import (
+	"drive/pkg/errorer"
+
+	"gorm.io/gorm"
+)
 
 type User struct {
 	gorm.Model
@@ -14,4 +18,14 @@ type UserHeader struct {
 	gorm.Model
 	UserID     uint
 	HeaderPath string
+}
+
+func (u *User) IsNullValue() error {
+	if u.UserName == "" {
+		return errorer.New(errorer.ErrUserNameNotFound)
+	}
+	if u.PassWord == "" {
+		return errorer.New(errorer.ErrPasswordNotFound)
+	}
+	return nil
 }

@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"context"
-	"drive/internal/api/dtos"
+	"drive/internal/api/dtos/request"
 	"drive/internal/service"
 	"drive/pkg/logger"
 	"net/http"
@@ -20,7 +20,7 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 	defer cancel()
 	defer logger.Info("文件上传请求处理完成")
 	// 绑定 JSON 请求体到 FileDtos
-	var fileDto dtos.FileDtos
+	var fileDto request.FileDtos
 	//默认权限为private
 	fileDto.Permissions = "public"
 	// 获取上传的文件

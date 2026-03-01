@@ -1,4 +1,4 @@
-package dtos
+package request
 
 import "drive/internal/domain"
 

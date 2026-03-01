@@ -61,7 +61,7 @@ func (h *UserHandler) UpdateHeader(c *gin.Context) {
 		}
 		return
 	}
-	if err := h.userRepo.UpdateHeader(ctx, fileRecord); err != nil {
+	if err := h.userServicer.UpdateHeader(ctx, fileRecord); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "更新用户头像失败"})
 		return
 	}

@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"context"
-	"drive/internal/api/dtos"
+	"drive/internal/api/dtos/request"
 	"drive/internal/service"
 	"drive/pkg/logger"
 	"net/http"
@@ -18,7 +18,7 @@ func (h *UserHandler) RemixUser(c *gin.Context) {
 	// 设置合理的超时时间，用户信息修改涉及数据库更新
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
-	var userDto dtos.UserDtos
+	var userDto request.UserDtos
 	if err := c.ShouldBindJSON(&userDto); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})
 		return
@@ -35,7 +35,7 @@ func (h *UserHandler) RemixUser(c *gin.Context) {
 		return
 	}
 	// 修改用户信息
-	if err := h.userRepo.RemixUser(ctx, DMUser); err != nil {
+	if err := h.userServicer.RemixUser(ctx, DMUser); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "修改失败"})
 		return
 	}

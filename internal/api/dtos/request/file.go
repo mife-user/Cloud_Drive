@@ -1,4 +1,4 @@
-package dtos
+package request
 
 type FileDtos struct {
 	Permissions string `json:"permissions"`

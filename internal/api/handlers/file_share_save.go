@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"context"
-	"drive/internal/api/dtos"
+	"drive/internal/api/dtos/request"
 	"drive/internal/service"
 	"drive/pkg/logger"
 	"fmt"
@@ -20,7 +20,7 @@ func (h *FileHandler) ShareFile(c *gin.Context) {
 	defer cancel()
 	defer logger.Info("分享文件请求处理完成")
 
-	var req dtos.ShareFileRequest
+	var req request.ShareFileRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		logger.Error("绑定请求参数失败", logger.C(err))
 		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})

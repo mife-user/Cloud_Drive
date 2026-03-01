@@ -4,6 +4,7 @@ import (
 	"drive/internal/api/handlers"
 	"drive/internal/api/middlewares"
 	"drive/internal/repo"
+	"drive/internal/service"
 	"drive/pkg/conf"
 
 	"github.com/gin-gonic/gin"
@@ -13,7 +14,6 @@ import (
 
 // Router 路由结构体
 type Router struct {
-	authHandler *handlers.AuthHandler
 	fileHandler *handlers.FileHandler
 	userHandler *handlers.UserHandler
 	config      *conf.Config
@@ -28,9 +28,9 @@ func GetRouter() *Router {
 func (r *Router) NewRouter(db *gorm.DB, rd *redis.Client, config *conf.Config) bool {
 	userRepo := repo.NewUserRepo(db, rd)
 	fileRepo := repo.NewFileRepo(db, rd)
-	r.authHandler = handlers.NewAuthHandler(userRepo, config)
+	userServicer := service.NewUserServicer(userRepo, config)
 	r.fileHandler = handlers.NewFileHandler(fileRepo, config)
-	r.userHandler = handlers.NewUserHandler(userRepo, config)
+	r.userHandler = handlers.NewUserHandler(userServicer, config)
 	r.config = config
 	return true
 }
@@ -53,7 +53,7 @@ func (r *Router) Setup() *gin.Engine {
 		user := api.Group("/user")
 		{
 			user.POST("/register", r.userHandler.Register)
-			user.POST("/login", r.authHandler.Login)
+			user.POST("/login", r.userHandler.Login)
 			user.POST("/header", middlewares.AuthMiddleware(r.config), r.userHandler.UpdateHeader)
 			user.GET("/header/:username", r.userHandler.GetHeader)
 		}

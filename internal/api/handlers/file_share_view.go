@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"context"
-	"drive/internal/api/dtos"
+	"drive/internal/api/dtos/request"
 	"drive/pkg/errorer"
 	"drive/pkg/logger"
 	"net/http"
@@ -26,7 +26,7 @@ func (h *FileHandler) AccessShare(c *gin.Context) {
 		return
 	}
 
-	var req dtos.AccessShareRequest
+	var req request.AccessShareRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		logger.Error("绑定请求参数失败", logger.C(err))
 		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})

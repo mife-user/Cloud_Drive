@@ -24,7 +24,7 @@ func (h *UserHandler) GetHeader(c *gin.Context) {
 		return
 	}
 	// 查询用户头像
-	headPath, err := h.userRepo.GetUserHeadPath(ctx, userName)
+	headPath, err := h.userServicer.GetUserHeadPath(ctx, userName)
 	if err != nil {
 		logger.Error("查询用户头像失败", logger.S("user_name", userName), logger.C(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "查询用户头像失败"})

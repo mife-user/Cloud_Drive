@@ -1,4 +1,4 @@
-package dtos
+package request
 
 type UserDtos struct {
 	UserName string `json:"user_name"`

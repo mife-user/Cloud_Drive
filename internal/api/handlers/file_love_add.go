@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"context"
-	"drive/internal/api/dtos"
+	"drive/internal/api/dtos/request"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
@@ -20,7 +20,7 @@ func (h *FileHandler) AddFavorite(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
 
-	var req dtos.FavoriteFileRequest
+	var req request.FavoriteFileRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		logger.Error("绑定请求参数失败", logger.C(err))
 		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})

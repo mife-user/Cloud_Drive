@@ -7,14 +7,14 @@ import (
 
 // UserHandler 用户处理器
 type UserHandler struct {
-	userRepo domain.UserRepo
-	config   *conf.Config
+	userServicer domain.UserServicer
+	config       *conf.Config
 }
 
 // NewUserHandler 创建用户处理器
-func NewUserHandler(userRepo domain.UserRepo, config *conf.Config) *UserHandler {
+func NewUserHandler(userServicer domain.UserServicer, config *conf.Config) *UserHandler {
 	return &UserHandler{
-		userRepo: userRepo,
-		config:   config,
+		userServicer: userServicer,
+		config:       config,
 	}
 }
