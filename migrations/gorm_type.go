@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	UserName string `gorm:"type:varchar(100);not null;default:'默认用户';comment:用户名"`
+	UserName string `gorm:"type:varchar(100);not null;default:'no_name_user';comment:用户名"`
 	PassWord string `gorm:"type:varchar(100);not null;default:'123456';comment:密码"`
 	Role     string `gorm:"type:varchar(50);not null;default:'NOVIP';comment:角色"`
 	Size     int64  `gorm:"not null;default:3221225472;comment:用户空间大小"`
@@ -14,6 +14,7 @@ type User struct {
 type UserHeader struct {
 	gorm.Model
 	UserID     uint   `gorm:"not null;index;comment:用户ID"`
+	Username   string `gorm:"type:varchar(100);not null;default:'no_name_user';comment:用户名"`
 	HeaderPath string `gorm:"type:varchar(255);not null;default:'/Header';comment:用户头像路径"`
 }
 

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"drive/internal/api/dtos/response"
 	"drive/pkg/errorer"
 	"drive/pkg/logger"
 	"net/http"
@@ -16,20 +17,24 @@ func (h *UserHandler) GetHeader(c *gin.Context) {
 	//设置过期时间
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 30*time.Second)
 	defer cancel()
-	// 获取用户名称
-	userName := c.Param("user_name")
-	if userName == "" {
-		logger.Debug("获取用户信息失败" + errorer.ErrUserNameNotFound)
-		c.JSON(http.StatusBadRequest, gin.H{"error": errorer.ErrUserNameNotFound})
+	// 获取用户名
+	username := c.Param("username")
+	if username == "" {
+		logger.Debug("获取用户信息失败" + errorer.ErrUserIDNotFound)
+		c.JSON(http.StatusBadRequest, gin.H{"error": errorer.ErrUserIDNotFound})
 		return
 	}
 	// 查询用户头像
-	headPath, err := h.userServicer.GetUserHeadPath(ctx, userName)
+	headPath, err := h.userServicer.GetUserHeadPath(ctx, username)
 	if err != nil {
-		logger.Error("查询用户头像失败", logger.S("user_name", userName), logger.C(err))
+		logger.Error("查询用户头像失败", logger.S("username", username), logger.C(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "查询用户头像失败"})
 		return
 	}
+	headPathRSP := response.ToDTHeaderPath(headPath)
 	// 返回用户头像
-	c.JSON(http.StatusOK, gin.H{"head_path": headPath})
+	c.JSON(http.StatusOK, gin.H{
+		"message": "查询用户头像成功",
+		"data":    headPathRSP,
+	})
 }

@@ -18,12 +18,12 @@ func (h *UserHandler) RemixUser(c *gin.Context) {
 	// 设置合理的超时时间，用户信息修改涉及数据库更新
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
-	var userDto request.UserDtos
+	var userDto request.UserAuthDT
 	if err := c.ShouldBindJSON(&userDto); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "参数错误"})
 		return
 	}
-	DMUser := userDto.ToDMUser()
+	DMUser := userDto.ToDMUserAuth()
 	// 从上下文获取当前登录用户ID
 	userID, exists := c.Get("user_id")
 	if !exists {

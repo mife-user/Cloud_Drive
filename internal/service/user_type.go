@@ -12,18 +12,8 @@ type userServicer struct {
 	config   *conf.Config
 }
 
-// GetUserHeadPath implements [domain.UserServicer].
-func (s *userServicer) GetUserHeadPath(ctx context.Context, userName string) (headPath string, err error) {
-	panic("unimplemented")
-}
-
 // RemixUser implements [domain.UserServicer].
 func (s *userServicer) RemixUser(ctx context.Context, user *domain.User) error {
-	panic("unimplemented")
-}
-
-// UpdateHeader implements [domain.UserServicer].
-func (s *userServicer) UpdateHeader(ctx context.Context, header *domain.UserHeader) error {
 	panic("unimplemented")
 }
 

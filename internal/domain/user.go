@@ -2,12 +2,10 @@ package domain
 
 import (
 	"drive/pkg/errorer"
-
-	"gorm.io/gorm"
 )
 
 type User struct {
-	gorm.Model
+	ID       uint
 	UserName string
 	PassWord string
 	Role     string
@@ -15,9 +13,9 @@ type User struct {
 	NowSize  int64
 }
 type UserHeader struct {
-	gorm.Model
-	UserID     uint
+	Username   string
 	HeaderPath string
+	Role       string
 }
 
 func (u *User) IsNullValue() error {

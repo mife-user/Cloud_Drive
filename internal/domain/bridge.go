@@ -1,13 +1,16 @@
 package domain
 
-import "context"
+import (
+	"context"
+	"mime/multipart"
+)
 
 type UserRepo interface {
 	Register(ctx context.Context, user *User) error
 	Logon(ctx context.Context, user *User) error
 	RemixUser(ctx context.Context, user *User) error
 	UpdateHeader(ctx context.Context, header *UserHeader) error
-	GetUserHeadPath(ctx context.Context, userName string) (headPath string, err error)
+	GetUserHeadPath(ctx context.Context, username string) (headPath string, err error)
 }
 
 type FileRepo interface {
@@ -29,8 +32,8 @@ type UserServicer interface {
 	Register(ctx context.Context, user *User) error
 	Login(ctx context.Context, user *User) (string, error)
 	RemixUser(ctx context.Context, user *User) error
-	UpdateHeader(ctx context.Context, header *UserHeader) error
-	GetUserHeadPath(ctx context.Context, userName string) (headPath string, err error)
+	UpdateHeader(ctx context.Context, header *UserHeader, fileHandler *multipart.FileHeader) error
+	GetUserHeadPath(ctx context.Context, username string) (string, error)
 }
 type FileServicer interface {
 	CheckUserSize(ctx context.Context, userID uint, totalSize int64) (int64, bool)
