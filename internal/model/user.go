@@ -12,7 +12,7 @@ type User struct {
 	gorm.Model
 	UserName string
 	PassWord string
-	Role     string
+	Role     string `gorm:"default:NOVIP"`
 	Size     int64
 	NowSize  int64
 }
