@@ -22,7 +22,7 @@ func (s *userServicer) UpdateHeader(ctx context.Context, header *domain.UserHead
 		rating = 1024 * 1024
 	}
 	// 保存文件
-	headerPath, err := save.SaveHeader(ctx, fileHeader, header.Username, rating)
+	headerPath, err := save.SaveHeader(ctx, fileHeader, header.UserName, rating)
 	if err != nil {
 		return err
 	}

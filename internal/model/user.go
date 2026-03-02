@@ -4,7 +4,6 @@ import "gorm.io/gorm"
 
 type UserHeader struct {
 	gorm.Model
-	UserID     uint
 	UserName   string `gorm:"index"`
 	HeaderPath string
 }

@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/internal/model"
 	"drive/pkg/cache"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
@@ -13,18 +14,14 @@ import (
 // RemixUser 修改用户信息
 func (r *userRepo) RemixUser(ctx context.Context, user *domain.User) error {
 	var err error
-	// 检查用户名是否为空
-	if user.UserName == "" {
-		logger.Debug("修改用户失败" + errorer.ErrUserNameNotFound)
-		return errorer.New(errorer.ErrUserNameNotFound)
+	oldUser := &model.User{
+		UserName: user.OldUserName,
 	}
-	// 检查密码是否为空
-	if user.PassWord == "" {
-		logger.Debug("修改用户失败" + errorer.ErrPasswordNotFound)
-		return errorer.New(errorer.ErrPasswordNotFound)
+	newUser := &model.User{
+		UserName: user.UserName,
+		PassWord: user.PassWord,
 	}
-	var oldUser domain.User
-	key := "user:" + user.UserName
+	key := "user:" + oldUser.UserName
 	// 检查用户是否存在
 	userjsonOut, err := r.rd.Get(ctx, key).Result()
 	if err == nil {
@@ -46,24 +43,25 @@ func (r *userRepo) RemixUser(ctx context.Context, user *domain.User) error {
 		}
 	}
 	// 加密密码
-	hashedPassword, err := utils.HashPassword(user.PassWord)
+	hashedPassword, err := utils.HashPassword(newUser.PassWord)
 	if err != nil {
 		logger.Debug("修改用户失败"+errorer.ErrPasswordError, logger.C(err))
 		return err
 	}
-	user.PassWord = hashedPassword
-	//避免修改敏感信息
-	user.Role = oldUser.Role
-	user.ID = oldUser.ID
+	newUser.PassWord = hashedPassword
+	//避免修改敏感信息(虽然不可能修改，但以防万一,hhh)
+	newUser.Role = oldUser.Role
+	newUser.ID = oldUser.ID
 	// 更新用户信息
-	if err = r.db.Model(&domain.User{}).
-		Where("id = ?", user.ID).
-		Updates(user).Error; err != nil {
+	if err = r.db.Model(&model.User{}).
+		Where("id = ?", newUser.ID).
+		Select("user_name", "pass_word").
+		Updates(newUser).Error; err != nil {
 		logger.Error("修改用户失败"+errorer.ErrUpdateUserFailed, logger.C(err))
 		return err
 	}
 	// 缓存用户信息，使用带随机偏移的缓存策略
-	userjsonIn, err := exc.ExcFileToJSON(user)
+	userjsonIn, err := exc.ExcFileToJSON(newUser)
 	if err != nil {
 		logger.Error("修改用户失败"+errorer.ErrUpdateUserFailed, logger.C(err))
 		return err

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"drive/internal/domain"
 	"drive/pkg/conf"
 )
@@ -10,11 +9,6 @@ import (
 type userServicer struct {
 	userRepo domain.UserRepo
 	config   *conf.Config
-}
-
-// RemixUser implements [domain.UserServicer].
-func (s *userServicer) RemixUser(ctx context.Context, user *domain.User) error {
-	panic("unimplemented")
 }
 
 // NewUserServicer 创建用户服务

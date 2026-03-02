@@ -12,12 +12,12 @@ import (
 // UpdateHeader 更新用户头像
 func (r *userRepo) UpdateHeader(ctx context.Context, header *domain.UserHeader) error {
 	var err error
-	var headerKey = fmt.Sprintf("header:%s", header.Username)
+	var headerKey = fmt.Sprintf("header:%s", header.UserName)
 	var headerModel = &model.UserHeader{
-		UserName:   header.Username,
+		UserName:   header.UserName,
 		HeaderPath: header.HeaderPath,
 	}
-	if err = r.db.Where("username = ?", header.Username).Updates(headerModel).Error; err != nil {
+	if err = r.db.Where("username = ?", header.UserName).Updates(headerModel).Error; err != nil {
 		logger.Error("更新用户头像失败", logger.C(err))
 		return err
 	}

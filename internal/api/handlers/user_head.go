@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"context"
-	"drive/internal/domain"
+	"drive/internal/api/dtos/request"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"net/http"
@@ -45,12 +45,12 @@ func (h *UserHandler) UpdateHeader(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "role类型错误"})
 		return
 	}
-	fileRecord := &domain.UserHeader{
-		Username:   usernameSTR,
+	fileRecord := &request.UserHeaderDT{
+		UserName:   usernameSTR,
 		HeaderPath: "",
 		Role:       userRoleSTR,
 	}
-	if err := h.userServicer.UpdateHeader(ctx, fileRecord, file); err != nil {
+	if err := h.userServicer.UpdateHeader(ctx, fileRecord.ToDMUserHeader(), file); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "更新用户头像失败"})
 		return
 	}
