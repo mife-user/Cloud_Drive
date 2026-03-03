@@ -1361,3 +1361,63 @@ drive/pkg/pool.(*Pool).Start.func1
 03-01 10:42:14.402	用户登录请求处理完成||
 03-01 10:42:22.624	应用正在关闭...||
 03-01 10:42:22.624	应用已关闭||
+03-03 07:21:07.649	开始处理用户注册请求||
+03-03 07:21:07.721	注册用户成功	{"user_name": "mife"}||
+03-03 07:21:07.721	用户注册请求处理完成||
+03-03 07:21:13.816	开始处理用户登录请求||
+03-03 07:21:13.863	登录用户成功	{"user_name": "mife"}||
+03-03 07:21:13.864	用户登录请求处理完成||
+03-03 07:21:45.587	开始处理用户登录请求||
+03-03 07:21:45.635	登录用户成功	{"user_name": "mife"}||
+03-03 07:21:45.636	用户登录请求处理完成||
+03-03 07:22:07.431	开始处理用户登录请求||
+03-03 07:22:07.480	登录用户成功	{"user_name": "mife"}||
+03-03 07:22:07.480	用户登录请求处理完成||
+03-03 07:22:25.114	开始处理用户登录请求||
+03-03 07:22:25.163	登录用户成功	{"user_name": "mife"}||
+03-03 07:22:25.164	用户登录请求处理完成||
+03-03 07:23:05.884	开始处理用户登录请求||
+03-03 07:23:05.931	登录用户成功	{"user_name": "mife"}||
+03-03 07:23:05.932	用户登录请求处理完成||
+03-03 07:23:13.056	上传文件成功	{"user_id": 1}||
+03-03 07:23:17.429	查询文件成功	{"user_id": 1}||
+03-03 07:23:37.955	删除文件成功	{"file_id": 1}||
+03-03 07:23:41.933	查询用户删除的文件成功	{"user_id": 1}||
+03-03 07:23:54.074	查询文件失败	{"file_id": 1, "error": "record not found"}
+drive/pkg/logger.Error
+	/app/pkg/logger/logger_Act.go:12
+drive/internal/repo.(*fileRepo).DeleteFile
+	/app/internal/repo/file_del.go:26
+drive/internal/service.(*fileServicer).DeleteFile
+	/app/internal/service/file_delete.go:10
+drive/internal/api/handlers.(*FileHandler).DeleteFile
+	/app/internal/api/handlers/file_del.go:35
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.AuthMiddleware.func3
+	/app/internal/api/middlewares/auth.go:56
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+drive/internal/api/routes.(*Router).Setup.CORSMiddleware.func1
+	/app/internal/api/middlewares/cors.go:26
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:3340
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:2109||
+03-03 07:23:57.126	查询用户删除的文件成功	{"user_id": 1}||
+03-03 07:24:16.710	应用正在关闭...||
+03-03 07:24:16.711	应用已关闭||

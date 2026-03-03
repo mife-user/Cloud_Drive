@@ -1,24 +1,15 @@
 package service
 
 import (
-	"drive/pkg/errorer"
-	"drive/pkg/exc"
-	"drive/pkg/logger"
+	"context"
 )
 
-// ExchangeFile 兑换文件
-func ExchangeFile(userID any, userName any) (uint, string, error) {
-	// 转换userID为uint类型
-	userIDUint, ok := exc.IsUint(userID)
-	if !ok {
-		logger.Error("userID类型转换失败")
-		return 0, "", errorer.New(errorer.ErrTypeError)
+// ShareFile 分享文件
+func (s *fileServicer) ShareFile(ctx context.Context, fileID uint, userID uint, owner string) (string, string, error) {
+	var err error
+	var shareID, accessKey string
+	if shareID, accessKey, err = s.fileRepo.ShareFile(ctx, fileID, userID, owner); err != nil {
+		return "", "", err
 	}
-	// 转换userName为string类型
-	userNameStr, ok := exc.IsString(userName)
-	if !ok {
-		logger.Error("userName类型转换失败")
-		return 0, "", errorer.New(errorer.ErrTypeError)
-	}
-	return userIDUint, userNameStr, nil
+	return shareID, accessKey, nil
 }

@@ -2,47 +2,47 @@ package handlers
 
 import (
 	"context"
+	"drive/internal/api/dtos/response"
 	"drive/pkg/exc"
-	"drive/pkg/logger"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-// 查看单个文件
 func (h *FileHandler) ViewFile(c *gin.Context) {
-	logger.Info("开始处理查看单个文件请求")
-	defer logger.Info("查看单个文件请求处理完成")
-	// 设置合理的超时时间，查看文件涉及数据库查询和文件读取
-	ctx, cancel := context.WithTimeout(c.Request.Context(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 	defer cancel()
-	// 获取文件ID
-	fileID := c.Param("file_id")
-	//将文件ID转换为uint类型
-	fileIDUint, err := exc.StrToUint(fileID)
+
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
+		return
+	}
+
+	userIDUint, ok := exc.IsUint(userID)
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "用户ID类型错误"})
+		return
+	}
+
+	fileIDStr := c.Param("file_id")
+	if fileIDStr == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "文件ID不能为空"})
+		return
+	}
+
+	fileID, err := exc.StrToUint(fileIDStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "文件ID格式错误"})
 		return
 	}
-	// 获取用户ID
-	userID, ok := c.Get("user_id")
-	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "获取用户ID失败"})
-		return
-	}
-	// 检查用户ID是否为uint类型
-	userIDUint, ok := exc.IsUint(userID)
-	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "用户ID格式错误"})
-		return
-	}
-	// 查看文件
-	file, err := h.fileRepo.ViewFile(ctx, fileIDUint, userIDUint)
+
+	file, err := h.fileServicer.ViewFile(ctx, fileID, userIDUint)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "查看文件失败: " + err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	// 返回文件信息
-	c.File(file.Path)
+
+	c.JSON(http.StatusOK, response.ToDTFileInfo(file))
 }

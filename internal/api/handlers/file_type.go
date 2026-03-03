@@ -7,14 +7,14 @@ import (
 
 // FileHandler 文件处理器
 type FileHandler struct {
-	fileRepo domain.FileRepo
-	config   *conf.Config
+	fileServicer domain.FileServicer
+	config       *conf.Config
 }
 
 // NewFileHandler 创建文件处理器
-func NewFileHandler(fileRepo domain.FileRepo, config *conf.Config) *FileHandler {
+func NewFileHandler(fileServicer domain.FileServicer, config *conf.Config) *FileHandler {
 	return &FileHandler{
-		fileRepo: fileRepo,
+		fileServicer: fileServicer,
 		config:   config,
 	}
 }

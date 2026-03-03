@@ -29,7 +29,8 @@ func (r *Router) NewRouter(db *gorm.DB, rd *redis.Client, config *conf.Config) b
 	userRepo := repo.NewUserRepo(db, rd)
 	fileRepo := repo.NewFileRepo(db, rd)
 	userServicer := service.NewUserServicer(userRepo, config)
-	r.fileHandler = handlers.NewFileHandler(fileRepo, config)
+	fileServicer := service.NewFileServicer(fileRepo, config)
+	r.fileHandler = handlers.NewFileHandler(fileServicer, config)
 	r.userHandler = handlers.NewUserHandler(userServicer, config)
 	r.config = config
 	return true
@@ -37,19 +38,14 @@ func (r *Router) NewRouter(db *gorm.DB, rd *redis.Client, config *conf.Config) b
 
 // Setup 设置路由
 func (r *Router) Setup() *gin.Engine {
-	// 设置 Gin 模式
 	gin.SetMode(r.config.Gin.Mode)
 
-	// 创建路由
 	router := gin.Default()
 
-	// 配置 CORS
 	router.Use(middlewares.CORSMiddleware(r.config))
 
-	// API 路由组
 	api := router.Group("/api")
 	{
-		// 用户路由 - 公开
 		user := api.Group("/user")
 		{
 			user.POST("/register", r.userHandler.Register)
@@ -58,14 +54,12 @@ func (r *Router) Setup() *gin.Engine {
 			user.GET("/header/:username", r.userHandler.GetHeader)
 		}
 
-		// 文件路由 - 公开访问（不需要认证）
 		api.GET("/file/share/:share_id", r.fileHandler.AccessShare)
 
-		// 文件路由 - 需要认证
 		file := api.Group("/file")
 		file.Use(middlewares.AuthMiddleware(r.config))
 		{
-			file.GET("/view/deleted", r.fileHandler.ViewDeletedFiles)
+			file.GET("/view/deleted", r.fileHandler.GetDeletedFiles)
 			file.POST("/upload", middlewares.TypeCheck(r.config), r.fileHandler.UploadFile)
 			file.GET("/view", r.fileHandler.ViewFilesNote)
 			file.GET("/view/:file_id", r.fileHandler.ViewFile)

@@ -4,81 +4,75 @@ import (
 	"context"
 	"drive/internal/api/dtos/request"
 	"drive/internal/service"
-	"drive/pkg/logger"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-// UploadFile 文件上传
 func (h *FileHandler) UploadFile(c *gin.Context) {
-	logger.Info("开始处理文件上传请求")
-	// 设置较长的超时时间，考虑令牌桶限流的影响
-	// 普通用户限速512KB/s，上传1GB文件需要约34分钟
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 30*time.Minute)
 	defer cancel()
-	defer logger.Info("文件上传请求处理完成")
-	// 绑定 JSON 请求体到 FileDtos
-	var fileDto request.FileDtos
-	//默认权限为private
+
+	var fileDto request.FilePermissionsDT
 	fileDto.Permissions = "public"
-	// 获取上传的文件
+
 	file, err := c.MultipartForm()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "获取文件失败: " + err.Error()})
 		return
 	}
-	// 获取上传的文件头
+
 	files := file.File["files"]
-	// 获取当前登录用户ID
+
 	userID, existsID := c.Get("user_id")
 	if !existsID {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
-	// 获取当前登录用户名
+
 	userName, existsNM := c.Get("user_name")
 	if !existsNM {
-
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
+
 	userRole, existsRole := c.Get("role")
 	if !existsRole {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证用户"})
 		return
 	}
+
 	userIDUint, userNameSTR, userRoleSTR, ok := service.ExchangeType(userID, userName, userRole)
 	if !ok {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "类型转换失败"})
 		return
 	}
-	//获取上传文件所有大小
+
 	totalSize := service.GetTotalSize(files)
-	//检查用户额度是否足够
-	nowSize, ok := h.fileRepo.CheckUserSize(ctx, userIDUint, totalSize)
+
+	nowSize, ok := h.fileServicer.CheckUserSize(ctx, userIDUint, totalSize)
 	if !ok {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "用户空间不足"})
 		return
 	}
-	// 转换为领域模型,减少参数传递
-	fileKey := fileDto.ToDMFile()
+
+	fileKey := fileDto.ToDMFilePermissions()
 	fileKey.UserID = userIDUint
 	fileKey.Owner = userNameSTR
-	// 保存文件
+
 	fileRecords, err := service.SaveFiles(ctx, files, userRoleSTR, fileKey)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件失败: " + err.Error()})
 		return
 	}
 
-	// 保存文件记录到数据库
 	if len(*fileRecords) == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件记录失败: 没有文件记录"})
 		return
 	}
-	if err := h.fileRepo.UploadFile(ctx, *fileRecords, nowSize); err != nil {
+
+	if err := h.fileServicer.UploadFile(ctx, *fileRecords, nowSize); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件记录失败: " + err.Error()})
 		return
 	}
