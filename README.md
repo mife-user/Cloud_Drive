@@ -39,6 +39,46 @@ Lanshan寒假考核
   - [x] 缓存雪崩(随机过期时间)
   - [x] 缓存穿透(空对象缓存)
 - [x] Docker
+
+---
+
+## ___Docker 部署___
+
+### 1. 生成交叉编译的 Linux 可执行文件
+
+在 **Windows** 上运行以下命令：
+
+```bash
+
+# 方法 2: 手动构建
+set CGO_ENABLED=0
+set GOOS=linux
+set GOARCH=amd64
+go build -o cloud_drive ./cmd/main/main.go
+```
+
+### 2. 构建 Docker 镜像
+
+```bash
+docker build -t cloudpan:latest .
+```
+
+### 3. 运行服务
+
+```bash
+# 使用 docker-compose 启动所有服务（推荐）
+docker-compose up -d
+
+# 或单独启动应用
+docker run -d -p 8080:8080 --name cloudpan-app cloudpan:latest
+```
+
+### 4. 停止服务
+
+```bash
+docker-compose down -v
+```
+
 ## 前端测试链接
 [测试链接](https://github.com/mife-user/Cloud_Drive/blob/main/%E5%89%8D%E7%AB%AF%E6%B5%8B%E8%AF%95.md)
 

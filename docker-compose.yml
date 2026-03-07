@@ -1,9 +1,9 @@
 version: "3.8"
 
 services:
-  # 应用服务：补充Gin配置环境变量
+  # 应用服务
   cloudpan:
-    build: .
+    image: cloudpan:latest
     container_name: cloudpan-app
     restart: always
     ports:
@@ -24,7 +24,7 @@ services:
     networks:
       - cloudpan-net
 
-  # MySQL数据库（保持不变）
+  # MySQL 数据库
   mysql:
     image: mysql:8.0
     container_name: cloudpan-mysql
@@ -41,7 +41,7 @@ services:
     networks:
       - cloudpan-net
 
-  # Redis缓存（保持不变）
+  # Redis 缓存
   redis:
     image: redis:7.2-alpine
     container_name: cloudpan-redis
