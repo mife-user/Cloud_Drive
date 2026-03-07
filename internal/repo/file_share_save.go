@@ -2,7 +2,7 @@ package repo
 
 import (
 	"context"
-	"drive/internal/domain"
+	"drive/internal/model"
 	"drive/pkg/cache"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
@@ -26,7 +26,7 @@ func (r *fileRepo) ShareFile(ctx context.Context, fileID uint, userID uint, owne
 
 	expiresAt := time.Now().Add(24 * time.Hour).Unix() // 分享有效期为24小时
 
-	fileShare := &domain.FileShare{ // 创建分享记录
+	fileShare := &model.FileShare{ // 创建分享记录
 		FileID:    fileID,
 		ShareID:   shareID,
 		AccessKey: accessKey,

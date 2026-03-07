@@ -2,7 +2,7 @@ package repo
 
 import (
 	"context"
-	"drive/internal/domain"
+	"drive/internal/model"
 	"drive/pkg/cache"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
@@ -11,7 +11,7 @@ import (
 
 func (r *fileRepo) CheckUserSize(ctx context.Context, userID uint, totalSize int64) (int64, bool) {
 	var err error
-	var user domain.User
+	var user model.User
 	userKey := fmt.Sprintf("user_size:%d", userID)
 	userJSON, err := r.rd.Get(ctx, userKey).Result()
 	if err == nil {

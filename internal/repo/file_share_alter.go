@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/internal/model"
 	"drive/pkg/cache"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
@@ -13,7 +14,7 @@ import (
 // UpdateFilePermissions 更新文件权限
 func (r *fileRepo) UpdateFilePermissions(ctx context.Context, fileID uint, userID uint, permissions string) error {
 	var err error
-	var file domain.File
+	var file model.File
 	var fileJSON string
 	// 检查权限参数是否有效
 	if permissions != "public" && permissions != "private" {

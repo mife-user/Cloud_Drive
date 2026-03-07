@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/internal/model"
 	"drive/pkg/cache"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
@@ -32,7 +33,7 @@ func (r *fileRepo) AccessShare(ctx context.Context, shareID string, accessKey st
 // getShareRecord 获取分享记录（使用 singleflight 防止缓存击穿）
 func (r *fileRepo) getShareRecord(ctx context.Context, shareID string, accessKey string) (*domain.FileShare, error) {
 	var err error
-	var fileShare domain.FileShare
+	var fileShare model.FileShare
 	var shareJSON string
 	var shareKey = fmt.Sprintf("share:%s", shareID)
 	// 从缓存中获取分享记录
@@ -75,7 +76,7 @@ func (r *fileRepo) getShareRecord(ctx context.Context, shareID string, accessKey
 		if err != nil {
 			return nil, err
 		}
-		fileShare = *result.(*domain.FileShare)
+		fileShare = *result.(*model.FileShare)
 	}
 	// 验证访问密钥
 	if fileShare.AccessKey != accessKey {
@@ -88,13 +89,13 @@ func (r *fileRepo) getShareRecord(ctx context.Context, shareID string, accessKey
 		return nil, errorer.New(errorer.ErrShareExpired)
 	}
 	// 分享记录有效，返回分享记录
-	return &fileShare, nil
+	return exchangeFileShare(fileShare), nil
 }
 
 // getShareFile 获取分享文件（使用 singleflight 防止缓存击穿）
 func (r *fileRepo) getShareFile(ctx context.Context, share *domain.FileShare) (*domain.File, error) {
 	var err error
-	var file domain.File
+	var file model.File
 	var fileJSON string
 	fileIDSTR := fmt.Sprintf("file:%d", share.FileID)
 	userIDSTR := fmt.Sprintf("files:%d", share.UserID)
@@ -146,7 +147,25 @@ func (r *fileRepo) getShareFile(ctx context.Context, share *domain.FileShare) (*
 		if err != nil {
 			return nil, err
 		}
-		file = *result.(*domain.File)
+		file = *result.(*model.File)
 	}
-	return &file, nil
+	return &domain.File{
+		ID:          file.ID,
+		FileName:    file.FileName,
+		Size:        file.Size,
+		Path:        file.Path,
+		UserID:      file.UserID,
+		Owner:       file.Owner,
+		Permissions: file.Permissions,
+	}, nil
+}
+func exchangeFileShare(fileShare model.FileShare) *domain.FileShare {
+	return &domain.FileShare{
+		FileID:    fileShare.FileID,
+		ShareID:   fileShare.ShareID,
+		AccessKey: fileShare.AccessKey,
+		UserID:    fileShare.UserID,
+		Owner:     fileShare.Owner,
+		ExpiresAt: fileShare.ExpiresAt,
+	}
 }

@@ -2,7 +2,7 @@ package repo
 
 import (
 	"context"
-	"drive/internal/domain"
+	"drive/internal/model"
 	"drive/pkg/errorer"
 	"drive/pkg/logger"
 	"fmt"
@@ -20,7 +20,7 @@ func (r *fileRepo) RemoveFavorite(ctx context.Context, userID uint, fileID uint)
 		return err
 	}
 	var count int64
-	if err = r.db.Model(&domain.FileFavorite{}).Where("user_id = ? AND file_id = ?", userID, fileID).Count(&count).Error; err != nil {
+	if err = r.db.Model(&model.FileFavorite{}).Where("user_id = ? AND file_id = ?", userID, fileID).Count(&count).Error; err != nil {
 		logger.Error("查询收藏记录失败", logger.C(err))
 		return err
 	}
@@ -29,7 +29,7 @@ func (r *fileRepo) RemoveFavorite(ctx context.Context, userID uint, fileID uint)
 		return errorer.New(errorer.ErrFavoriteNotExist)
 	}
 	// 从数据库中删除收藏记录
-	result := r.db.Unscoped().Where("user_id = ? AND file_id = ?", userID, fileID).Delete(&domain.FileFavorite{})
+	result := r.db.Unscoped().Where("user_id = ? AND file_id = ?", userID, fileID).Delete(&model.FileFavorite{})
 	if err = result.Error; err != nil {
 		logger.Error("取消收藏失败", logger.C(err))
 		return err

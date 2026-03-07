@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/internal/model"
 	"drive/pkg/cache"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
@@ -35,7 +36,7 @@ func (r *fileRepo) AddFavorite(ctx context.Context, userID uint, fileID uint) er
 // getLoveRecord 获取文件收藏记录
 func (r *fileRepo) getLoveRecord(ctx context.Context, userID uint, fileID uint) (*domain.File, error) {
 	var err error
-	var fileLove domain.File
+	var fileLove model.File
 	var fileJSON string
 	userKey := fmt.Sprintf("files:%d", userID)
 	fileIDSTR := fmt.Sprintf("file:%d", fileID)
@@ -75,7 +76,15 @@ func (r *fileRepo) getLoveRecord(ctx context.Context, userID uint, fileID uint) 
 			return nil, err
 		}
 	}
-	return &fileLove, nil
+	return &domain.File{
+		ID:          fileLove.ID,
+		FileName:    fileLove.FileName,
+		Size:        fileLove.Size,
+		Path:        fileLove.Path,
+		UserID:      fileLove.UserID,
+		Owner:       fileLove.Owner,
+		Permissions: fileLove.Permissions,
+	}, nil
 }
 
 // addLoveRecord 添加文件收藏记录
@@ -89,11 +98,11 @@ func (r *fileRepo) addLoveRecord(ctx context.Context, userID uint, fileID uint) 
 		return errorer.New(errorer.ErrFavoriteExist)
 	}
 	// 检查数据库中是否已存在收藏记录
-	if err = r.db.Where("user_id = ? AND file_id = ?", userID, fileID).First(&domain.FileFavorite{}).Error; err == nil {
+	if err = r.db.Where("user_id = ? AND file_id = ?", userID, fileID).First(&model.FileFavorite{}).Error; err == nil {
 		logger.Info("文件已收藏", logger.C(err))
 		return errorer.New(errorer.ErrFavoriteExist)
 	}
-	favorite := &domain.FileFavorite{
+	favorite := &model.FileFavorite{
 		UserID: userID,
 		FileID: fileID,
 	}

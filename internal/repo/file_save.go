@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/internal/model"
 	"drive/pkg/cache"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
@@ -20,19 +21,32 @@ func (r *fileRepo) UploadFile(ctx context.Context, files []*domain.File, nowSize
 		logger.Error(fmt.Sprintf("上传文件失败: %s", errorer.ErrEmptySlice))
 		return fmt.Errorf(errorer.ErrEmptySlice)
 	}
+	//将domain转换为model
+	var fileModels []*model.File
+	for _, file := range files {
+		fileModel := &model.File{
+			FileName:    file.FileName,
+			Size:        file.Size,
+			Path:        file.Path,
+			UserID:      file.UserID,
+			Owner:       file.Owner,
+			Permissions: file.Permissions,
+		}
+		fileModels = append(fileModels, fileModel)
+	}
 	// 上传文件到数据库
-	if err = r.db.CreateInBatches(files, len(files)).Error; err != nil {
+	if err = r.db.CreateInBatches(fileModels, len(fileModels)).Error; err != nil {
 		logger.Error("上传文件失败", logger.C(err))
 		return err
 	}
 
 	// 缓存文件信息
-	userID := files[0].UserID
+	userID := fileModels[0].UserID
 	userKey := fmt.Sprintf("files:%d", userID)
 	workerPool := pool.NewPool(4) // 可根据系统配置调整大小
 	workerPool.Start()
 	var wg sync.WaitGroup
-	for _, file := range files {
+	for _, file := range fileModels {
 		f := file
 		wg.Add(1)
 		// 提交任务到协程池

@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/internal/model"
 	"drive/pkg/cache"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
@@ -15,8 +16,8 @@ import (
 func (r *fileRepo) ViewFilesNote(ctx context.Context, userID uint) ([]domain.File, error) {
 	var err error
 	var result bool = false
-	var files []domain.File
-	var filesNew []domain.File
+	var files []model.File
+	var filesNew []model.File
 	// 从缓存中查询文件信息
 	userKey := fmt.Sprintf("files:%d", userID)
 	fileJSONs, err := r.rd.HGetAll(ctx, userKey).Result()
@@ -28,14 +29,14 @@ func (r *fileRepo) ViewFilesNote(ctx context.Context, userID uint) ([]domain.Fil
 	workerPool := pool.NewPool(4)
 	workerPool.Start()
 	var wg sync.WaitGroup
-	fileCh := make(chan domain.File, len(fileJSONs))
+	fileCh := make(chan model.File, len(fileJSONs))
 	// 解析缓存中的文件信息
 	for _, fileJSON := range fileJSONs {
 		wg.Add(1)
 		fileJSONCopy := fileJSON
 		workerPool.Submit(func() {
 			defer wg.Done()
-			var file domain.File
+			var file model.File
 			if err = exc.ExcJSONToFile(fileJSONCopy, &file); err != nil {
 				logger.Debug("解析缓存文件信息失败", logger.C(err))
 				return
@@ -86,8 +87,23 @@ func (r *fileRepo) ViewFilesNote(ctx context.Context, userID uint) ([]domain.Fil
 			}
 		}
 		logger.Info("从数据库查询文件成功", logger.U("user_id", userID))
-		return filesNew, nil
+		return exchangeFiles(filesNew), nil
 	}
 	logger.Info("查询文件成功", logger.U("user_id", userID))
-	return files, nil
+	return exchangeFiles(files), nil
+}
+func exchangeFiles(files []model.File) []domain.File {
+	var filesNew []domain.File
+	for _, file := range files {
+		filesNew = append(filesNew, domain.File{
+			ID:          file.ID,
+			FileName:    file.FileName,
+			Size:        file.Size,
+			Path:        file.Path,
+			UserID:      file.UserID,
+			Owner:       file.Owner,
+			Permissions: file.Permissions,
+		})
+	}
+	return filesNew
 }

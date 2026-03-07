@@ -1,7 +1,9 @@
-package domain
+package model
+
+import "gorm.io/gorm"
 
 type File struct {
-	ID          uint
+	gorm.Model
 	FileName    string
 	Size        int64
 	Path        string
@@ -11,6 +13,7 @@ type File struct {
 }
 
 type FileShare struct {
+	gorm.Model
 	FileID    uint
 	ShareID   string
 	AccessKey string
@@ -20,6 +23,7 @@ type FileShare struct {
 }
 
 type FileFavorite struct {
+	gorm.Model
 	UserID uint
 	FileID uint
 }

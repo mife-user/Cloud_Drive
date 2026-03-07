@@ -2,7 +2,7 @@ package repo
 
 import (
 	"context"
-	"drive/internal/domain"
+	"drive/internal/model"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
@@ -14,7 +14,7 @@ import (
 // DeleteFile 删除文件(软删除)
 func (r *fileRepo) DeleteFile(ctx context.Context, userID uint, fileID uint) error {
 	var err error
-	var file domain.File
+	var file model.File
 	userKey := fmt.Sprintf("files:%d", userID)
 	fileKey := fmt.Sprintf("file:%d", fileID)
 	// 按ID锁

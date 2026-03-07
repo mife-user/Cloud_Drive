@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/internal/model"
 	"drive/pkg/cache"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
@@ -12,7 +13,7 @@ import (
 
 func (r *fileRepo) ViewFile(ctx context.Context, fileID uint, userID uint) (*domain.File, error) {
 	var err error
-	var file domain.File
+	var file model.File
 	var fileJSON string
 
 	userKey := fmt.Sprintf("files:%d", userID)
@@ -55,5 +56,13 @@ func (r *fileRepo) ViewFile(ctx context.Context, fileID uint, userID uint) (*dom
 		}
 	}
 	logger.Info("查询文件成功", logger.U("file_id", fileID))
-	return &file, nil
+	return &domain.File{
+		ID:          file.ID,
+		FileName:    file.FileName,
+		Size:        file.Size,
+		Path:        file.Path,
+		UserID:      file.UserID,
+		Owner:       file.Owner,
+		Permissions: file.Permissions,
+	}, nil
 }

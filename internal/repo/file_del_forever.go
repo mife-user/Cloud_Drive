@@ -2,7 +2,7 @@ package repo
 
 import (
 	"context"
-	"drive/internal/domain"
+	"drive/internal/model"
 	"drive/pkg/logger"
 	"fmt"
 )
@@ -17,7 +17,7 @@ func (r *fileRepo) DeleteFileForever(ctx context.Context, userID uint, fileID ui
 		logger.Error("删除文件缓存失败", logger.C(err))
 		return err
 	}
-	if err = r.db.Unscoped().Where("id = ?", fileID).Delete(&domain.File{}).Error; err != nil {
+	if err = r.db.Unscoped().Where("id = ?", fileID).Delete(&model.File{}).Error; err != nil {
 		logger.Error("删除文件记录失败", logger.C(err))
 		return err
 	}

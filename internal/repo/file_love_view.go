@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/internal/model"
 	"drive/pkg/cache"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
@@ -31,7 +32,7 @@ func (r *fileRepo) GetFavorites(ctx context.Context, userID uint) ([]domain.File
 // getFavoriteRecord 从缓存中获取收藏列表
 func (r *fileRepo) getFavoriteRecord(ctx context.Context, userID uint) ([]domain.FileFavorite, error) {
 	var err error
-	var favorites []domain.FileFavorite
+	var favorites []model.FileFavorite
 	var lovesJSONs map[string]string
 	// 从缓存中获取收藏列表
 	loverKey := fmt.Sprintf("lover:%d", userID)
@@ -66,7 +67,7 @@ func (r *fileRepo) getFavoriteRecord(ctx context.Context, userID uint) ([]domain
 			return nil, err
 		}
 		for _, value := range lovesJSONs {
-			var favorite domain.FileFavorite
+			var favorite model.FileFavorite
 			if err = exc.ExcJSONToFile(value, &favorite); err != nil {
 				logger.Error("反序列化收藏记录失败", logger.C(err))
 				continue
@@ -74,15 +75,15 @@ func (r *fileRepo) getFavoriteRecord(ctx context.Context, userID uint) ([]domain
 			favorites = append(favorites, favorite)
 		}
 	}
-	return favorites, nil
+	return exchangeFavorites(favorites), nil
 }
 
 // getFavoriteFiles 从缓存中获取收藏文件
 func (r *fileRepo) getFavoriteFiles(ctx context.Context, favorites []domain.FileFavorite, userID uint) ([]domain.File, error) {
 	userKey := fmt.Sprintf("files:%d", userID)
-	var files []domain.File
+	var files []model.File
 	for _, favorite := range favorites {
-		var file domain.File
+		var file model.File
 		// 从缓存中获取文件信息
 		fileIDSTR := fmt.Sprintf("file:%d", favorite.FileID)
 		fileJSON, err := r.rd.HGet(ctx, userKey, fileIDSTR).Result()
@@ -122,5 +123,15 @@ func (r *fileRepo) getFavoriteFiles(ctx context.Context, favorites []domain.File
 		}
 		files = append(files, file)
 	}
-	return files, nil
+	return exchangeFiles(files), nil
+}
+func exchangeFavorites(favorites []model.FileFavorite) []domain.FileFavorite {
+	var favoritesNew []domain.FileFavorite
+	for _, favorite := range favorites {
+		favoritesNew = append(favoritesNew, domain.FileFavorite{
+			UserID: favorite.UserID,
+			FileID: favorite.FileID,
+		})
+	}
+	return favoritesNew
 }

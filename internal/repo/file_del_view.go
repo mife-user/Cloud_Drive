@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"drive/internal/domain"
+	"drive/internal/model"
 	"drive/pkg/exc"
 	"drive/pkg/logger"
 	"drive/pkg/pool"
@@ -13,7 +14,7 @@ import (
 
 func (r *fileRepo) GetDeletedFiles(ctx context.Context, userID uint) ([]domain.File, error) {
 	var err error
-	var files []domain.File
+	var files []model.File
 	//缓存查询用户删除的文件
 	userKey := fmt.Sprintf("files:%d", userID)
 	mapcmd := r.rd.HGetAll(ctx, userKey)
@@ -59,7 +60,7 @@ func (r *fileRepo) GetDeletedFiles(ctx context.Context, userID uint) ([]domain.F
 	} else {
 		fileJSONs := mapcmd.Val()
 		var wg sync.WaitGroup
-		fileChan := make(chan domain.File, len(fileJSONs))
+		fileChan := make(chan model.File, len(fileJSONs))
 		workerPool := pool.NewPool(4)
 		workerPool.Start()
 		for _, fileJSON := range fileJSONs {
@@ -67,7 +68,7 @@ func (r *fileRepo) GetDeletedFiles(ctx context.Context, userID uint) ([]domain.F
 			wg.Add(1)
 			workerPool.Submit(func() {
 				defer wg.Done()
-				var file domain.File
+				var file model.File
 				if err = exc.ExcJSONToFile(f, &file); err != nil {
 					logger.Error("反序列化文件失败", logger.C(err))
 					return
@@ -89,5 +90,5 @@ func (r *fileRepo) GetDeletedFiles(ctx context.Context, userID uint) ([]domain.F
 		}
 	}
 	logger.Info("查询用户删除的文件成功", logger.U("user_id", userID))
-	return files, nil
+	return exchangeFiles(files), nil
 }
