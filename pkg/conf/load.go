@@ -2,7 +2,6 @@ package conf
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"github.com/spf13/viper"
 )
@@ -16,7 +15,7 @@ func GetConfig() *Config {
 func LoadConfig() (*Config, error) {
 	v := viper.New()
 	//主要配置文件目录
-	path := filepath.Join("configs")
+	path := "../../configs"
 	v.AddConfigPath(path)
 	//配置文件名称和类型
 	v.SetConfigName("config")

@@ -42,42 +42,102 @@ Lanshan寒假考核
 
 ---
 
-## ___Docker 部署___
+## ___环境要求___
 
-### 1. 生成交叉编译的 Linux 可执行文件
+- Go 1.21+
+- MySQL 8.0
+- Redis 7.x
+- Node.js 18+ (前端开发)
+- Docker & Docker Compose (生产部署)
 
-在 **Windows** 上运行以下命令：
+---
 
-```bash
+## ___开发环境___
 
-# 方法 2: 手动构建
-set CGO_ENABLED=0
-set GOOS=linux
-set GOARCH=amd64
+### 后端启动
+
+**方式一：设置环境变量**
+
+```powershell
+# Windows PowerShell
+$env:CLOUDPAN_ENV="dev"
+$env:CLOUDPAN_MYSQL_DSN="root:123456@tcp(127.0.0.1:3306)/cloudpan?charset=utf8mb4&parseTime=True&loc=Local"
+$env:CLOUDPAN_REDIS_HOST="127.0.0.1"
+$env:CLOUDPAN_JWT_SECRET="your-secret-key"
+
+go run ./cmd/main/main.go
+```
+
+**方式二：修改配置文件**
+
+编辑 `configs/config.dev.yaml`，配置本地 MySQL 和 Redis 连接信息，然后：
+
+```powershell
+$env:CLOUDPAN_ENV="dev"
+go run ./cmd/main/main.go
+```
+
+后端服务运行在 `http://localhost:8080`
+
+### 前端启动
+
+```powershell
+cd web
+npm install
+npm run dev
+```
+
+前端开发服务运行在 `http://localhost:5173`
+
+---
+
+## ___生产环境 (Docker 部署)___
+
+### 一键启动
+
+```powershell
+# 1. 生成交叉编译的 Linux 可执行文件
+$env:CGO_ENABLED=0
+$env:GOOS="linux"
+$env:GOARCH="amd64"
 go build -o cloud_drive ./cmd/main/main.go
+
+# 2. 构建并启动所有服务（前端 + 后端 + MySQL + Redis）
+docker-compose up -d --build
+
+# 3. 查看服务状态
+docker-compose ps
 ```
 
-### 2. 构建 Docker 镜像
+### 服务端口
 
-```bash
-docker build -t cloudpan:latest .
+| 服务 | 端口 | 访问地址 |
+|------|------|----------|
+| 前端 | 80 | `http://localhost` |
+| 后端 API | 8080 | `http://localhost:8080` |
+| MySQL | 3306 | - |
+| Redis | 6379 | - |
+
+### 停止服务
+
+```powershell
+docker-compose down      # 仅停止服务
+docker-compose down -v   # 停止并删除数据卷
 ```
 
-### 3. 运行服务
+---
 
-```bash
-# 使用 docker-compose 启动所有服务（推荐）
-docker-compose up -d
+## ___环境变量说明___
 
-# 或单独启动应用
-docker run -d -p 8080:8080 --name cloudpan-app cloudpan:latest
-```
+| 变量名 | 说明 | 示例 |
+|--------|------|------|
+| `CLOUDPAN_ENV` | 环境标识 | `dev` / `prod` |
+| `CLOUDPAN_MYSQL_DSN` | MySQL 连接串 | `root:pass@tcp(host:3306)/db?charset=utf8mb4&parseTime=True&loc=Local` |
+| `CLOUDPAN_REDIS_HOST` | Redis 地址 | `127.0.0.1` |
+| `CLOUDPAN_REDIS_PASSWORD` | Redis 密码 | `your-password` |
+| `CLOUDPAN_JWT_SECRET` | JWT 密钥 | `your-secret-key` |
 
-### 4. 停止服务
-
-```bash
-docker-compose down -v
-```
+---
 
 ## 前端测试链接
 [测试链接](https://github.com/mife-user/Cloud_Drive/blob/main/%E5%89%8D%E7%AB%AF%E6%B5%8B%E8%AF%95.md)

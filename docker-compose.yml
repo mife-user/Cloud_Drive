@@ -3,7 +3,7 @@ version: "3.8"
 services:
   # 应用服务
   cloudpan:
-    image: cloudpan:latest
+    build: .
     container_name: cloudpan-app
     restart: always
     ports:
@@ -51,6 +51,18 @@ services:
     command: redis-server --requirepass cloudpan_redis_123
     volumes:
       - redis-data:/data
+    networks:
+      - cloudpan-net
+
+  # 前端服务
+  web:
+    build: ./web
+    container_name: cloudpan-web
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - cloudpan
     networks:
       - cloudpan-net
 

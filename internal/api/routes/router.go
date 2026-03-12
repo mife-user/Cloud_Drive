@@ -44,6 +44,10 @@ func (r *Router) Setup() *gin.Engine {
 
 	router.Use(middlewares.CORSMiddleware(r.config))
 
+	// 静态文件服务 - 用于生产环境前端
+	router.Static("/assets", "./web/dist/assets")
+	router.StaticFile("/vite.svg", "./web/dist/vite.svg")
+
 	api := router.Group("/api")
 	{
 		user := api.Group("/user")
@@ -72,6 +76,17 @@ func (r *Router) Setup() *gin.Engine {
 			file.DELETE("/delete/:file_id/forever", r.fileHandler.DeleteFileForever)
 		}
 	}
+
+	// SPA 路由支持 - 所有非 API 路由返回 index.html
+	router.NoRoute(func(c *gin.Context) {
+		// 如果是 API 路由但未匹配，返回 404
+		if len(c.Request.URL.Path) >= 4 && c.Request.URL.Path[:4] == "/api" {
+			c.JSON(404, gin.H{"message": "接口不存在"})
+			return
+		}
+		// 其他路由返回前端页面
+		c.File("./web/dist/index.html")
+	})
 
 	return router
 }
