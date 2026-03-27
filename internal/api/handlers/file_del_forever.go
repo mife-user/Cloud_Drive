@@ -1,17 +1,13 @@
 package handlers
 
 import (
-	"context"
 	"drive/pkg/exc"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (h *FileHandler) DeleteFileForever(c *gin.Context) {
-	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
-	defer cancel()
 
 	userID, exists := c.Get("user_id")
 	if !exists {
@@ -32,7 +28,7 @@ func (h *FileHandler) DeleteFileForever(c *gin.Context) {
 		return
 	}
 
-	if err := h.fileServicer.DeleteFileForever(ctx, userIDUint, fileIDUint); err != nil {
+	if err := h.fileServicer.DeleteFileForever(c.Request.Context(), userIDUint, fileIDUint); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

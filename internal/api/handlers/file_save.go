@@ -1,19 +1,14 @@
 package handlers
 
 import (
-	"context"
 	"drive/internal/api/dtos/request"
 	"drive/internal/service"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (h *FileHandler) UploadFile(c *gin.Context) {
-	ctx, cancel := context.WithTimeout(c.Request.Context(), 30*time.Minute)
-	defer cancel()
-
 	var fileDto request.FilePermissionsDT
 	fileDto.Permissions = "public"
 
@@ -51,7 +46,7 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 
 	totalSize := service.GetTotalSize(files)
 
-	nowSize, ok := h.fileServicer.CheckUserSize(ctx, userIDUint, totalSize)
+	nowSize, ok := h.fileServicer.CheckUserSize(c.Request.Context(), userIDUint, totalSize)
 	if !ok {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "用户空间不足"})
 		return
@@ -61,7 +56,7 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 	fileKey.UserID = userIDUint
 	fileKey.Owner = userNameSTR
 
-	fileRecords, err := service.SaveFiles(ctx, files, userRoleSTR, fileKey)
+	fileRecords, err := service.SaveFiles(c.Request.Context(), files, userRoleSTR, fileKey)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件失败: " + err.Error()})
 		return
@@ -72,7 +67,7 @@ func (h *FileHandler) UploadFile(c *gin.Context) {
 		return
 	}
 
-	if err := h.fileServicer.UploadFile(ctx, *fileRecords, nowSize); err != nil {
+	if err := h.fileServicer.UploadFile(c.Request.Context(), *fileRecords, nowSize); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件记录失败: " + err.Error()})
 		return
 	}

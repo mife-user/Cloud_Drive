@@ -1,19 +1,15 @@
 package handlers
 
 import (
-	"context"
 	"drive/internal/api/dtos/request"
 	"drive/pkg/errorer"
 	"drive/pkg/exc"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (h *FileHandler) UpdateFilePermissions(c *gin.Context) {
-	ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
-	defer cancel()
 
 	fileIDStr := c.Param("file_id")
 	if fileIDStr == "" {
@@ -45,7 +41,7 @@ func (h *FileHandler) UpdateFilePermissions(c *gin.Context) {
 		return
 	}
 
-	if err := h.fileServicer.UpdateFilePermissions(ctx, fileID, userIDUint, req.Permissions); err != nil {
+	if err := h.fileServicer.UpdateFilePermissions(c.Request.Context(), fileID, userIDUint, req.Permissions); err != nil {
 		switch err.Error() {
 		case errorer.ErrFileNotExist:
 			c.JSON(http.StatusNotFound, gin.H{"error": "文件不存在"})
